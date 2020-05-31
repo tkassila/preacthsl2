@@ -1,0 +1,48 @@
+import React, { Component }  from 'react';
+
+class GiveAddress extends Component 
+{
+    constructor(props) {
+        super(props);
+        this.state = {
+      //      chkbox: false
+            inputValue: '',
+	    inputDistance: ''
+        }
+        this.updateInput = this.updateInput.bind(this);
+        this.updateDistance = this.updateDistance.bind(this);
+        this.searchaddressss = this.searchaddressss.bind(this);
+    }
+
+    updateInput(event){
+        this.setState({inputValue : event.target.value})
+    }
+    
+    updateDistance(event){
+        this.setState({inputDistance : event.target.value})
+    }
+
+    searchaddressss() {
+        console.log(this.state);
+        this.props.addresssselected(this.state.inputValue, this.state.inputDistance);
+    }
+
+     //  <label htmlFor="address">Anna osoite:</label><br/>
+             
+    render() {
+        return (
+            <div>
+            <h3>Lähisoite pysäkeille:</h3>
+                <label htmlFor="address">Anna lähin osoite lähellä sijaitseville pysäkeille:</label><br/>
+                <input type="text" name="address" placeholder="Kirjoita haettava osoite.." 
+                    maxlength="100" size="70" onChange={this.updateInput}/><br/>
+                <label htmlFor="distance">Anna pysäkkien maksimi etäisyys:</label><br/>
+                <input type="text" name="distance" placeholder="Anna pysäkkien maksimi etäisyys.." 
+                    maxlength="100" size="70" onChange={this.updateDistance}/><br/>
+                <button onClick={this.searchaddressss} >Hae osoitetta</button>
+             </div>
+        );
+    }
+}
+
+export default GiveAddress;

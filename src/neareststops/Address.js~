@@ -1,0 +1,37 @@
+import React, { Component } from 'react';
+
+class Address extends Component 
+{
+    constructor(props) {
+        super(props);
+        console.log(this.props);
+        /*
+        this.state = {
+            chkbox: false,
+            addresses: ['1','2']
+        }
+        */
+    }
+
+    componentWillReceiveProps(nextProps) {
+        /*
+        if (this.props.address !== nextProps.address) {
+          this.setState({address: nextProps.address});
+        }
+        */
+     }
+
+    addressClicked = event => {
+      this.props.addresssselected(event.target.text);
+    }
+
+    render() {
+            return (
+                <div id="div.Address">
+                 <a onClick={this.addressClicked}>{this.props.address}</a>
+               </div>
+            );
+    }
+}
+
+export default Address;

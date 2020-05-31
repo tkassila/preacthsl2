@@ -1,0 +1,235 @@
+import React, { Component } from 'react';
+import { h } from 'preact';
+import style from '../App.css';
+
+import GiveAddress from './GiveAddress';
+import AddressList from './AddressList';
+// import gql from "apollo-boost";
+import SearchAndListAddressStops from './searchstops/SearchAndListAddressStops';
+import axios from 'axios';
+// import { withApollo } from 'react-apollo';
+import Config from '../util/Config';
+
+const HSLLSERVICEURI = {
+    HSL: 'hsl',
+    WALTTI: 'waltti',
+    FINLAND: 'finland',
+};
+
+class NearestStops extends Component 
+{
+    static hsl_baseurl = null;
+    static address_search_url = null;
+   
+    static localHSLUri = HSLLSERVICEURI_HSL;
+
+    static getHslBaseUrl()
+    {
+        let hsl_baseurl = null;
+        if (window.location.origin) {
+            NearestStops.hsl_baseurl = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':8080/hsl/' : ':8080/' +NearestStops.localHSLUri +'/');
+           console.log("NearestStops.hsl_baseurl");
+            console.log(NearestStops.hsl_baseurl);
+        }
+        return NearestStops.hsl_baseurl;
+    }
+
+    static getPDFURL()
+    {
+        return "https://api.digitransit.fi/timetables/v1/";
+    }
+    
+    static getAddress_search_url()
+    {
+        if (window.location.origin) {
+            NearestStops.address_search_url = NearestStops.getHslBaseUrl() +"geocoding/v1/search?text=";
+           console.log("NearestStops.address_search_url");
+            console.log(NearestStops.address_search_url);
+        }
+        return NearestStops.address_search_url;
+    }
+    // address_search_url = "https://api.digitransit.fi/geocoding/v1/search?text=";
+    hsl_baseurlhsl_baseurl = "http://localhost:81NearestStops makeGetQuery before: axios:080/hsl/";
+    // hsl_baseurl = window.location.href +":8080/hsl/";
+    // address_search_url = NearestStops.getHslBaseUrl() +"geocoding/v1/search?text=";
+    prev_features = null;
+
+    constructor(props) {
+        super(props);
+        if (Config.bDebug)
+            console.log("NearestStops constructor");
+        if (props.client)
+            this.client = props.client;
+
+//        console.log("window.location.href");
+//        console.log(window.location.href);
+        // hsl_baseurl = window.location.href.
+        let hsl_baseurl = null;
+        if (window.location.origin) {
+            hsl_baseurl = NearestStops.getHslBaseUrl();
+           console.log("this.hsl_baseurl");
+            console.log(hsl_baseurl);
+        }
+        this.address_search_url = hsl_baseurl +"geocoding/v1/search?text=";
+          
+        this.state = {
+            searchstops: false,
+            address: null,
+            addressfeatures: null,
+            longitude: null,
+            latitude: null,
+            alladdress: null,
+	        distance: null
+        }
+    }
+
+    
+    handleResponseData(response)
+    {
+        if (Config.bDebug)
+            console.log("NearestStops handleResponseData");
+            let i = 0;
+            let bSearch = false;
+            const features = response.data.features;
+            let feature, coordinates, street;
+            let bExactAdressFound = false;
+            let allAddresses = [];
+            this.setState( { alladdress: allAddresses } );
+
+            for (i in features) {
+                feature = features[i];
+                coordinates = feature.geometry.coordinates;
+                street = feature.properties.name;   
+                if (Config.bDebug)         
+                {
+                    console.log("coordinates:" +coordinates);
+                    console.log("street:" +street);
+                    console.log("this.state.address:" +this.state.address);
+                }
+                allAddresses.push(street);
+                if (bExactAdressFound)
+                    continue;
+                if (street != null && street.toString() == this.state.address.toString())
+                {
+                    bExactAdressFound = true;
+                    if (Config.bDebug)
+                        console.log("bExactAdressFound:" +bExactAdressFound);
+                    continue;
+                }
+            } 
+            this.setState( { alladdress: allAddresses } );
+            let alladdress = this.state.alladdress;
+
+            console.log("alladdress");
+            console.log(alladdress);
+
+            if (bExactAdressFound)
+            {
+                if (Config.bDebug)
+                    console.log("bExactAdressFound2:" +bExactAdressFound);
+                let addressfeature = new Object();
+               if (this.state.address.length > 0)
+                    bSearch = true;
+                let afeatures = [ feature ];
+                this.setState({ searchstops: bSearch });
+                this.setState( { addressfeatures: afeatures } );
+            }
+            else
+            {
+                if (Config.bDebug)
+                    console.log("features for 2:");
+                /*
+                for (i in features) {
+                    feature = features[i];
+                    coordinates = feature.geometry.coordinates;
+                    street = feature.properties.name;            
+                    console.log("coordinates:" +coordinates);
+                    console.log("street:" +street);
+                }     
+                */
+                if (this.state.address.length > 0)
+                    bSearch = true;
+                this.setState({ searchstops: bSearch });
+                this.setState( { addressfeatures: features } );
+              // this.render();
+            }
+            //console.log(coordinates);
+         //   this.render();
+    }
+
+    makeGetQuery(addressparam)
+    {
+        if (!addressparam || addressparam.length == 0 )
+        {
+            this.setState( { addressfeatures: null } );
+            return;
+
+        }if (Config.bDebug)
+            console.log("NearestStops makeGetQuery before: axios:" );
+
+        const test = NearestStops.getAddress_search_url() +addressparam;
+        if (Config.bDebug)
+            console.log("url:" +test  );
+         const decodedurl = NearestStops.getAddress_search_url() +encodeURIComponent(addressparam);
+         if (Config.bDebug)
+            console.log("decodedurl:" +decodedurl  );
+        axios.get(decodedurl)
+            .then(response => this.handleResponseData(response));
+    }
+
+    addresssSelected = (addressparam, distanceparam) => {
+        if (Config.bDebug)
+        {
+            console.log("NearestStops addresssSelected.addressparam=" +addressparam);
+            console.log("NearestStops addresssSelected.distanceparam=" +distanceparam);
+        }
+        this.setState({
+            address: addressparam,
+	    distance: distanceparam
+        });
+        let bSearch = false;
+        if (addressparam.length > 0)
+        {
+            bSearch = true;
+            this.setState({
+                searchstops: bSearch,
+                address: addressparam
+            });
+        }
+        this.makeGetQuery(addressparam, distanceparam);
+        if (Config.bDebug)
+            console.log("bSearch2");
+      }
+
+    render(state) {
+        if (Config.bDebug)
+            console.log("NearestStops render()");
+        const search = (state.searchstops != null && state.addressfeatures  != null) ;
+        if (Config.bDebug)
+        {
+            console.log("NearestStops search?" +search);
+            console.log(state.addressfeatures);
+            console.log("state.alladdress");
+            console.log(state.alladdress);
+        }
+        let searchAndListAddressStops = null;
+        if (search)
+        searchAndListAddressStops = <SearchAndListAddressStops address={state.address} 
+            distance={state.distance} 
+            addressfeatures={state.addressfeatures} addresssselected={this.addresssSelected} 
+            latitude={state.latitude} longitude={state.longitude} />;
+
+        return (
+            <section>
+            <h1>Hae pysäkkejä osoitteen mukaan {this.props.title}</h1>
+            <GiveAddress style={style.page} addresssselected={this.addresssSelected}/> 
+            <AddressList style={style.page} addresssselected={this.addresssSelected} 
+        distance={state.distance} alladdress={state.alladdress} />
+	        {searchAndListAddressStops}
+            </section>
+        );
+    }
+}
+
+//export default withApollo(NearestStops);
+export default NearestStops;
