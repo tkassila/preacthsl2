@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, Fragment } from 'preact';
 import Address from '../Address.js';
 import NearStop from './NearStop';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import Checkbox from '../../components/Checkbox';
 import NearestStops from '../NearestStops';
 import Config from '../../util/Config';
+import style from '../../App.css';
 
 // import ApolloClient from "apollo-boost";
 // import gql from "apollo-boost";
@@ -576,7 +577,9 @@ if (Config.bDebug)
       }
 
     render(props, state) 
-    {      
+    { 
+      let itemStyles = { padding: 0 };
+           
         const search = state.searchstops;
         if (Config.bDebug)
         {
@@ -616,9 +619,12 @@ if (Config.bDebug)
                
             const loading = this.state.loading;
             let loadingComp = null;
-            if (loading && features2 == null)
-               loadingComp = <h3>Ladataan...</h3>;            
-
+            if (loading && state.neareststops == null)
+               loadingComp = <h4 aria-label="Ladataan">Ladataan...</h4>;            
+            else
+            if (!loading && state.neareststops == null)
+               loadingComp = <h4 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h4>;
+            
                /*
             coordinates = feature.geometry.coordinates;
             street = feature.properties.name;            
@@ -632,7 +638,7 @@ if (Config.bDebug)
                 if (edge.node != null && edge.node.place != null && edge.node.place != undefined
                   && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
                return (
-                <li  ><NearStop index={i} stop={edge.node} 
+                <li styles={itemStyles}><NearStop index={i} stop={edge.node} 
                 seeKAllStopTimes={this.state.seeKAllStopTimes}/></li>
                ); 
              } 
@@ -652,15 +658,19 @@ if (Config.bDebug)
 
           //  if (!neareststops)
             this.prev_feature = state.addressfeatures;              
+
+            //   <ul role="listbox" aria-label="reittiehdotuksia" style={style.ul}>
+            //    {this.nearestopsmap}</ul>               
+            // 
+            const divstyle = { padding_left: 0 };
             return (
-                <div data-message="tulokset">
-                <h3>{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
+                <div >
+                <h3 tabIndex="0">{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
                 {features3}
                 <p></p>
-                {loadingComp}
-                {features2}
-                <ul tabindex="0" role="listbox" aria-label="reittiehdotuksia">
-                  {this.nearestopsmap}</ul>
+                <div id="loadingComp1" aria-live="polite">{loadingComp}</div>
+                {features2}              
+                {this.nearestopsmap}
                 </div>
             );
        }

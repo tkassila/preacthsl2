@@ -717,11 +717,15 @@ class RoutePlans extends Component {
         let loadingComp = null;
         let features2 = null;
         let plans = this.state.plans;
+        if (state.bButtonPressed && (!loading && plans != null))
+          loadingComp = <h4 aria-label="Tulokset alla">Tulokset alla.</h4>;
+        else
         if (state.bButtonPressed && (loading && plans == null))
-           loadingComp = <h4>Ladataan...</h4>;
+           loadingComp = <h4 aria-label="Ladataan">Ladataan...</h4>;
         else
         if (state.bButtonPressed && (!loading && plans == null))
-          loadingComp = <h4>Ei tuloksia.</h4>;
+          loadingComp = <h4 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h4>;
+        
         if (Config.bDebug)
           console.log(plans);
         let planitems = null;
@@ -738,14 +742,14 @@ class RoutePlans extends Component {
               return <RoutePlan id={"routeplan" +ind} 
                       index={ind} plan={plan} 
                       showShowAllLegs={state.showShowAllLegs} /> } );
-            features2 = <div data-message="tulosten osoitteet">
-                    <b>{this.state.firstaddress}<space> </space>
+            features2 = <div role="navigation" aria-label="tulosten osoitteet">
+                    <h4 tabIndex="0"><b>{this.state.firstaddress}<space> </space>
                    (pit {this.state.firstaddressfeatures[0].geometry.coordinates[1]}<space> </space> 
-                   lev {this.state.firstaddressfeatures[0].geometry.coordinates[0]}) 
-                   </b><br/><b>{this.state.secondaddress}<space> </space> 
+                   lev {this.state.firstaddressfeatures[0].geometry.coordinates[0]})
+                   </b></h4><h4 tabIndex="0"><b>{this.state.secondaddress}<space> </space> 
                    (pit {this.state.secondaddressfeatures[0].geometry.coordinates[1]}<space> </space>  
                    lev {this.state.secondaddressfeatures[0].geometry.coordinates[0]})
-                   </b><p/></div>;
+                   </b></h4><p/></div>;
             features3 = <Checkbox id="idChecboxShowAllLegs" 
             label="Avaa kaikki reittivaihtoehtojen alakohdat" 
             handleCheckboxChange={this.handleChecboxShowAllLegs} 
@@ -755,7 +759,7 @@ class RoutePlans extends Component {
 
         return (
             <section data-message="Reittisuunnitelma">              
-             <h1>Reittisuunnitelma lähtö- ja tulo-osoitteiden mukaan</h1>
+             <h1 tabIndex="0">Reittisuunnitelma lähtö- ja tulo-osoitteiden mukaan</h1>
              <div onChange={props.selectedDataSource} 
 	 data-message="Tietoja luetaan järjestelmästä valinta">
 	   <fieldset>
@@ -778,9 +782,9 @@ class RoutePlans extends Component {
              {features2}
              {features3}
              <p/>
-             {loadingComp}
-             <div data-message="kyselyn tulokset">
-              <ul>
+             <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
+             <div role="navigation" aria-label="kyselyn tulokset">
+              <ul style={style.ul}>
              {planitems}
              </ul>
              </div>

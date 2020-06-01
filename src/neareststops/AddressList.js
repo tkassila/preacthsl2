@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Fragment, Component } from 'preact';
 import Address from './Address.js'
 import {h } from 'preact';
 import Config from '../util/Config';
@@ -76,9 +76,9 @@ class AddressList extends Component
         if (state.chkbox)
         {
             return (
-                <div data-message="osoitelista" id="div.ListAddresses">
-                    <h3>Annetun osoitteen muita löytyneitä osoitteita</h3>
-                    <input type="checkbox" id="checkbox_id" name="checkbox_id" 
+                <Fragment>
+                    <h3 tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
+                    <input tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id" 
                     aria-label="Näytä osoitelista" 
                     defaultChecked={this.state.chkbox} 
                     onChange={this.handleChangeChk} />
@@ -86,18 +86,18 @@ class AddressList extends Component
                     <div className={!state.chkbox ? 'hidden' : ''}>
                      {addresses}                    
                     </div>           
-               </div>
+               </Fragment>
             );    
         }
         else
             return (
-                <div data-message="osoitelista" id="div.ListAddresses">
-                <h3>Annetun osoitteen muita löytyneitä osoitteita</h3>
-                <input type="checkbox" id="checkbox_id" name="checkbox_id"
+            <Fragment>
+                <h3 tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
+                <input tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id"
                 defaultChecked={this.state.chkbox} 
                 onChange={this.handleChangeChk} />
                 <label htmlFor="checkbox_id">Näytä osoitelista</label>            
-           </div>
+            </Fragment>
             );
     }
 }

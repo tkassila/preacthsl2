@@ -858,25 +858,19 @@ class NearestStops extends Component
         let loading = this.state.loading;
         let bButtonPressed = this.state.buttonpressed;
         if (loading && bButtonPressed)
-               loadingComp = <h3>Ladataan...</h3>;
+               loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ladataan...</h3>;
 
         return (
-            <section data-message="Pysäkit">
-            <h1>Hae pysäkkejä osoitteen mukaan</h1>
+            <section >
+            <h1 tabIndex="0">Hae pysäkkejä osoitteen mukaan</h1>
             <GiveAddress style={style.page} distance={state.distance} 
             addresssselected={this.addresssSelected} address={state.address} 
             stopAddresssSelected={this.stopAddresssSelected}
             disableCancelButton={this.state.disableCancelButton} /> 
-            <div>
            {addresslist}
            {loadingComp}
-           <p/>
-           <div data-message="kyselyn tulokset">
-           <ul tabIndex="0" role="listbox" aria-label="pysäkkilista aikojen kanssa">
-             {searchAndListAddressStops}</ul>
-            </div>
-            </div>
-            </section>
+           <ul style={style.ul}>{searchAndListAddressStops}</ul>
+           </section>
         );
     }
 }

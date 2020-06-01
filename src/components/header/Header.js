@@ -6,11 +6,11 @@ const Header = (props) => (
 	<div>
 	<table className={style.header} alt="Valikko">
 	   <tr><th>
-		<h3 className={style.h1}>Pysäkit tekstitaikatauluiksi</h3>
+	   <h3 className={style.h1} tabIndex="0" >Pysäkit tekstitaikatauluiksi</h3>
 		</th>
-		<th><nav >
-			<Link aria-current="page" className={style.link} href="/" >Pysäkit osoitteen mukaan</Link>
-	    	<Link aria-current="page" className={style.link} href="/routeplan" >Reittisuunnitelma</Link>
+		<th><nav aria-label="pagination" >
+			<a aria-label="Pysäkit osoitteen mukaan" className={style.link} href="/" >Pysäkit osoitteen mukaan</a>
+	    	<a aria-label="Pysäkit osoitteen mukaan" className={style.link} href="/routeplan" >Reittisuunnitelma</a>
    		 </nav>
 		</th></tr>
 		<tr><th> </th></tr>
