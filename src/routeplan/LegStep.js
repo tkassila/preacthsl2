@@ -6,6 +6,11 @@ import NearestStops from '../neareststops/NearestStops';
 import Config from '../util/Config';
 import {useState} from 'preact/hooks'
 
+/**
+ * This is used inside of LegStep component.
+ * 
+ * @param {*} props 
+ */
 function useIntermediateStops(props) {
     const [intermediates, setIntermediates] = useState(null);
 
@@ -40,7 +45,12 @@ function useIntermediateStops(props) {
     return { intermediates };
   }
 
-  
+/**
+ * This fuoncitonal component is used there are lowest data entity under a route
+ * plan.
+ * 
+ * @param {*} props 
+ */
 function LegStep (props) {
   
    /* constructor(props) {

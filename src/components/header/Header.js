@@ -2,6 +2,12 @@ import { h, table, tr, th } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style';
 
+/**
+ * This functional component Header is displaying in header area and are used
+ * for menu like use.
+ * 
+ * @param {*} props 
+ */
 const Header = (props) => (
 	<div>
 	<table className={style.header} alt="Valikko">

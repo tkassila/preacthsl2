@@ -2,9 +2,14 @@ import React, { Component, h, createRef }  from 'preact';
 // import Button from 'preact-material-components/Button';
 import Config from '../util/Config';
 
+/**
+ * This class is given address and distance inputs from user before near (bus) stops.
+ */
 class GiveAddress extends Component 
 {
-    addressfield = createRef();;
+    addressfield = createRef();
+    distanceRef = createRef();
+    timer = null;
  
     constructor(props) {
         super(props);
@@ -17,8 +22,12 @@ class GiveAddress extends Component
                 inputValue: localAddress,
                 inputDistance: localDistance,
                 errordistance: null,
+                addresscoordinateswrong: false,
                 addresses: null
             }
+        this.distanceRef = React.createRef()
+        // this.addressRef = React.createRef()
+
         this.updateInput = this.updateInput.bind(this);
         this.focusInput = this.updateInput.bind(this);
         this.updateDistance = this.updateDistance.bind(this);
@@ -41,11 +50,34 @@ class GiveAddress extends Component
      */
 
     componentWillReceiveProps(nextProps) 
-    {  
+    {
         let localAddress = (nextProps.address != null ? nextProps.address : '');
         let localDistance = (nextProps.distance != null ? nextProps.distance : '');
         if (localDistance == null || localDistance == '')
             localDistance = '800';
+
+       if (Config.bDebug)
+            console.log("componentWillReceiveProps");
+       if (Config.bDebug)
+            console.log("this.state");
+       if (Config.bDebug)
+            console.log(this.state);
+       if (Config.bDebug)
+            console.log("nextProps");
+       if (Config.bDebug)
+            console.log(nextProps);
+
+        if (nextProps.addresscoordinateswrong )
+        {
+            this.setState({errordistance: this.getErrorMsg("Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen.")});
+            /*
+            this.timer = setTimeout(() => {
+                    console.log('Timeout called!');
+                    this.addressfield.current.focus();
+                    clearTimeout(this.timer);
+             }, 4000); 
+             */
+        }
 
         this.setState({
       //      chkbox: false
@@ -69,7 +101,7 @@ class GiveAddress extends Component
         return /^\+?(0|[1-9]\d*)$/.test(str);
     }
 
-    getErrorDistance(msg)
+    getErrorMsg(msg)
     {
         if (msg == null || msg == '')
             return null;
@@ -82,22 +114,48 @@ class GiveAddress extends Component
             console.log("searchaddressss()");
         if (Config.bDebug)
             console.log(this.state);
+
+    this.setState({errordistance: this.getErrorMsg("")});
+    let inputvaluefieldvalue = this.addressfield.current.value;
+
+    if (inputvaluefieldvalue == null ||
+        inputvaluefieldvalue.toString().trim() == '' )
+    {
+        this.setState({errordistance: this.getErrorMsg("Osoite puuttuu tai on tyhjä")});
+        this.timer = setTimeout(() => {
+            console.log('Timeout called!');
+            this.addressfield.current.focus();
+            clearTimeout(this.timer);
+          }, 4000);        
+        return;
+    }
+
     let distance = this.state.inputDistance;
 	if (distance == '')
         distance = '800';
     else
     {
-        this.setState({ errordistance: null });
         let isnan = isNaN(distance);
         if (isnan)
         {
             console.log("isnan");
-            this.setState({errordistance: this.getErrorDistance("Ei ole numero")});
+            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole numero")});
+            this.timer = setTimeout(() => {
+                console.log('Timeout called!');
+                this.distanceRef.current.focus();
+                clearTimeout(this.timer);
+              }, 4000);                        
             return;
         }        
         if (!this.isNormalInteger(distance))
         {
             console.log("!isNormalInteger(distance)");
+            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole kokonaisluku")});
+            this.timer = setTimeout(() => {
+                console.log('Timeout called!');
+                this.distanceRef.current.focus();
+                clearTimeout(this.timer);
+              }, 4000);                        
             return;
         }
         let isgreaterthanzero = parseInt(distance) > 0;
@@ -106,13 +164,19 @@ class GiveAddress extends Component
         if (!isgreaterthanzero)
         {
             console.log("!isgreaterthanzero(distance)");
+            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys: luvun oltava nollaa suurempi")});
+            this.timer = setTimeout(() => {
+                console.log('Timeout called!');
+                this.distanceRef.current.focus();
+                clearTimeout(this.timer);
+              }, 4000);                        
             return;
         }
     }
+
     let inputvalue = this.state.inputValue;   
     // get rigth input control value, if state inputvlaue has a wrong
     // search address value. That's clicked elseware earlier:
-    let inputvaluefieldvalue = this.addressfield.current.value;
     if (inputvaluefieldvalue != null && inputvalue != null 
         && inputvaluefieldvalue !== inputvalue)
         inputvalue = inputvaluefieldvalue;
@@ -149,6 +213,8 @@ class GiveAddress extends Component
              
     render(props, state) { // placeholder="Anna pysäkkien maksimi etäisyys.." 
         let errordistance = state.errordistance; 
+        if (Config.bDebug)
+            console.log("errordistance" +errordistance);
         return (             
             <div data-message="Anna haettavien pysäkkien lähiosoite">
                             <div onChange={props.selectedDataSource} 
@@ -176,7 +242,9 @@ class GiveAddress extends Component
                 <label htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
                 <input type="text" id="distance" name="distance"                     
                     maxlength="70" size="70" onChange={this.updateDistance} 
-                    defaultValue={this.state.inputDistance}/>{errordistance}
+                    defaultValue={this.state.inputDistance}
+                    ref={this.distanceRef}/>
+                    <div id="errordistance1" aria-live="polite">{errordistance}</div>
                     <br/><br/>
                 <button onClick={this.searchaddressss} aria-label="Hae pysäkkejä" >
 

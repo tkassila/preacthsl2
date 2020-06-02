@@ -1,23 +1,17 @@
-import React, {h, Component, createRef } from 'preact';
+import {h, Component, createRef } from 'preact';
 import Config from '../util/Config';
 // import Button from 'preact-material-components/Button';
 
-/**
- * This class are given user input for start and end address for bus route server
- * query.
- */
 class GiveAddresses extends Component 
 {
     addressfield = createRef();
-    targetaddressfield  = createRef();
 
     constructor(props) {
         super(props);
         this.state = {
       //      chkbox: false
             inputValue: '',
-        inputTarget: '',
-        errormsg: null
+	    inputTarget: ''
         }
         this.updateInput = this.updateInput.bind(this);
         this.updateTarget = this.updateTarget.bind(this);
@@ -58,31 +52,13 @@ class GiveAddresses extends Component
     searchroutes() {
         if (Config.bDebug)
         console.log(this.state);
-        let target = this.state.inputTarget;
-        let inputvalue = this.state.inputValue;
-        
-        if (inputvalue == null || inputvalue.toString().trim() == '')
-        {
-            this.setState({errormsg: this.getErrorMsg("Lähtöoosoite puuttuu tai on tyhjä")});
-            this.timer = setTimeout(() => {
-                this.addressfield.current.focus();
-                clearTimeout(this.timer);
-            }, 4000);        
-            return;         
-        }
-        if (target == null ||target.toString().trim() == '')
-        {
-            this.setState({errormsg: this.getErrorMsg("Määränpääsoite puuttuu tai on tyhjä")});
-            this.timer = setTimeout(() => {
-                this.targetaddressfield.current.focus();
-                clearTimeout(this.timer);
-            }, 4000);        
-            return;         
-        }
-
-        if (inputvalue != null && inputvalue != '' &&
-            target != null && target != '')
-                this.props.addresssesselected(inputvalue, target);
+	let target = this.state.inputTarget;
+	if (target == '')
+	    return ;
+	let inputvalue = this.state.inputValue;
+	if (inputvalue != null && inputvalue != '' &&
+        target != null && target != '')
+            this.props.addresssesselected(inputvalue, target);
     }
 
     isNumeric(val) {
@@ -93,17 +69,9 @@ class GiveAddresses extends Component
         this.props.routeAddressesSelected();
     }
 
-    getErrorMsg(msg)
-    {
-        if (msg == null || msg == '')
-            return null;
-        let ret = <div className="error"><space> </space><h3>{msg}</h3></div>;
-        return ret;
-    }
-
      //  <label htmlFor="address">Anna osoite:</label><br/>
              
-    render(props, state) {
+    render(props) {
         return (
             <div data-message="reittiehdotuksen osoitteet">
             <h3>Osoitteet ehdotettavile reiteille:</h3>
@@ -117,9 +85,7 @@ class GiveAddresses extends Component
                 <input type="text" id="targetaddress" name="targetaddress" placeholder="Kirjoita määränpääosoite.." 
                     maxlength="100" size="70" onChange={this.updateTarget} 
                     onFocue={this.focusTarget} 
-                    defaultValue={this.state.inputTarget || ''}
-                    ref={this.targetaddressfield}/>
-                    <div id="errorfield1" aria-live="polite">{state.errormsg}</div><br/>
+                    defaultValue={this.state.inputTarget || ''}/><br/>
                     <br/>
                 <button onClick={this.searchroutes} aria-label="Hae reittejä">
                     

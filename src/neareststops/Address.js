@@ -1,6 +1,9 @@
 import {h , Component} from 'preact';
 import Config from '../util/Config';
 
+/**
+ * This Address class is showing a address.
+ */
 class Address extends Component 
 {
     constructor(props) {        

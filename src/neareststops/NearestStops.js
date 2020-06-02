@@ -10,7 +10,9 @@ import axios from 'axios';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
 
-
+/**
+ * This class is showing controls of the bus stop query and makes query for near stops.
+ */
 class NearestStops extends Component 
 {
     
@@ -108,7 +110,8 @@ class NearestStops extends Component
         fetched: null,
         seeKAllStopTimes: false, 
         neareststops: null,
-        disableCancelButton: true 
+        disableCancelButton: true,
+        addresscoordinateswrong: false
         }
     }
 
@@ -184,6 +187,10 @@ class NearestStops extends Component
         let founded = this.seekRigthAddressFromResponse(response, firstAddress);
         if (Config.bDebug)
             console.log("NearestStops handleResponseData founded: " +founded);
+        if (founded == null || founded != null && !founded)
+        {
+          this.setState({loading: false, addresscoordinateswrong: true})
+        }
         let earlieraddress = null;
 
         while(!founded && firstAddress != null && firstAddress.length > 1 && 
@@ -375,9 +382,9 @@ class NearestStops extends Component
          
          if (Config.bDebug)
             console.log("decodedurl:" +decodedurl  );
-        axios.get(decodedurl)
+       this.setState({ loading: true, addresscoordinateswrong: false });
+       axios.get(decodedurl)
             .then(response => this.handleResponseData(response));
-        this.setState({ loading: true });
     }
 
     addresssSelected = (addressparam, distanceparam) => {
@@ -388,14 +395,14 @@ class NearestStops extends Component
         }
         if (distanceparam == null || distanceparam.trim().length == 0)
             distanceparam = 800;
-            
+       
+            //  loading: true,
         this.setState({
             address: addressparam,
         distance: distanceparam,
-        loading: true,
+       
         searchstops: null,
-        addressfeatures: null,
-        buttonpressed: true
+        addressfeatures: null
         });
 
 
@@ -405,16 +412,19 @@ class NearestStops extends Component
             bSearch = true;
             this.setState({
                 searchstops: bSearch,
+                buttonpressed: true,
                 address: addressparam
             });
             this.makeGetQuery(addressparam, distanceparam);
         } 
         if (Config.bDebug) 
             console.log("bSearch2");
-            
+       
+            /*
         this.setState({
             loading: false
             });
+            */
             
       }
 
@@ -851,14 +861,24 @@ class NearestStops extends Component
             addresssselected={this.addresssSelected} 
             coordinateschanged={this.coordinateschanged}
             latitude={state.latitude} longitude={state.longitude}
-            neareststops={state.neareststops}
+            neareststops={state.neareststops} 
             />;
 
         let loadingComp = null;
         let loading = this.state.loading;
         let bButtonPressed = this.state.buttonpressed;
-        if (loading && bButtonPressed)
-               loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ladataan...</h3>;
+        if (loading == false && bButtonPressed && searchAndListAddressStops != null)
+           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Tulokset alla.</h3>;
+        else
+        if (loading && bButtonPressed && searchAndListAddressStops == null)
+           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ladataan...</h3>;
+        else        
+        if (loading == false && bButtonPressed && state.addresscoordinateswrong
+           && searchAndListAddressStops == null)
+           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</h3>;
+        else        
+        if (loading == false && bButtonPressed && searchAndListAddressStops == null)
+           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ei tuloksia.</h3>;
 
         return (
             <section >
@@ -866,9 +886,10 @@ class NearestStops extends Component
             <GiveAddress style={style.page} distance={state.distance} 
             addresssselected={this.addresssSelected} address={state.address} 
             stopAddresssSelected={this.stopAddresssSelected}
-            disableCancelButton={this.state.disableCancelButton} /> 
+            disableCancelButton={this.state.disableCancelButton}
+            addresscoordinateswrong={state.addresscoordinateswrong} /> 
            {addresslist}
-           {loadingComp}
+           <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
            <ul style={style.ul}>{searchAndListAddressStops}</ul>
            </section>
         );

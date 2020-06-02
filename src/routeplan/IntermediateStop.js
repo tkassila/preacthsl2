@@ -6,6 +6,12 @@ import NearestStops from '../neareststops/NearestStops';
 import StaticFunctions from '../util/StaticFunctions';
 import Config from '../util/Config';
 
+/**
+ * This class is used when showing an intermediate stop under a route plan and 
+ * under a stop.
+ * 
+ * @param {*} props 
+ */
 function IntermediateStop(props) {
         /*
         if (this.props && this.props.legClicked != null)

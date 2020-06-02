@@ -14,6 +14,9 @@ import style from '../../App.css';
 // import { url } from 'inspector';
 // import { type } from 'os';
 
+/**
+ * This class used to show and query user intputs before query bus stops.
+ */
 class SearchAndListAddressStops extends Component 
 {
    // address_search_url = "https://api.digitransit.fi/geocoding/v1/search?text=";
@@ -45,7 +48,7 @@ class SearchAndListAddressStops extends Component
             seeKAllStopTimes: false,
             uncheckCheckBox: false,
             distance: props.distance,
-            alladdresses: props.alladdresses,
+            alladdresses: props.alladdresses,          
             loading: false
         }
      
@@ -67,7 +70,7 @@ class SearchAndListAddressStops extends Component
       //  this.makeGetQuery();
     }
 
-    shouldComponentUpdate(nextProps, nextState) { 
+    shouldComponentUpdate(nextProps, nextState) {      
       return true;
     }
 
@@ -480,7 +483,7 @@ if (Config.bDebug)
                 {
                     bExactAdressFound = true;
                     if (Config.bDebug)
-                    console.log("bExactAdressFound:" +bExactAdressFound);
+                      console.log("bExactAdressFound:" +bExactAdressFound);
                     break;
                 }
             } 
@@ -578,7 +581,7 @@ if (Config.bDebug)
 
     render(props, state) 
     { 
-      let itemStyles = { padding: 0 };
+        let itemStyles = { padding: 0 };
            
         const search = state.searchstops;
         if (Config.bDebug)

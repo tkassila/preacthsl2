@@ -3,6 +3,9 @@ import Address from './Address.js'
 import {h } from 'preact';
 import Config from '../util/Config';
 
+/**
+ * This class component is showing a list of addresses.
+ */
 class AddressList extends Component 
 {
     constructor(props) {

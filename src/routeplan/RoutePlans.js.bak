@@ -11,9 +11,6 @@ import style from '../App.css';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
 
-/**
- * This class is used to show routeplans and makes querie to the server for.
- */
 class RoutePlans extends Component {
 
     address_search_url = NearestStops.getHslBaseUrl() +"geocoding/v1/search?text=";
@@ -21,6 +18,10 @@ class RoutePlans extends Component {
     addresstargetdata = null;
     abortController = null;
     abortSignal = null;
+
+    addressfield = createRef();
+    targetfield = createRef();
+    timer = null;
 
     constructor(props) {
         super(props);
@@ -60,8 +61,7 @@ class RoutePlans extends Component {
             firstaddress: null,
             secondaddress: null,
             firstaddressfeatures: null,
-            secondaddressfeatures: null,
-            addresscoordinateswrong: false
+            secondaddressfeatures: null
         }
     }
 
@@ -140,8 +140,7 @@ class RoutePlans extends Component {
             console.log("url:" +test  );
            let decodedurl = this.address_search_url +encodeURIComponent(addressparam);
            if (Config.bDebug)
-            console.log("decodedurl:" +decodedurl  );            
-          this.setState({addresscoordinateswrong: false});
+            console.log("decodedurl:" +decodedurl  );
           let response = await axios.get(decodedurl);
           if (Config.bDebug)
           {
@@ -149,10 +148,7 @@ class RoutePlans extends Component {
             console.log(response);
           }
           if (response == null)
-          {
-            this.setState({addresscoordinateswrong: true});
             return;
-          }
           this.handleResponseData(response, "address", addressparam);
 
           this.addressresponse = null;
@@ -233,8 +229,7 @@ class RoutePlans extends Component {
                       bExactAdressFound = true;
                       found_address = street;
                       found_feature = feature; 
-                      if (Config.bDebug)    
-                        console.log("bExactAdressFound:" +bExactAdressFound);
+                      console.log("bExactAdressFound:" +bExactAdressFound);
                       continue;
                   }
               } 
@@ -270,8 +265,7 @@ class RoutePlans extends Component {
 
            if (!bExactAdressFound)
            {
-            if (Config.bDebug)
-              console.log("returning false");
+            console.log("returning false");
             if (this.state.firstaddress == null)
                 this.setState({firstaddress: address});
               else
@@ -289,8 +283,7 @@ class RoutePlans extends Component {
                 address: found_address,
                 alladdresses: alladdresses
             };
-            if (Config.bDebug)
-              console.log("returning returneddata");
+            console.log("returning returneddata");
             // this.setState({"returneddata": returneddata });
            return returneddata;
       }
@@ -362,7 +355,6 @@ class RoutePlans extends Component {
     
          if (found == null)
          {
-            this.setState({addresscoordinateswrong: true});
             console.log("<= RoutePlans handleResponseData founded not founded: ");
             return;
          }
@@ -729,9 +721,6 @@ class RoutePlans extends Component {
         let loadingComp = null;
         let features2 = null;
         let plans = this.state.plans;
-        if (state.addresscoordinateswrong == true)
-          loadingComp = <h4 aria-label="Tulokset alla">Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja.</h4>;
-        else
         if (state.bButtonPressed && (!loading && plans != null))
           loadingComp = <h4 aria-label="Tulokset alla">Tulokset alla.</h4>;
         else

@@ -2,7 +2,7 @@ import { Component } from 'preact';
 
 class Config extends Component {
 
-    static bDebug = true;
+    static bDebug = false;
 
     /*
     static HSLLSERVICEURI = {

@@ -1,5 +1,10 @@
 import React, { p, Component } from 'preact';
 
+/**
+ * This class is used to show a bus stop or like that.
+ * 
+ * @param {*} props 
+ */
 function StopTime(props) {
 { 
         let ret = null; // role="option"

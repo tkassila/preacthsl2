@@ -3,6 +3,9 @@ import React, { Component } from 'preact';
 
 import Config from '../util/Config';
 
+/**
+ * This Checkbox class is a checkbox component of the app.
+ */
 class Checkbox extends Component {
   state = {
     isChecked: false,

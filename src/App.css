@@ -97,11 +97,12 @@ section {
 	width: 100%;
 }
 
-
+/*
  ul {
 	margin: 0;
 	padding-left: 0;
 }
+*/
 
 label {
 	font-size: 18px;
@@ -126,3 +127,7 @@ input[type="text"]
 }
 
 a {font-size: 16px}
+
+div {font-size: 16px}
+
+li {font-size: 16px}
