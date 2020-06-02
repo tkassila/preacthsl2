@@ -12,7 +12,7 @@ The application is made by preact 10.4.4 library. The preact is like a js react 
 Installing
 
 When (1) npm and node are installed on a (web) server, (2) install this repo on your server, (3) then install the app by command: 'npm install' on project repo root direcotry. (4) Start a gateway server from a 'reacthslserver' directory by command: 'node server.js'. (5) On another prompt, the server app for a developer is started by 'npm run dev' command. 
-(6) The deploy package is done by command: npm run build. (7) install and start the js application/server normally.
+(6) The deploy package is done by command: npm run build. (7) if you have deployed (6), then install and start the js application/server normally.
 
 Config.js file contais by ex. a gateway address definition. And reacthslserver directory constains that gateway server made by node server. It is started by command: node server.js <enter>. If you may change Config.js file url or/and port,
 then change also server.js file also.
