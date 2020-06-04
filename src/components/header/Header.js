@@ -16,7 +16,7 @@ const Header = (props) => (
 		</th>
 		<th><nav aria-label="pagination" >
 			<a aria-label="Pysäkit osoitteen mukaan" className={style.link} href="/" >Pysäkit osoitteen mukaan</a>
-	    	<a aria-label="Pysäkit osoitteen mukaan" className={style.link} href="/routeplan" >Reittisuunnitelma</a>
+	    	<a aria-label="Reittisuunnitelma" className={style.link} href="/routeplan" >Reittisuunnitelma</a>
    		 </nav>
 		</th></tr>
 		<tr><th> </th></tr>

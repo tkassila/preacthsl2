@@ -214,6 +214,21 @@ static getSecondsIntoMinutes(seconds)
     return mins;
 }
 
+
+static trimMidleSpacies(value)
+{
+   if (value == null)
+      return null;
+   let ind = value.lastIndexOf(" ");
+   if (ind == -1)
+      return value;
+    while (/\s{2,}/i.test(value))
+    {
+        value = value.replace(/\s{2,}/i, ' ');
+    }
+   return value.replace(/\s{2,}/i, ' ');
+}
+
 }
 
 

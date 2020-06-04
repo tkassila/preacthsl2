@@ -3,6 +3,7 @@ import NearestStops from '../neareststops/NearestStops';
 import GiveAddresses from './GiveAddresses';
 import RoutePlan from './RoutePlan';
 import Checkbox from '../components/Checkbox';
+import StaticFunctions from '../util/StaticFunctions';
 
 //import AddressList from '../neareststops/AddressList';
 //import SearchAndListAddressStops from '../neareststops/searchstops/SearchAndListAddressStops';
@@ -73,7 +74,6 @@ class RoutePlans extends Component {
   componentDidMount() {
     // document.title = “Pysäkit”;
   }
-  
 
     addresssesSelected = (addressparam, targetparam) => {
       if (Config.bDebug)
@@ -82,8 +82,10 @@ class RoutePlans extends Component {
           console.log("Routeplan addresssesSelected.targetparam=" +targetparam);
       }
 
+      targetparam = StaticFunctions.trimMidleSpacies(targetparam);
+      addressparam = StaticFunctions.trimMidleSpacies(addressparam);
       this.setState({secondaddress: targetparam, 
-                     firstaddress: addressparam})
+                     firstaddress: addressparam });
 
       /*
       this.setState({

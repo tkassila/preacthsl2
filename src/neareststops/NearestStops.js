@@ -9,7 +9,7 @@ import axios from 'axios';
 // import { withApollo } from 'react-apollo';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
-
+import StaticFunctions from '../util/StaticFunctions';
 /**
  * This class is showing controls of the bus stop query and makes query for near stops.
  */
@@ -373,6 +373,7 @@ class NearestStops extends Component
             this.setState( { addressfeatures: null } );
             return;
         }
+      
         if (Config.bDebug)
             console.log("NearestStops makeGetQuery before: axios:" );
         const test = this.address_search_url +addressparam;
@@ -395,6 +396,8 @@ class NearestStops extends Component
         }
         if (distanceparam == null || distanceparam.trim().length == 0)
             distanceparam = 800;
+           
+        addressparam = StaticFunctions.trimMidleSpacies(addressparam);
        
             //  loading: true,
         this.setState({

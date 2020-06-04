@@ -126,7 +126,7 @@ class RoutePlan extends Component {
          if (leg == null)
             return null;
         if (Config.bDebug)
-            console.log("not null"); // href={"routeplan" +this.props.id}
+             console.log("not null"); // href={"routeplan" +this.props.id}
         let planlink = <a id={"planlink" +this.props.id} href=""
             onClick={this.planClicked}>{legname} Lähtöaika {starttime} Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
         if (Config.bDebug)

@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import NearestStops from '../neareststops/NearestStops';
 
 class Config extends Component {
 
@@ -33,7 +34,14 @@ class Config extends Component {
       this.state = {          
 
       }
-      this.hsl_baseurl = Config.HSL_LOCAL_WEBADDRESS +Config.HSL_LOCAL_PORT +Config.HSL_LOCAL_WEBURI_END;
+      let basewebaddress = NearestStops.getHslBaseUrl();
+      if (basewebaddress == null)
+      {
+        console.log("Config.js: NearestStops.getHslBaseUrl() is null!")
+        this.hsl_baseurl = Config.HSL_LOCAL_WEBADDRESS +Config.HSL_LOCAL_PORT +Config.HSL_LOCAL_WEBURI_END;
+      }
+      else
+        this.hsl_baseurl = basewebaddress; 
     }
   
     render() {
