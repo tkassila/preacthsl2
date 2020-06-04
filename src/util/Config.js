@@ -43,7 +43,7 @@ class Config extends Component {
       else
         this.hsl_baseurl = basewebaddress; 
     }
-  
+
     render() {
       return (
         <div>

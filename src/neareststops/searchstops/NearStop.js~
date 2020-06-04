@@ -1,0 +1,416 @@
+import React, { Component } from 'react';
+import axios from 'axios';
+import NearestStops from '../NearestStops';
+
+class NearStop extends Component 
+{
+    hsl_baseurl = null;
+    address_search_url = null;
+  
+    constructor(props) {
+        super(props);
+        console.log("NearStop constructor(props)");
+        console.log(this.props);
+        this.hsl_baseurl = NearestStops.getHslBaseUrl();
+        this.address_search_url = this.hsl_baseurl +"geocoding/v1/search?text=";
+        
+        this.state = {
+            linkclicked: false,
+            stop: this.props.stop
+        }
+     
+        if (this.props.client)
+        {
+            this.client = this.props.client;
+            console.log("NearStop this.props.client");
+        }
+
+        if (this.client)
+        console.log("client=" +this.client);
+    else
+        console.log("null: client" );
+
+      //  this.makeGetQuery();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        /*
+        if (this.props.address !== nextProps.address) {
+          this.setState({address: nextProps.address});
+        }
+        */
+     }
+
+     makeApolloCallForNearestStopTimes(stopid)
+    {
+        console.log("NearStop makeApolloCallForNearestStopTimes 1 1" );
+        console.log(stopid);
+        let coordinates = null;
+
+        const options = {
+        method: 'POST',
+            data: `{
+		{
+  stop(id: "` +stopid +`") {
+    name
+    lat
+    lon
+    wheelchairBoarding
+    stoptimesWithoutPatterns(omitNonPickups: true, numberOfDepartures: 10) {
+      scheduledArrival
+      realtimeArrival
+      arrivalDelay
+      scheduledDeparture
+      realtimeDeparture
+      departureDelay
+      timepoint
+      realtime
+      realtimeState
+      pickupType
+      dropoffType
+      serviceDay
+      stopHeadsign
+      headsign
+      trip {
+        gtfsId
+        routeShortName
+      }
+    }
+  }
+}`,
+    // credentials: 'include',
+    headers: { "Content-Type": "application/graphql"}
+  };
+  
+  let data = `{ stop(id: "HSL:1040129") {
+    name
+    lat
+    lon
+    wheelchairBoarding
+  }  
+}`;
+  // let body = JSON.stringify(data);
+  let body1 = `nearest(lat: 60.19414, lon: 25.02965, maxResults: 3, 
+    trrt
+  dddd
+  }`;
+  let longitude = 0;
+  let latitude = 0;
+  
+  let body = `{
+  stop(id: "` +stopid.toUpperCase() +`") {
+    name
+    lat
+    lon
+    wheelchairBoarding
+       stoptimesWithoutPatterns(omitNonPickups: true, numberOfDepartures: 10) {
+      scheduledArrival
+      realtimeArrival
+      arrivalDelay
+      scheduledDeparture
+      realtimeDeparture
+      departureDelay
+      timepoint
+      realtime
+      realtimeState
+      pickupType
+      dropoffType
+      serviceDay
+      stopHeadsign
+      headsign
+      trip {
+        gtfsId
+        routeShortName
+      }
+    }
+  }
+  }`;
+	    
+  console.log("body");
+  console.log(body);
+
+  // http://localhost:8080/hsl/geocoding/v1/search
+  /*
+  fetch( this.hsl_baseurl +'routing/v1/routers/hsl/index/graphql', {
+    method: 'POST',
+    */
+ //   headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
+  /*  body: body })
+    .then(response => { return response.json();})
+    .then(responseData => {console.log(responseData.data); return responseData.data;})
+    .then(data => { 
+      console.log("data");
+      console.log(data); }
+      )
+    .catch((error) => {
+        console.error("error");
+        console.error(error);
+    });
+    */
+
+	console.log("body2");
+	console.log(body);
+	
+   fetch( this.hsl_baseurl +'routing/v1/routers/hsl/index/graphql', {
+    method: 'POST',
+    headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
+    body: body })
+    .then(response => { return response.json();})
+    .then(responseData => {console.log(responseData.data); return responseData.data;})
+    .then(data => { 
+      console.log("data");
+	console.log(data);
+	let stoptimes = data.stop.stoptimesWithoutPatterns;
+      this.setState("neareststops", stoptimes) }
+      )
+    .catch((error) => {
+        console.error("error");
+        console.error(error);
+    });
+  
+/*
+        fetch('http://localhost:8080/hsl/graphql/hsl', {
+            method: 'post',
+            headers: {"Content-Type": "application/graphql"},
+            body: `{ stop(id: "HSL:1040129") {
+                name
+                lat
+                lon
+                wheelchairBoarding
+              }  
+            }`}
+            ).then((response) => response.json())
+           .then((responseJson) => {
+            console.error("responseJson");
+             return responseJson;
+           })
+           .catch((error) => {
+            console.error("responseJson error");
+             console.error(error);
+           } );     
+          */
+
+           console.log("makeApolloCallForNearestStops 3" );
+    }
+
+     makeApolloCallForNearestStops2(addressfeatures)
+     {
+        console.log("makeApolloCallForNearestStops 2 1" );
+        if (!addressfeatures)
+            return;
+
+            console.log("makeApolloCallForNearestStops before http CALL");
+
+        // this.client.setUrl("https://api.digitransit.fi/graphql/hsl");
+        /*
+        this.client
+            .query({
+            query: gql`
+            {
+                stopsByRadius(lat:60.201706,lon:24.918506,radius:500) {
+                  edges {
+                    node {
+                      stop { 
+                        gtfsId 
+                        name
+                      }
+                      distance
+                    }
+                  }
+                }
+            }        `
+        })
+      .then(result => console.log(result));
+      */
+
+      /*
+     axios.post('https://api.digitransit.fi/graphql/hsl', { query: `{ 
+        stopsByRadius(lat:60.201706,lon:24.918506,radius:1500) {
+          edges {
+            node {
+              stop { 
+                gtfsId 
+                name
+              }
+              distance
+            }
+          }
+        }
+      }`,
+      headers: { 'Content-Type': 'application/graphql' } })
+      .then(function (response) {
+        console.log("response");
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log("error");  
+        console.log(error);
+      });
+      */
+
+     var xhr = new XMLHttpRequest()
+     //xhr.open("POST", 'https://api.digitransit.fi/graphql/hsl'  )
+     xhr.open("POST", 'http://localhost:8080/hsl/graphql/hsl'  )
+     xhr.setRequestHeader('Content-Type', 'application/graphql' );
+     xhr.withCredentials = false;
+     xhr.onload = function(e){
+        console.log("onload=>");
+       if (xhr.readyState === 4){
+         if (xhr.status === 200){
+            console.log("onload 1 =>");
+           var data = JSON.parse(xhr.response);
+           console.log("onload 2 =>");
+           console.log("onload 3 data => " +data);
+           /*
+           this.setState({
+             story: story,
+             storyLength: story.length,
+             currentChapter: story[0]
+           })
+           */
+         } else {
+           console.error(xhr.statusText)
+         }
+       }
+     }; // .bind(this);
+ 
+     xhr.onprogress = function () {
+        console.log('LOADING', xhr.status);
+    };
+  
+    xhr.onerror = function(e){
+       console.error(xhr.statusText)
+     };
+
+     console.log("makeApolloCallForNearestStops before http CALL 2");
+
+     xhr.send( `{ 
+        stopsByRadius(lat:60.201706,lon:24.918506,radius:1500) {
+          edges {
+            node {
+              stop { 
+                gtfsId 
+                name
+              }
+              distance
+            }
+          }
+        }
+      }`);
+    
+
+    console.log("makeApolloCallForNearestStops AFTER  http CALL");
+    }
+
+    /*
+    componentDidMount() {
+        this.makeGetQuery();
+    }
+    */
+
+    getNeareststoptimes(neareststops)
+    {
+	let ret = neareststops.map(stoptime => {
+                        return <StopTime stoptime={stoptime} />
+        });
+	return ret;
+    }
+	
+    handleResponseData(response)
+    {
+            let i = 0;
+            let bSearch = false;
+            const features = response.data.features;
+            let feature, coordinates, street;
+            let bExactAdressFound = false;
+
+            for (i in features) {
+                feature = features[i];
+                coordinates = feature.geometry.coordinates;
+                street = feature.properties.name;            
+                console.log("coordinates:" +coordinates);
+                console.log("street:" +street);
+                if (street != null && street.toString() == this.props.address.toString())
+                {
+                    bExactAdressFound = true;
+                    console.log("bExactAdressFound:" +bExactAdressFound);
+                    break;
+                }
+            } 
+
+            if (bExactAdressFound)
+            {
+                console.log("bExactAdressFound2:" +bExactAdressFound);
+                let addressfeature = new Object();
+               if (this.props.address.length > 0)
+                    bSearch = true;
+                let afeatures = [ feature ];
+                coordinates = feature.geometry.coordinates;
+                street = feature.properties.name;
+                this.setState({ searchstops: bSearch });
+                this.setState( { addressfeatures: afeatures } );
+            }
+            else
+            {
+                console.log("features for 2:");
+                /*
+                for (i in features) {
+                    feature = features[i];
+                    coordinates = feature.geometry.coordinates;
+                    street = feature.properties.name;            
+                    console.log("coordinates:" +coordinates);
+                    console.log("street:" +street);
+                }     
+                */
+                if (this.props.address.length > 0)
+                    bSearch = true;
+                this.setState({ searchstops: bSearch });
+                this.setState( { addressfeatures: features } );
+       
+            }
+            //console.log(coordinates);
+         //   this.render();
+    }
+
+      astopClicked = (event) => {  
+          event.preventDefault();
+          console.log("stopClicked");
+          console.log(event.target);
+            console.log("href");
+            var href = event.target.href;
+            console.log(href);  
+            let bvalue = this.state.linkclicked;
+            console.log("bvalue");  
+            console.log(bvalue);
+            this.makeApolloCallForNearestStopTimes(href);
+            this.setState({linkclicked: !bvalue});    
+    }
+
+    render() {
+        const linkclicked = this.state.linkclicked;
+     // const features2 = this.state.addressfeatures;        
+     if (!linkclicked)
+            return ( 
+                <div>
+                <a id={this.state.stop.place.gtfsId} href={this.state.stop.place.gtfsId} onClick={this.astopClicked}>Pysäkki {this.state.stop.place.code} {this.state.stop.place.name} Etäisyys {this.state.stop.distance}</a>
+                </div>
+            );
+	else
+	{
+	    const neareststops = this.state.neareststops;
+	    const neareststoptimes = null;
+	    if (neareststops)		
+		neareststoptimes = getNeareststoptimes(neareststops);
+	    
+         return ( 
+            <div>
+            <a id={this.state.stop.place.gtfsId} href={this.state.stop.place.gtfsId} onClick={this.astopClicked}>Pysäkki {this.state.stop.place.code} {this.state.stop.place.name} Etäisyys {this.state.stop.distance}</a>
+		 {neareststoptimes}
+            </div>
+         );
+	}
+
+    }
+}
+
+export default  NearStop;

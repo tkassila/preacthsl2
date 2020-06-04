@@ -64,7 +64,6 @@ class NearestStops extends Component
         super(props);
         if (Config.bDebug)
           console.log("NearestStops constructor");
-        NearestStops.localHSLUri = Config.HSLLSERVICEURI_HSL;
 
         if (this.props.client != null)
             this.client = this.props.client;
@@ -373,6 +372,8 @@ class NearestStops extends Component
             this.setState( { addressfeatures: null } );
             return;
         }
+        console.log("makeGetQuery:addressparam");
+        console.log(addressparam);
       
         if (Config.bDebug)
             console.log("NearestStops makeGetQuery before: axios:" );

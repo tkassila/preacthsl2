@@ -82,10 +82,8 @@ class RoutePlans extends Component {
           console.log("Routeplan addresssesSelected.targetparam=" +targetparam);
       }
 
-      targetparam = StaticFunctions.trimMidleSpacies(targetparam);
-      addressparam = StaticFunctions.trimMidleSpacies(addressparam);
-      this.setState({secondaddress: targetparam, 
-                     firstaddress: addressparam });
+      this.setState({secondaddress: StaticFunctions.trimMidleSpacies(targetparam), 
+                     firstaddress: StaticFunctions.trimMidleSpacies(addressparam)});
 
       /*
       this.setState({

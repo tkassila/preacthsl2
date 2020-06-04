@@ -226,7 +226,14 @@ static trimMidleSpacies(value)
     {
         value = value.replace(/\s{2,}/i, ' ');
     }
-   return value.replace(/\s{2,}/i, ' ').trim();
+   return value.replace(/\s{2,}/i, ' ');
+}
+
+static getSpaceBeforeOf(space, obj)
+{
+  if (obj == null)
+    return null;
+  return ' ' +obj;
 }
 
 }

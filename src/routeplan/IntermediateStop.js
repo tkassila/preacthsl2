@@ -44,6 +44,8 @@ function IntermediateStop(props) {
          href={NearestStops.getPDFURL()+ NearestStops.localHSLUri +"/stops/" +
          NearStop.getStopIdAfterStartID(props.legdata.gtfsId) +".pdf"}>
              (Avaa aikataulu pdf)</a>;
+//        else
+  //          openpdflink = '';
 
         let opentimetablelink = null;
         if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
@@ -55,6 +57,8 @@ function IntermediateStop(props) {
             opentimetablelink = <a target="_blank" id={"open" +props.legdata.gtfsId}
             href={"https://opas.matka.fi/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
             (Avaa kartta-aikataulu sivu)</a>;
+    //    else
+     //       opentimetablelink = '';
 
        let legname = props.legdata.mode;
        let starttime = null;
@@ -65,9 +69,9 @@ function IntermediateStop(props) {
        
            //<div id={"istopslinkdiv"+props.legdata.id} data-message="välipysäkki">
         let showtext = this.props.legdata.name +" Lähtöaika "+ starttime +" " +
-                        props.legdata.desc;
+                        ( props.legdata.desc != null ? props.legdata.desc : '');
        return (<div><li id="" tabIndex="0" auto-label={showtext}>
-       <b>{showtext}</b></li>&nbsp;&nbsp; {openpdflink} &nbsp;&nbsp;
+       <b>Kissa {showtext}</b></li>{openpdflink}{(openpdflink != null ? ' ' : null)} 
         {opentimetablelink}</div>
        );
 }
