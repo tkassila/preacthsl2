@@ -214,6 +214,7 @@ class NearestStops extends Component
 
         if (!founded)
         {
+          if (Config.bDebug)
             console.log("<= NearestStops handleResponseData founded: " +founded);
             this.setState({ fetched: new Date(), addressfeatures: null});
             return;
@@ -372,9 +373,11 @@ class NearestStops extends Component
             this.setState( { addressfeatures: null } );
             return;
         }
-        console.log("makeGetQuery:addressparam");
-        console.log(addressparam);
-      
+        if (Config.bDebug)
+        {
+          console.log("makeGetQuery:addressparam");
+          console.log(addressparam);
+        }      
         if (Config.bDebug)
             console.log("NearestStops makeGetQuery before: axios:" );
         const test = this.address_search_url +addressparam;

@@ -110,8 +110,9 @@ function LegStep (props) {
             if (Config.bDebug)
                 console.log("-LegStep:intermediateStops" +intermediateStops);
 
-            if (intermediateStops != null)
-            console.log("-LegStep:intermediateStops nro" +intermediateStops.length);
+            if (Config.bDebug && intermediateStops != null)
+                console.log("-LegStep:intermediateStops nro" +intermediateStops.length);
+
                 if (intermediateStops !== null)        
                 {
                     let showedtext = starttime +" "+ StaticFunctions.getLegName(props.legdata) +

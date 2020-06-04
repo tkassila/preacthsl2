@@ -229,7 +229,7 @@ static trimMidleSpacies(value)
    return value.replace(/\s{2,}/i, ' ');
 }
 
-static getSpaceBeforeOf(space, obj)
+static getSpaceBeforeOf(obj)
 {
   if (obj == null)
     return null;

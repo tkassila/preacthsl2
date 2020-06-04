@@ -71,7 +71,7 @@ function IntermediateStop(props) {
         let showtext = this.props.legdata.name +" Lähtöaika "+ starttime +" " +
                         ( props.legdata.desc != null ? props.legdata.desc : '');
        return (<div><li id="" tabIndex="0" auto-label={showtext}>
-       <b>Kissa {showtext}</b></li>{openpdflink}{(openpdflink != null ? ' ' : null)} 
+       <b>{showtext}</b></li>{openpdflink}{(openpdflink != null ? ' ' : null)} 
         {opentimetablelink}</div>
        );
 }

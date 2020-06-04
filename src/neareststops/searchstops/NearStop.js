@@ -156,10 +156,14 @@ class NearStop extends Component
     }
   }
   }`;
-	    
-  console.log("body");
-  console.log(body);
-
+      
+  
+  if (Config.bDebug)
+  {
+    console.log("body");
+    console.log(body);
+  }
+  
   // http://localhost:8080/hsl/geocoding/v1/search
   /*
   fetch( this.hsl_baseurl +'routing/v1/routers/hsl/index/graphql', {
@@ -228,6 +232,7 @@ class NearStop extends Component
            } );     
           */
 
+         if (Config.bDebug)
            console.log("makeApolloCallForNearestStops 3" );
     }
 
