@@ -226,7 +226,7 @@ static trimMidleSpacies(value)
     {
         value = value.replace(/\s{2,}/i, ' ');
     }
-   return value.replace(/\s{2,}/i, ' ');
+   return value.replace(/\s{2,}/i, ' ').trim();
 }
 
 }
