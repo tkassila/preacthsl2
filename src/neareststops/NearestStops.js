@@ -35,7 +35,7 @@ class NearestStops extends Component
     {
         let hsl_baseurl = null;
         if (window.location.origin) {
-            hsl_baseurl = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':8080/hsl/' : ':8080/hsl/');
+            hsl_baseurl = window.location.protocol + "//" + window.location.hostname + (window.location.port ? Config.HSL_LOCAL_PORT +'/hsl/' : Config.HSL_LOCAL_PORT +'/hsl/');
             if (Config.bDebug)
             {
                 console.log("hsl_baseurl");
@@ -542,6 +542,7 @@ class NearestStops extends Component
                 gtfsId
                 code
                 desc
+                vehicleType
                 locationType              
               }
               ...on BikePark {
@@ -699,6 +700,7 @@ class NearestStops extends Component
                 gtfsId
                 code
                 desc
+                vehicleType
                 locationType              
               }
               ...on BikePark {

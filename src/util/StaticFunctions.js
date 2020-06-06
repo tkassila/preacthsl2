@@ -1,4 +1,5 @@
 import { Component  } from 'preact';
+import Config from './Config';
 
 class StaticFunctions  extends Component {
 
@@ -51,7 +52,12 @@ class StaticFunctions  extends Component {
                 return "RAIL";            
                 break;
             default:
+                {
+                    console.log("getRouteType");
+                    console.log("default typevalue = unknown value:");
+                    console.log(typevalue);
                     return typevalue;
+                }                    
 
         }
     }
@@ -63,51 +69,56 @@ class StaticFunctions  extends Component {
             case "WALK":
                 return "Kävely";
                 break;
-                case "AIRPLANE":
+            case "AIRPLANE":
                     return "Lentokone";
                     break;
-                case "BICYCLE":
+            case "BICYCLE":
                      return "Polkupyörä";
                      break;
-                case "AIRPLANE":
+            case "AIRPLANE":
                      return "Lentokone";
                      break;
-                case "BUS":
+            case "BUS":
                      return "Bussi";
                      break;
-                case "CABLE_CAR":
+            case "CABLE_CAR":
                      return "Kaapeliauto";
                      break;
-                case "CAR":
+            case "CAR":
                     return "Auto";
                     break;
-                case "FERRY":
+            case "FERRY":
                     return "Lautta";
                     break;
-                case "FUNICULAR":
+            case "FUNICULAR":
                     return "Köysirata";
                     break;
-                case "GONDOLA":
+            case "GONDOLA":
                     return "Gondoli";
                     break;
-                case "RAIL":
+            case "RAIL":
                     return "Rautatie";
                     break;
-               case "SUBWAY":
+            case "SUBWAY":
                     return "Metro";
                     break;
-                case "TRAM":
+            case "TRAM":
                     return "Raitiovaunu";
                     break;
-                case "TRANSIT":
+            case "TRANSIT":
                     return "Ylikulku, kauttakulku";
                     break;
-                case "LEG_SWITCH":
+            case "LEG_SWITCH":
                     return "";
                     break;
                     
                default:
-                    return mode;
+                {
+                    console.log("getTransportMode");
+                    console.log("default value = unknown value:");
+                    console.log(mode);
+                    return '';
+                }
          }
     }
 
@@ -125,6 +136,28 @@ class StaticFunctions  extends Component {
         return StaticFunctions.getTransportMode(name);
     }
 
+    
+    static getLegVehicleType(leg)
+    {
+        if (leg === null)
+            return "";
+
+        if (Config.bDebug)
+        {
+            console.log("getLegVehicleType");
+            console.log("leg");
+            console.log(leg);        
+        }
+        
+        let type = leg.vehicleType;
+        if (type != null)
+        {
+            return StaticFunctions.getTransportMode(
+                StaticFunctions.getRouteType(type));
+        }
+        
+        return '';
+    }
     static getRoundedMeterDistance(distance)
     {
         if (isNaN(distance))

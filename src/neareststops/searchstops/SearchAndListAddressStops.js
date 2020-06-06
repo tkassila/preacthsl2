@@ -221,6 +221,7 @@ class SearchAndListAddressStops extends Component
               gtfsId
               code
               desc
+              vehicleType
               locationType              
             }
             ...on BikePark {

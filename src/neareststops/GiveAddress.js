@@ -90,10 +90,25 @@ class GiveAddress extends Component
     }
 
     updateInput(event){
-        this.setState({inputValue : event.target.value})
+        let value = event.target.value;
+        if (value != null && value.trim() != "")
+            this.setState({errordistance: null});
+        this.setState({inputValue : value})
     }
     
+    focusInput(event){
+        if (Config.bDebug)
+        console.log("focusInput: " +event.target.value);
+        let value = event.target.value;
+        if (value != null && value.trim() != "")
+            this.setState({errormsg: null});
+        this.setState({inputValue : value})
+    }
+
     updateDistance(event){ // event.target.valueAsInteger || event.target.value
+        let value = event.target.value;
+        if (value != null && value.trim() != "")
+            this.setState({errordistance: null});
         this.setState({inputDistance :  event.target.valueAsInteger || event.target.value})
     }
 
@@ -105,8 +120,13 @@ class GiveAddress extends Component
     {
         if (msg == null || msg == '')
             return null;
-        let ret = <div className="error"><space> </space><h3>{msg}</h3></div>;
+        let ret = <div className="error"><space> </space><h3>Virhe: {msg}</h3></div>;
         return ret;
+    }
+
+    clearTimeout(timer)
+    {
+        this.timer = null;
     }
 
     searchaddressss() {
@@ -125,7 +145,7 @@ class GiveAddress extends Component
         this.timer = setTimeout(() => {
             console.log('Timeout called!');
             this.addressfield.current.focus();
-            clearTimeout(this.timer);
+            this.clearTimeout(this.timer);
           }, 4000);        
         return;
     }
@@ -143,7 +163,7 @@ class GiveAddress extends Component
             this.timer = setTimeout(() => {
                 console.log('Timeout called!');
                 this.distanceRef.current.focus();
-                clearTimeout(this.timer);
+                this.clearTimeoutclearTimeout(this.timer);
               }, 4000);                        
             return;
         }        
@@ -154,7 +174,7 @@ class GiveAddress extends Component
             this.timer = setTimeout(() => {
                 console.log('Timeout called!');
                 this.distanceRef.current.focus();
-                clearTimeout(this.timer);
+                this.clearTimeout(this.timer);
               }, 4000);                        
             return;
         }
@@ -168,7 +188,7 @@ class GiveAddress extends Component
             this.timer = setTimeout(() => {
                 console.log('Timeout called!');
                 this.distanceRef.current.focus();
-                clearTimeout(this.timer);
+                this.clearTimeout(this.timer);
               }, 4000);                        
             return;
         }
@@ -212,9 +232,8 @@ class GiveAddress extends Component
      //  <label htmlFor="address">Anna osoite:</label><br/>
              
     render(props, state) { // placeholder="Anna pysäkkien maksimi etäisyys.." 
-        let errordistance = state.errordistance; 
         if (Config.bDebug)
-            console.log("errordistance" +errordistance);
+            console.log("errordistance" +state.errordistance);
         return (             
             <div data-message="Anna haettavien pysäkkien lähiosoite">
                             <div onChange={props.selectedDataSource} 
@@ -236,7 +255,7 @@ class GiveAddress extends Component
                 <label htmlFor="address">Anna lähin osoite lähellä sijaitseville pysäkeille (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
                 <input type="text" id="address" name="address" placeholder="Kirjoita haettava osoite.." 
                     maxlength="200" size="70" onChange={this.updateInput}
-                    onFocus={this.focusInput}
+                    onFocus={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
                 <label htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
@@ -244,7 +263,7 @@ class GiveAddress extends Component
                     maxlength="70" size="70" onChange={this.updateDistance} 
                     defaultValue={this.state.inputDistance}
                     ref={this.distanceRef}/>
-                    <div id="errordistance1" aria-live="polite">{errordistance}</div>
+                    <div id="errordistance1" aria-live="polite">{state.errordistance}</div>
                     <br/><br/>
                 <button onClick={this.searchaddressss} aria-label="Hae pysäkkejä" >
 

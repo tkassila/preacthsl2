@@ -1,13 +1,10 @@
 {
   "private": true,
-  "name": "preacthsl",
-  "config": {
-    "port": "3000"
-  },
+  "name": "preacthsl2",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || preact watch --port 3000",
+    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
     "build": "preact build",
     "serve": "preact build && preact serve",
     "dev": "preact watch",
@@ -29,18 +26,16 @@
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
     "if-env": "^1.0.0",
-    "preact-cli": "^2.0.0",
-    "preact-cli-plugin-async": "^2.0.0"
+    "preact-cli": "^2.0.0"
   },
   "dependencies": {
-    "abort-controller": "^3.0.0",
-    "apollo-boost": "^0.4.7",
     "axios": "^0.19.2",
     "graphql": "^14.6.0",
-    "preact": "^10.4.4",
-    "preact-material-components": "^1.6.1",
-    "preact-render-to-string": "^5.1.8",
-    "preact-router": "^3.2.1",
+    "preact": "^8.5.2",
+    "preact-compat": "^3.17.0",
+    "preact-material-components": "^1.4.3",
+    "preact-render-to-string": "^4.1.0",
+    "preact-router": "^2.5.5",
     "preact-views": "^1.0.0"
   }
 }

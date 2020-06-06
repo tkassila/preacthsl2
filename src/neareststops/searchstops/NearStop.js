@@ -4,12 +4,14 @@ import axios from 'axios';
 import NearestStops from '../NearestStops';
 import StopTime from './StopTime';
 import Config from '../../util/Config';
+import { duplicateFieldDefinitionNameMessage } from 'graphql/validation/rules/UniqueFieldDefinitionNames';
 
 class NearStop extends Component 
 {
     hsl_baseurl = null;
     address_search_url = null;
     client = null;
+    timer = null;
   
     constructor(props) {
         super(props);
@@ -25,7 +27,7 @@ class NearStop extends Component
             linkclicked: false,
             stop: this.props.stop,
             seeKAllStopTimes: false,
-            neareststops: null
+            secondquerystoptime: false,
         }
      
         if (this.props.client)
@@ -43,6 +45,11 @@ class NearStop extends Component
           console.log("null: client" );
         }
       //  this.makeGetQuery();
+    }
+
+    clearTimeout(timer)
+    {
+        this.timer = null;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -76,6 +83,8 @@ class NearStop extends Component
         console.log("NearStop makeApolloCallForNearestStopTimes 1 1" );
         console.log(stopid);
       }
+
+        this.setState({underServerCall: true});
         let coordinates = null;
 
         const options = {
@@ -86,6 +95,7 @@ class NearStop extends Component
     name
     lat
     lon
+    vehicleType
     wheelchairBoarding
     stoptimesWithoutPatterns(omitNonPickups: true, numberOfDepartures: 10) {
       scheduledArrival
@@ -133,6 +143,7 @@ class NearStop extends Component
     name
     lat
     lon
+    vehicleType
     wheelchairBoarding
        stoptimesWithoutPatterns(omitNonPickups: true, numberOfDepartures: 10) {
       scheduledArrival
@@ -195,15 +206,50 @@ class NearStop extends Component
     .then(response => { return response.json();})
     .then(responseData => { if (Config.bDebug) console.log(responseData.data); return responseData.data;})
     .then(data => { 
+      if (Config.bDebug)
+      {
         console.log("data");
-	    console.log(data);
+        console.log(data);
+      }
         let stoptimes = data.stop.stoptimesWithoutPatterns;
-        console.log("stoptimes");
-        console.log(stoptimes);
+        if (stoptimes != null && stoptimes.length != 0)
+        {
+          if (Config.bDebug)
+             console.log("stoptimes will change!");
+          stoptimes.forEach(stoptime => {
+            stoptime.vehicleType = data.stop.vehicleType;
+          });
+        }
+        else
+        {
+            if (!this.state.secondquerystoptime)
+            {
+              this.timer = setTimeout(() => {
+                console.log('Timeout called!');
+              // if (Config.bDebug)
+                console.log("!this.state.secondquerystoptime");
+                this.setState({ secondquerystoptime: true});
+                this.makeApolloCallForNearestStopTimes(stopid);
+                this.clearTimeout(this.timer);
+              }, 4000);       
+            }
+        }
+
+        if (this.state.secondquerystoptime)
+        {
+          this.setState({ secondquerystoptime: false});
+        }
+
+        if (Config.bDebug)
+        {
+          console.log("stoptimes");
+          console.log(stoptimes);
+        }
         let bClicked = true;
         if (stoptimes == null || stoptimes.length == 0)
             bClicked = false;
-        this.setState({neareststops: stoptimes, linkclicked: bClicked});
+        this.setState({neareststops: stoptimes, linkclicked: bClicked,
+                      underServerCall: false});
     })
     .catch((error) => {
         console.error("error");
@@ -561,21 +607,33 @@ class NearStop extends Component
 
       astopClicked = (event) => {  
           event.preventDefault();
-          console.log("stopClicked");
-          console.log(event.target);
+
+          if (this.state.underServerCall)
+          {
+            if (Config.bDebug)
+              console.log("this.state.underServerCall true");
+              return;
+          }
+
+          if (Config.bDebug)
+          {
+            console.log("stopClicked");
+            console.log(event.target);
             console.log("href");
+          }
             var href = event.target.href;
-            console.log(href);  
+            if (Config.bDebug)
+              console.log(href);  
             var linkid = event.target.id;
             if (Config.bDebug)
-            console.log("linkid");
+              console.log("linkid");
             if (Config.bDebug)
-            console.log(linkid);
+              console.log(linkid);
             let elemid = "ul" +linkid;
             if (Config.bDebug)
-            console.log("elemid");
+              console.log("elemid");
             if (Config.bDebug)
-            console.log(elemid);
+              console.log(elemid);
             // let stoptimesul = this.refs[elemid]
             let stoptimesul = document.getElementById(elemid);
             if (stoptimesul != null)
@@ -594,11 +652,11 @@ class NearStop extends Component
                 this.setState({linkclicked: false});
             else    
             {
-              if (this.state.neareststops == null)
+              if (this.state.neareststops == null 
+                  || this.state.neareststops.length == 0)
                 this.makeApolloCallForNearestStopTimes(href);
               this.setState({linkclicked: true});
             }
-
     }
 
     seeKAllStopTimes()

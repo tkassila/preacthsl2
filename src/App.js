@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, createRef } from 'preact';
 import {h, p } from 'preact';
 import Router from 'preact-router';
 import RoutePlans from './routeplan/RoutePlans';
@@ -9,10 +9,16 @@ import Header from './components/header/Header';
 import { Link } from 'preact-views';
 
 // import logo from './logo.svg';
-import './App.css';
+// import './App.css';
 import NearestStops from './neareststops/NearestStops.js';
 import Config from './util/Config';
+import AppPages from './AppPages';
 //import gql from "apollo-boost";
+
+const cssFuncLoader = () => import('./App.css');
+const cssFuncLoaderDark = () => import('./AppDark.css');
+
+// require the decache module:
 
 /*
 const GET_LINKS = gql`
@@ -56,11 +62,53 @@ const Other = ({ value=0 }) => (
 
 class App extends Component {
   
+  static defaultStyle = true;
+
+  // const importCss = () => { return import('./App.css'); } 
   constructor(props)
   {
     super(props);
     this.state = {
-      showSidebar: false
+      showSidebar: false,
+      loaddarkstyle: true
+    }
+  }
+
+  changeStyle = () =>
+	{
+		const { loaddarkstyle } = this.state;
+		this.setState({ loaddarkstyle: !loaddarkstyle});
+	}
+
+  shouldComponentUpdate(nextProps, nextState)
+	{
+		return true;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot)
+  {
+  }
+
+  changeStyleSheet()
+  {
+    console.log("changeStyleSheet()");
+    if (this.state.loaddarkstyle != null)
+    {
+      if (this.state.loaddarkstyle)
+      {
+        console.log("./AppDark.css");
+        // import('./AppDark.css');
+        this.setState({ stylePath: './AppDark.css' });
+        //document.body.classList.remove(cssFuncLoader());
+        // document.body.classList.add('mdc-theme--dark');
+      }
+      else
+      {
+        console.log("./App.css'");
+        // import('./App.css');
+        this.setState({ stylePath: './App.css' });
+      }
+      // forceUpdate();
     }
   }
 
@@ -102,23 +150,68 @@ class App extends Component {
   }
 
   render() {
-    const showSidebar = this.state.showSidebar;
-    const  size = 'small';
-    return (
+    // const showSidebar = this.state.showSidebar;
+    // const  size = 'small';
+    // <link rel="stylesheet" type="text/css" href={this.state.loaddarkstyle ? './AppDark.css' : './App.css'} />
+
+    if (Config.bDebug)
+    {
+      console.log("document.documentURI");
+      console.log(document.documentURI);
+      console.log("baseUrl");
+    }
+    let baseUrl = window.location.protocol + "//" + window.location.hostname +":" + window.location.port;
+    if (Config.bDebug)
+      console.log(baseUrl);
+    let ind = document.baseURI.toString().indexOf(baseUrl);
+    if (Config.bDebug)
+    {
+      console.log("ind");
+      console.log(ind);
+    }
+    let removedDocumentURI = document.baseURI.toString().substring(ind+baseUrl.length);
+    if (Config.bDebug)
+    {
+      console.log("removedDocumentURI");
+      console.log(removedDocumentURI);
+    }
+    let cssPath = "";
+    if (removedDocumentURI != null 
+        && (removedDocumentURI.includes("routeplan")
+        || removedDocumentURI.includes("reitti")
+        ))
+      cssPath = "../";
+
+    return (      
       <div>
-        <Header selectedDataSource={this.selectedDataSource}/>
-       <Router>
-        <div path='/' default>
-           <NearestStops title="Pysäkkikysely" selectedDataSource={this.selectedDataSource}/>
-        </div>
-        <div path='/routeplan'>
-        <RoutePlans title="Pysäkkireittiehdotukset" selectedDataSource={this.selectedDataSource}/>
-        </div>        
-        </Router>
+        <link rel="stylesheet" type="text/css" href={this.state.loaddarkstyle ? cssPath +'AppDark.css' : cssPath +'App.css'} />
+        <AppPages selectedDataSource={this.selectedDataSource}
+          loaddarkstyle={this.state.loaddarkstyle}
+          changeStyle={this.changeStyle}
+        /> 
       </div>  
     );
   } 
 }
+
+/*
+        <Header changeStyle={this.changeStyle} 
+        loaddarkstyle={this.state.loaddarkstyle} />
+       <Router>
+        <div path='/' default>
+           <NearestStops title="Pysäkkikysely" 
+           selectedDataSource={this.selectedDataSource}/>
+        </div>
+        <div path='/reitti'>
+          <RoutePlans title="Pysäkkireittiehdotukset" 
+          selectedDataSource={this.selectedDataSource}/>
+        </div>        
+        <div path='/routeplan'>
+          <RoutePlans title="Pysäkkireittiehdotukset"
+           selectedDataSource={this.selectedDataSource}/>
+        </div>        
+        </Router>
+*/
 
 /*
    <Router>

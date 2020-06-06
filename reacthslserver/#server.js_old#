@@ -1,0 +1,51 @@
+
+var express = require('express');
+var compression = require('compression');
+var httpProxy = require('http-proxy');
+//var httpProxy = require('http-proxy-middleware');
+var API_HOST = process.env.API_HOST || 'localhost:3000'
+var PORT = process.env.SERVER_PORT || 80;
+
+// Initialize
+var app = express();
+var apiProxy = httpProxy.createProxyServer();
+
+// Serve static resources from 'build' folder
+// app.use(express.static('build'));
+
+// Enable gzip response compression
+app.use(compression());
+
+app.use('/proxy', proxy('www.google.com'));
+
+// Proxy all the api requests
+app.all('/hsl/', function (req, res) {
+         apiProxy.web(req, res, { target: 'http://google.com' })
+});
+
+// Proxy all the api requests
+/*
+app.all('/hsl/*', function (req, res) {
+         apiProxy.web(req, res, { target: 'http://google.com' })
+});
+*/
+
+// Otherwise serve index.html
+
+app.get('*', function (req, res) {
+    //  res.sendfile("/build/index.html");
+    apiProxy.web(req, res, { target: 'http://' + API_HOST })
+});
+
+
+// Otherwise serve index.html
+/*
+app.get('/', function (req, res) {
+    //  res.sendfile("/build/index.html");
+      apiProxy.web(req, res, { target: 'http://' + API_HOST })
+});
+*/
+
+app.listen(PORT);
+
+console.log('Running on port' + PORT + ' with API_HOST:'+API_HOST);
