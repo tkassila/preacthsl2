@@ -11,9 +11,23 @@ The application is made by preact 10.4.4 library. The preact is like a js react 
 
 Installing
 
-When (1) npm and node are installed on a (web) server, (2) install this repo on your server, (3) then install the app by command: 'npm install' on project repo root direcotry. (4) Start a gateway server from a 'reacthslserver' directory by command: 'node server.js'. (5) On another prompt, the server app for a developer is started by 'npm run dev' command.
+When (1) npm and node are installed on a (web) server, (2) install this repo on your server, (3) then install the app by command: 'npm install' on project repo root direcotry. (4) Start a gateway server, if don't have gateway part installed on web server. It is started from a 'reacthslserver' directory by command: 'node server.js'. (5) On another prompt, the server app for a developer is started by 'npm run dev' command.
 If give command: 'npm start' enstead, then the starting app will use port 3000.
-(6) The deploy package is done by command: npm run build. (7) if you have deployed (6), then install and start the js application/server normally.
+
+Deploy
+(6) I have installed a next plugin: a) npm i -D preact-cli-plugin-async, b) create file: preact.config.js with next content: 
+
+import asyncPlugin from 'preact-cli-plugin-async';
+
+export default (config) => {
+    asyncPlugin(config);
+}
+
+c) build prod. dir content: preact build --no-prerender
+
+The deploy package is done by command: npm run build. More exact, see above.
+
+(7) if you have deployed (6), then install and start the js application/server normally.
 
 Config.js file contais by ex. a gateway address definition. And reacthslserver directory constains that gateway server made by node server. It is started by command: node server.js <enter>. If you may change Config.js file url or/and port,
 then change also server.js file also.
