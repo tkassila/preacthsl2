@@ -160,6 +160,9 @@ class App extends Component {
       console.log(document.documentURI);
       console.log("baseUrl");
     }
+
+    // seek current url and at last last url to know where current App.css etc is:
+
     let baseUrl = window.location.protocol + "//" + window.location.hostname +":" + window.location.port;
     if (Config.bDebug)
       console.log(baseUrl);
@@ -176,9 +179,13 @@ class App extends Component {
       console.log(removedDocumentURI);
     }
     let cssPath = "";
+
+    // is below / is selected, then App.css path is above path:
     if (removedDocumentURI != null 
         && (removedDocumentURI.includes("routeplan")
         || removedDocumentURI.includes("reitti")
+        ||removedDocumentURI.includes("help")
+        || removedDocumentURI.includes("apua")
         ))
       cssPath = "../";
 

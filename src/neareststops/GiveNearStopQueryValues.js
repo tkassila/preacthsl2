@@ -1,14 +1,16 @@
 import React, { Component, h, createRef }  from 'preact';
 // import Button from 'preact-material-components/Button';
 import Config from '../util/Config';
+import StaticFunctions from '../util/StaticFunctions';
 
 /**
  * This class is given address and distance inputs from user before near (bus) stops.
  */
-class GiveAddress extends Component 
+class GiveNearStopQueryValues extends Component 
 {
     addressfield = createRef();
     distanceRef = createRef();
+    starttimefield = createRef();
     timer = null;
  
     constructor(props) {
@@ -23,6 +25,7 @@ class GiveAddress extends Component
                 inputDistance: localDistance,
                 errordistance: null,
                 addresscoordinateswrong: false,
+                stopstarttime: null,
                 addresses: null
             }
         this.distanceRef = React.createRef()
@@ -30,6 +33,8 @@ class GiveAddress extends Component
 
         this.updateInput = this.updateInput.bind(this);
         this.focusInput = this.updateInput.bind(this);
+        this.focusStarttime = this.focusStarttime.bind(this);     
+        this.updateStarttime = this.updateStarttime.bind(this);                
         this.updateDistance = this.updateDistance.bind(this);
         this.searchaddressss = this.searchaddressss.bind(this);
         this.stopAddresssSelected = this.stopAddresssSelected.bind(this);
@@ -129,80 +134,162 @@ class GiveAddress extends Component
         this.timer = null;
     }
 
+    getStartTimeErrorMsg(message)
+    {
+        if (Config.bDebug)
+        {
+            console.log("getStartTimeErrorMsg: " +message);
+        }
+
+        if (message == null || message.trim().length == 0)
+            return "";
+        let starUserMsg = "Korjaa: ";
+        let endUserMsg = " Anna lähtöaika muodossa: tunti:min ";
+        switch(message)
+        {
+            case "error_time_unknowvalue":
+                return starUserMsg +" tuntematon aika virhe. " +endUserMsg;
+                break;
+            case "error_month_datelength_withseparator":
+                return starUserMsg +" pvm kuukausi virhe. " +endUserMsg;
+                break;
+            case "error_month_datelength_withseparator":
+                return starUserMsg +" päivä virhe. " +endUserMsg;
+                break;
+            case "error_month_unknowvalue":
+                return starUserMsg +" pvm kuukaisi virhe. " +endUserMsg;
+                break;
+            case "error_date_unknowvalue":
+                return starUserMsg +" päivä virhe. " +endUserMsg;
+                break;
+            default:
+                console.log("getStartTimeErrorMsg unknow err msg: " +message);
+                return starUserMsg +" tuntematon virhe. " +endUserMsg;
+                break;
+        }
+    }
+
     searchaddressss() {
         if (Config.bDebug)
             console.log("searchaddressss()");
         if (Config.bDebug)
             console.log(this.state);
 
-    this.setState({errordistance: this.getErrorMsg("")});
-    let inputvaluefieldvalue = this.addressfield.current.value;
+        this.setState({errordistance: this.getErrorMsg("")});
+        let inputvaluefieldvalue = this.addressfield.current.value;
 
-    if (inputvaluefieldvalue == null ||
-        inputvaluefieldvalue.toString().trim() == '' )
-    {
-        this.setState({errordistance: this.getErrorMsg("Osoite puuttuu tai on tyhjä")});
-        this.timer = setTimeout(() => {
-            console.log('Timeout called!');
-            this.addressfield.current.focus();
-            this.clearTimeout(this.timer);
-          }, 4000);        
-        return;
-    }
-
-    let distance = this.state.inputDistance;
-	if (distance == '')
-        distance = '800';
-    else
-    {
-        let isnan = isNaN(distance);
-        if (isnan)
+        if (inputvaluefieldvalue == null ||
+            inputvaluefieldvalue.toString().trim() == '' )
         {
-            console.log("isnan");
-            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole numero")});
+            this.setState({errordistance: this.getErrorMsg("Osoite puuttuu tai on tyhjä")});
             this.timer = setTimeout(() => {
                 console.log('Timeout called!');
-                this.distanceRef.current.focus();
-                this.clearTimeoutclearTimeout(this.timer);
-              }, 4000);                        
-            return;
-        }        
-        if (!this.isNormalInteger(distance))
-        {
-            console.log("!isNormalInteger(distance)");
-            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole kokonaisluku")});
-            this.timer = setTimeout(() => {
-                console.log('Timeout called!');
-                this.distanceRef.current.focus();
+                this.addressfield.current.focus();
                 this.clearTimeout(this.timer);
-              }, 4000);                        
+            }, 4000);        
             return;
         }
-        let isgreaterthanzero = parseInt(distance) > 0;
-        if (Config.bDebug)
-            console.log("isgreaterthanzero" +isgreaterthanzero);
-        if (!isgreaterthanzero)
-        {
-            console.log("!isgreaterthanzero(distance)");
-            this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys: luvun oltava nollaa suurempi")});
-            this.timer = setTimeout(() => {
-                console.log('Timeout called!');
-                this.distanceRef.current.focus();
-                this.clearTimeout(this.timer);
-              }, 4000);                        
-            return;
-        }
-    }
 
-    let inputvalue = this.state.inputValue;   
-    // get rigth input control value, if state inputvlaue has a wrong
-    // search address value. That's clicked elseware earlier:
-    if (inputvaluefieldvalue != null && inputvalue != null 
-        && inputvaluefieldvalue !== inputvalue)
-        inputvalue = inputvaluefieldvalue;
-	if (inputvalue != null && inputvalue != '' &&
-	    distance != null && distance != '')
-            this.props.addresssselected(inputvalue, distance);
+        let distance = this.state.inputDistance;
+        if (distance == '')
+            distance = '800';
+        else
+        {
+            let isnan = isNaN(distance);
+            if (isnan)
+            {
+                if (Config.bDebug)
+                    console.log("isnan");
+                this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole numero")});
+                this.timer = setTimeout(() => {
+                    console.log('Timeout called!');
+                    this.distanceRef.current.focus();
+                    this.clearTimeoutclearTimeout(this.timer);
+                }, 4000);                        
+                return;
+            }        
+            if (!this.isNormalInteger(distance))
+            {
+                console.log("!isNormalInteger(distance)");
+                this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys ei ole kokonaisluku")});
+                this.timer = setTimeout(() => {
+                    console.log('Timeout called!');
+                    this.distanceRef.current.focus();
+                    this.clearTimeout(this.timer);
+                }, 4000);                        
+                return;
+            }
+            let isgreaterthanzero = parseInt(distance) > 0;
+            if (Config.bDebug)
+                console.log("isgreaterthanzero" +isgreaterthanzero);
+            if (!isgreaterthanzero)
+            {
+                if (Config.bDebug)
+                    console.log("!isgreaterthanzero(distance)");
+                this.setState({errordistance: this.getErrorMsg("Pysäkkien etäisyys: luvun oltava nollaa suurempi")});
+                this.timer = setTimeout(() => {
+                    console.log('Timeout called!');
+                    this.distanceRef.current.focus();
+                    this.clearTimeout(this.timer);
+                }, 4000);                        
+                return;
+            }
+        }
+
+        // check that user given time or date time value is ok:
+
+        let stopstarttime = this.state.stopstarttime;
+        if (stopstarttime != null)
+        {
+            stopstarttime = stopstarttime.trim();
+            if (stopstarttime.length == 0)
+                stopstarttime = null;
+            else
+            if (stopstarttime.length != 0) // check stopstarttime that is valid
+            {
+                if (Config.bDebug)
+                console.log("GiveNearStopQueryValues stoptimedate " +stopstarttime);
+                try 
+                {
+                    let format = StaticFunctions.getMomentFormat(stopstarttime);
+                    if (Config.bDebug)
+                        console.log("GiveNearStopQueryValues format" +format);
+
+                    let timeDate = StaticFunctions.getTodayDateFromTime(stopstarttime, format);
+                    if (timeDate != null)
+                    {
+                        if (Config.bDebug)
+                            console.log("GiveNearStopQueryValues StaticFunctions.getUnixSecondsFromDate()");
+                        let sedonds = StaticFunctions.getUnixSecondsFromDate(timeDate);
+                        if (Config.bDebug)
+                            console.log("GiveNearStopQueryValues sedonds" +sedonds);                
+                    } 
+                }
+                catch(err) {        
+                // document.getElementById("demo").innerHTML = err.message;
+                console.log("GiveNearStopQueryValues::getNearestStopStartTime - error starttime=" +stopstarttime);
+                console.log("GiveNearStopQueryValues::getNearestStopStartTime - error starttime=" +err);
+                console.log("GiveNearStopQueryValues::getNearestStopStartTime - not using this value!");
+                this.setState({errordistance: this.getErrorMsg("Lähtöaika virhe: " +this.getStartTimeErrorMsg(err))});
+                this.timer = setTimeout(() => {
+                    console.log('starttimefield called!');
+                    this.starttimefield.current.focus();
+                    this.clearTimeout(this.timer);
+                    }, 4000);                        
+                return;
+                }
+            }
+        } 
+
+        let inputvalue = this.state.inputValue;   
+        // get rigth input control value, if state inputvlaue has a wrong
+        // search address value. That's clicked elseware earlier:
+        if (inputvaluefieldvalue != null && inputvalue != null 
+            && inputvaluefieldvalue !== inputvalue)
+            inputvalue = inputvaluefieldvalue;
+        if (inputvalue != null && inputvalue != '' &&
+            distance != null && distance != '')
+                this.props.addresssselected(inputvalue, distance, stopstarttime);
     }
 
     stopAddresssSelected() {
@@ -227,6 +314,24 @@ class GiveAddress extends Component
        if (Config.bDebug)
            console.log("ret" +ret);
        return ret;        
+    }
+
+    updateStarttime(event){
+        let value = event.target.value;
+        if (value === undefined)
+            return;
+        this.setState({ errordistance: null, stopstarttime: value})
+    }
+    
+    focusStarttime(event){
+        if (Config.bDebug)
+            console.log("focusStartTime: " +event.target.value);
+        let value = event.target.value;
+        if (value == undefined)
+            return;
+        // if (value != null && value.trim() != "")
+           // this.setState({errormsg: null});
+        this.setState({ stopstarttime: value });
     }
 
      //  <label htmlFor="address">Anna osoite:</label><br/>
@@ -258,6 +363,12 @@ class GiveAddress extends Component
                     onFocus={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
+                <label htmlFor="startime">Anna kelloaika lähtöajalle (tunti tai tunti:minuutteja):</label><br/>
+                <input type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
+                    maxlength="20" size="70" onChange={this.updateStarttime}
+                    onFocus={this.focusStarttime} 
+                    defaultValue={this.state.starttime || ''}
+                    ref={this.starttimefield} /><br/><br/>
                 <label htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
                 <input type="text" id="distance" name="distance"                     
                     maxlength="70" size="70" onChange={this.updateDistance} 
@@ -283,4 +394,4 @@ class GiveAddress extends Component
     }
 }
 
-export default GiveAddress;
+export default GiveNearStopQueryValues;

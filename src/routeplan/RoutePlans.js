@@ -1,6 +1,6 @@
 import { h, Component } from 'preact';
 import NearestStops from '../neareststops/NearestStops';
-import GiveAddresses from './GiveAddresses';
+import GiveRoutePlanQueryValues from './GiveRoutePlanQueryValues';
 import RoutePlan from './RoutePlan';
 import Checkbox from '../components/Checkbox';
 import StaticFunctions from '../util/StaticFunctions';
@@ -607,7 +607,7 @@ class RoutePlans extends Component {
   }
   this.setState({showShowAllLegs: false, disableCancelButton: false });
 
-   fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri +'/index/graphql', {
+  StaticFunctions.postData( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri +'/index/graphql', {
     method: 'POST',
     headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
     signal: this.abortSignal,
@@ -790,7 +790,7 @@ class RoutePlans extends Component {
 		 </div>
 	   </fieldset>
 	 </div>
-             <GiveAddresses  addresssesselected={this.addresssesSelected}
+             <GiveRoutePlanQueryValues  addresssesselected={this.addresssesSelected}
                address={this.state.address} target={this.state.target}
                routeAddressesSelected={this.routeAddressesSelected}
                disableCancelButton={this.state.disableCancelButton}/> 

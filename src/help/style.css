@@ -59,7 +59,17 @@
 	will-change: background-color;
 }
 
-help_a {
-	color: black; background: white;
+help_a {font-size: 16px; background: white; color: black;}
+
+help_a:focus {
+	border: 2px solid rgba(36, 39, 219, 0.623);
+	margin: 3px;
+	text-align: center;
+	background: rgb(238, 19, 19);
+	text-decoration: underline;
+	color: white;
+	will-change: background-color;
 }
+
+
 

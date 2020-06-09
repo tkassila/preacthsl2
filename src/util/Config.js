@@ -3,7 +3,11 @@ import NearestStops from '../neareststops/NearestStops';
 
 class Config extends Component {
 
-    static bDebug = false;
+    static bDebug = true
+    ;
+    static bUseOwnGatewayServer = false;
+    static CORS_DIGITRANSITSERVER = 'https://api.digitransit.fi/';
+    // https://api.digitransit.fi/hsl/index/graphql
 
     /*
     static HSLLSERVICEURI = {

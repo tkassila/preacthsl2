@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import style from '../App.css';
 
-import GiveAddress from './GiveAddress';
+import GiveNearStopQueryValues from './GiveNearStopQueryValues';
 import AddressList from './AddressList';
 // import gql from "apollo-boost";
 import SearchAndListAddressStops from './searchstops/SearchAndListAddressStops';
@@ -34,6 +34,11 @@ class NearestStops extends Component
     static getHslBaseUrl()
     {
         let hsl_baseurl = null;
+        if (!Config.bUseOwnGatewayServer)
+        {
+          hsl_baseurl = Config.CORS_DIGITRANSITSERVER;
+        }
+        else
         if (window.location.origin) {
             hsl_baseurl = window.location.protocol + "//" + window.location.hostname + (window.location.port ? Config.HSL_LOCAL_PORT +'/hsl/' : Config.HSL_LOCAL_PORT +'/hsl/');
             if (Config.bDebug)
@@ -110,6 +115,7 @@ class NearestStops extends Component
         seeKAllStopTimes: false, 
         neareststops: null,
         disableCancelButton: true,
+        usergivenStartTime: null,
         addresscoordinateswrong: false
         }
     }
@@ -392,22 +398,27 @@ class NearestStops extends Component
             .then(response => this.handleResponseData(response));
     }
 
-    addresssSelected = (addressparam, distanceparam) => {
+    addresssSelected = (addressparam, distanceparam, startimeparam) => 
+    {
         if (Config.bDebug)
         {
             console.log("NearestStops addresssSelected.addressparam=" +addressparam);
             console.log("NearestStops addresssSelected.distanceparam=" +distanceparam);
+            console.log("NearestStops addresssSelected.startimeparam=" +startimeparam);            
         }
         if (distanceparam == null || distanceparam.trim().length == 0)
             distanceparam = 800;
-           
+        if (startimeparam == null || startimeparam.trim().length == 0)
+          startimeparam = '';
+                       
         addressparam = StaticFunctions.trimMidleSpacies(addressparam);
        
             //  loading: true,
         this.setState({
             address: addressparam,
         distance: distanceparam,
-       
+        usergivenStartTime: startimeparam, // use this value when creating 
+        // particular stoptime(s)
         searchstops: null,
         addressfeatures: null
         });
@@ -433,19 +444,19 @@ class NearestStops extends Component
             });
             */
             
-      }
+    }
 
-      handleAddressListChangeChk = () => {
+    handleAddressListChangeChk = () => {
         this.setState({
             chkboxAddressList: !this.state.chkboxAddressList
         });
         if (Config.bDebug)
             console.log(this.state);
      //   React.render(this, document.getElementById('div.ListAddresses'));
-      }
+    }
 
-      makeApolloCallForNearestStops(addressfeatures)
-      {
+    makeApolloCallForNearestStops(addressfeatures)
+    {
         if (Config.bDebug)
         {
           console.log("makeApolloCallForNearestStops 1 1" );
@@ -459,10 +470,10 @@ class NearestStops extends Component
           let longitude = coordinates[0][1];
           let latitude = coordinates[0][0];
           this.makeApolloCallForNearestStopsAfterLongitudeAndLatitue(longitude, latitude)
-      }
+    }
   
-      makeApolloCallForNearestStopsAfterLongitudeAndLatitueEmptyResultset(longitude, latitude)
-      {
+    makeApolloCallForNearestStopsAfterLongitudeAndLatitue(longitude, latitude)
+    {
         if (Config.bDebug)
         {
           console.log("longitude ");
@@ -473,26 +484,6 @@ class NearestStops extends Component
           this.nearestopsmap = null;        
           this.setState({seeKAllStopTimes: false, neareststops: null,
             disableCancelButton: false});
-          /*
-          fetch('https://api.github.com/gists', {
-      method: 'post',
-      body: JSON.stringify({
-          description: 'Fetch API Post example',
-          public: true,
-          files: {
-            'test.js': {
-              content: 'kissa'
-            }
-          }
-        })
-    }).then(function(response) {
-      return response.json();
-    }).then(function(data) {
-      console.error('Created Gist:', data.html_url);
-    });
-  
-    console.log("makeApolloCallForNearestStops 2" );
-    */
   
     const options = {
       method: 'POST',
@@ -519,17 +510,18 @@ class NearestStops extends Component
       lon
       wheelchairBoarding
     }  
-  }`;
+    }`;
     // let body = JSON.stringify(data);
     let body1 = `nearest(lat: 60.19414, lon: 25.02965, maxResults: 3, 
       trrt
     dddd
                 }`;
-    
+          
       let distanceparam = this.state.distance;
       if (distanceparam == null || distanceparam.trim().length == 0)
         distanceparam = 800;
       // maxResults: 10,
+
     let body = `{ nearest(lat: ` +longitude +`, lon: ` +latitude +`,  
       maxDistance: ` +distanceparam +`, filterByPlaceTypes: [STOP, BIKE_PARK]) {
       edges {
@@ -555,14 +547,14 @@ class NearestStops extends Component
         }
       }
     }
-  }`;
+   }`;
   
-  if (Config.bDebug)
-  {
-    console.log("body");
-    console.log(body);
-  }
-    // http://localhost:8080/hsl/geocoding/v1/search
+    if (Config.bDebug)
+    {
+      console.log("body");
+      console.log(body);
+    }
+      // http://localhost:8080/hsl/geocoding/v1/search
     /*
     fetch( this.hsl_baseurl +'routing/v1/routers/hsl/index/graphql', {
       method: 'POST',
@@ -582,175 +574,19 @@ class NearestStops extends Component
       */
   
      if (Config.bDebug)
-      console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
+        console.log("fetch url: " +Config.CORS_DIGITRANSITSERVER +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
+      //  console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
   
-     fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
-      method: 'POST',
-      signal: this.abortSignal,
-      headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
-      body: body })
-      .then(response => { return response.json();})
-      .then(responseData => {if (Config.bDebug) console.log(responseData.data);
-         return responseData.data;})
-      .then(data => { 
-        if (Config.bDebug)
-        {
-        console.log("data");
-        console.log(data);
-        console.log(data.nearest.edges);
-        }
-        let addrs = this.alladdresses;
-        if (this.alladdresses != null)
-            addrs = this.removeAddressFromArray(this.alladdresses, this.address);
-        this.setState({ test_addresses: addrs, test_address: this.address, 
-            test_searchstops: this.searchstops, 
-            test_addressfeatures: this.addressfeatures,
-            test_fetched: new Date(),
-            test_uncheckCheckBox: true,
-            test_neareststops: data.nearest.edges,
-            test_loading: false, 
-            test_disableCancelButton: true
-         });
-        })      
-      .catch((error) => {
-          console.error("error");
-          console.error(error);
-          this.setState({ loading: false, disableCancelButton: true });
-          return;
-      });
-    }
-      makeApolloCallForNearestStopsAfterLongitudeAndLatitue(longitude, latitude)
-      {
-        if (Config.bDebug)
-        {
-          console.log("longitude ");
-          console.log(longitude );
-          console.log("latitude ");
-          console.log(latitude );
-        }
-          this.nearestopsmap = null;        
-          this.setState({seeKAllStopTimes: false, neareststops: null,
-            disableCancelButton: false});
-          /*
-          fetch('https://api.github.com/gists', {
-      method: 'post',
-      body: JSON.stringify({
-          description: 'Fetch API Post example',
-          public: true,
-          files: {
-            'test.js': {
-              content: 'kissa'
-            }
-          }
-        })
-    }).then(function(response) {
-      return response.json();
-    }).then(function(data) {
-      console.error('Created Gist:', data.html_url);
-    });
-  
-    console.log("makeApolloCallForNearestStops 2" );
-    */
-  
-    const options = {
-      method: 'POST',
-      data: `{
-        stopsByRadius(lat:60.199,lon:24.938,radius:500) {
-          edges {
-            node {
-              stop { 
-                gtfsId 
-                name
-              }
-              distance
-            }
-          }
-        }
-      }`,
-      // credentials: 'include',
-      headers: { "Content-Type": "application/graphql"}
-    };
-    
-    let data = `{ stop(id: "HSL:1040129") {
-      name
-      lat
-      lon
-      wheelchairBoarding
-    }  
-  }`;
-    // let body = JSON.stringify(data);
-    let body1 = `nearest(lat: 60.19414, lon: 25.02965, maxResults: 3, 
-      trrt
-    dddd
-                }`;
-    
-      let distanceparam = this.state.distance;
-      if (distanceparam == null || distanceparam.trim().length == 0)
-        distanceparam = 800;
-      // maxResults: 10,
-    let body = `{ nearest(lat: ` +longitude +`, lon: ` +latitude +`,  
-      maxDistance: ` +distanceparam +`, filterByPlaceTypes: [STOP, BIKE_PARK]) {
-      edges {
-        node {
-            place {
-              lat
-              lon
-              ...on Stop {
-                name
-                gtfsId
-                code
-                desc
-                vehicleType
-                locationType              
-              }
-              ...on BikePark {
-                name
-                bikeParkId
-                spacesAvailable
-              }
-            }
-            distance
-        }
-      }
-    }
-  }`;
-  
-  if (Config.bDebug)
-  {
-    console.log("body");
-    console.log(body);
-  }
-    // http://localhost:8080/hsl/geocoding/v1/search
-    /*
-    fetch( this.hsl_baseurl +'routing/v1/routers/hsl/index/graphql', {
-      method: 'POST',
-      */
-   //   headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
-    /*  body: body })
-      .then(response => { return response.json();})
-      .then(responseData => {console.log(responseData.data); return responseData.data;})
-      .then(data => { 
-        console.log("data");
-        console.log(data); }
-        )
-      .catch((error) => {
-          console.error("error");
-          console.error(error);
-      });
-      */
-  
-     if (Config.bDebug)
-        console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
-  
-     fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
-      method: 'POST',
-      signal: this.abortSignal,
-      headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
-      body: body })
-      .then(response => { return response.json();})
-      .then(responseData => {if (Config.bDebug) console.log(responseData.data);
-         return responseData.data;})
-      .then(data => { 
+     //fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
+      StaticFunctions.postData( Config.CORS_DIGITRANSITSERVER +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql',  {        
+        method: 'POST',
+        signal: this.abortSignal,
+        headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},        
+        body: body })
+        .then(response => { return response.json();})
+        .then(responseData => {if (Config.bDebug) console.log(responseData.data);
+           return responseData.data;})
+        .then(data => { 
         if (Config.bDebug)
         {
         console.log("data");
@@ -777,34 +613,14 @@ class NearestStops extends Component
           return;
       });
     
-  /*
-          fetch('http://localhost:8080/hsl/graphql/hsl', {
-              method: 'post',
-              headers: {"Content-Type": "application/graphql"},
-              body: `{ stop(id: "HSL:1040129") {
-                  name
-                  lat
-                  lon
-                  wheelchairBoarding
-                }  
-              }`}
-              ).then((response) => response.json())
-             .then((responseJson) => {
-              console.error("responseJson");
-               return responseJson;
-             })
-             .catch((error) => {
-              console.error("responseJson error");
-               console.error(error);
-             } );     
-            */
-           if (Config.bDebug)
+      if (Config.bDebug)
              console.log("makeApolloCallForNearestStops 3" );
           this.setState({ latitude: latitude, longitude: longitude });
           // this.coordinateschanged(latitude, longitude);
-      }
+  }
 
-      coordinateschanged = ( latitude, longitude ) => {
+  coordinateschanged = ( latitude, longitude ) => 
+  {
         if (Config.bDebug)
           console.log("coordinateschanged: lat " +latitude +" lon " +longitude);
         this.setState({ latitude: latitude, longitude: longitude});
@@ -818,9 +634,14 @@ class NearestStops extends Component
             this.abortController.abort();
             this.setState({ loading: false});
         }
-      }
+  }
 
-    render(props, state) {
+  getUsergivenStartTime(usergivenStartTime)
+  {
+      this.setState({usergivenStartTime: usergivenStartTime });
+  }
+
+   render(props, state) {
         if (Config.bDebug)
         {
             console.log("NearestStops render()");
@@ -871,6 +692,7 @@ class NearestStops extends Component
             coordinateschanged={this.coordinateschanged}
             latitude={state.latitude} longitude={state.longitude}
             neareststops={state.neareststops} 
+            usergivenStartTime={state.usergivenStartTime}
             />;
 
         let loadingComp = null;
@@ -892,7 +714,7 @@ class NearestStops extends Component
         return (
             <section >
             <h1 tabIndex="0">Hae pysäkkejä osoitteen mukaan</h1>
-            <GiveAddress style={style.page} distance={state.distance} 
+            <GiveNearStopQueryValues style={style.page} distance={state.distance} 
             addresssselected={this.addresssSelected} address={state.address} 
             stopAddresssSelected={this.stopAddresssSelected}
             disableCancelButton={this.state.disableCancelButton}

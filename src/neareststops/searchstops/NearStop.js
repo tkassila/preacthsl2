@@ -4,6 +4,7 @@ import axios from 'axios';
 import NearestStops from '../NearestStops';
 import StopTime from './StopTime';
 import Config from '../../util/Config';
+import StaticFunctions from '../../util/StaticFunctions';
 import { duplicateFieldDefinitionNameMessage } from 'graphql/validation/rules/UniqueFieldDefinitionNames';
 
 class NearStop extends Component 
@@ -76,7 +77,41 @@ class NearStop extends Component
         }        
      }
 
-     makeApolloCallForNearestStopTimes(stopid)
+     getNearestStopStartTime(starttime)
+     {
+        if (Config.bDebug)
+          console.log("NearStop getNearestStopStartTime() " +starttime);
+          /*
+          if (starttime == null || starttime.trim().length == 0)
+            return null;
+          */           
+
+        try {
+          let format = StaticFunctions.getMomentFormat(starttime);
+          if (Config.bDebug)
+              console.log("NearStop format" +format);
+
+          let timeDate = StaticFunctions.getTodayDateFromTime(starttime, format);
+          if (timeDate != null)
+          {
+             if (Config.bDebug)
+                console.log("NearStop StaticFunctions.getUnixSecondsFromDate()");
+             let sedonds = StaticFunctions.getUnixSecondsFromDate(timeDate);
+             if (Config.bDebug)
+                console.log("NearStop sedonds" +sedonds);
+             return `startTime: ` +sedonds +`,`;
+          } 
+        }
+        catch(err) {
+          // document.getElementById("demo").innerHTML = err.message;
+          console.log("NearStop::getNearestStopStartTime - error starttime=" +starttime);
+          console.log("NearStop::getNearestStopStartTime - error starttime=" +err);
+          console.log("NearStop::getNearestStopStartTime - not using this value!");
+        }
+        return null;
+     }
+    
+    makeApolloCallForNearestStopTimes(stopid)
     {
       if (Config.bDebug)
       {
@@ -137,7 +172,10 @@ class NearStop extends Component
   }`;
   let longitude = 0;
   let latitude = 0;
-  
+  let starttime = this.getNearestStopStartTime(this.props.usergivenStartTime);
+  if (starttime == null || starttime.trim().length == 0)
+      starttime = ``;      
+
   let body = `{
   stop(id: "` +stopid.toUpperCase() +`") {
     name
@@ -145,7 +183,7 @@ class NearStop extends Component
     lon
     vehicleType
     wheelchairBoarding
-       stoptimesWithoutPatterns(omitNonPickups: true, numberOfDepartures: 10) {
+       stoptimesWithoutPatterns(` +starttime +`omitNonPickups: true, numberOfDepartures: 10) {
       scheduledArrival
       realtimeArrival
       arrivalDelay
@@ -199,7 +237,7 @@ class NearStop extends Component
   console.log(body);
    }
 	
-   fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
+   StaticFunctions.postData( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
     method: 'POST',
     headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
     body: body })

@@ -43,16 +43,28 @@ class Header extends Component
     render(props, state) {
       return (
 		<div>
-		<table className={state.loaddarkstyle == true ? HeaderCss.header : style.header } alt="Valikko">
+		<table className={state.loaddarkstyle == true ? HeaderCss.header : 
+			style.header } alt="Valikko">
 		   <tr><th>
-		   <h3 className={state.loaddarkstyle == true ? HeaderCss.h1 : style.h1 } tabIndex="0" >Pysäkit tekstitaikatauluiksi</h3>
+		   <h3 className={state.loaddarkstyle == true ? 
+			HeaderCss.h1 : style.h1 } tabIndex="0" >Pysäkit tekstitaikatauluiksi</h3>
 			</th>
 			<th><nav aria-label="pagination" >
-				<a aria-label="Pysäkit osoitteen mukaan" className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/" >Pysäkit osoitteen mukaan</a>
-				<a aria-label="Reittisuunnitelma" className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/routeplan" >Reittisuunnitelma</a>
+				<a aria-label="Pysäkit osoitteen mukaan" 
+				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/" >Pysäkit osoitteen mukaan</a>
+				<a aria-label="Reittisuunnitelma" 
+				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/routeplan" >Reittisuunnitelma</a>
 				</nav>
-			</th><button className={state.loaddarkstyle == true ? HeaderCss.button : style.button }onClick={props.changeStyle} aria-label="Ulkoasun vaihto">Ulkoasu</button></tr>
-			<tr><th> </th></tr>
+			</th>
+			</tr>
+			<tr><th>
+			<button className={state.loaddarkstyle == true ? HeaderCss.button : style.button }
+			onClick={props.changeStyle} aria-label="Ulkoasun vaihto">Ulkoasu</button>
+			</th><th>
+			<a tabIndex="0" aria-label="Apua"
+			className={state.loaddarkstyle == true ? HeaderCss.link : style.link}
+                        href="/apua" >Apua</a>	
+			</th></tr>
 		</table>
 		 </div>	
 		  );

@@ -91,7 +91,9 @@ function LegStep (props) {
            starttime = StaticFunctions.getToStringFromEndTime(props.legdata.startTime, props.legdata.arrivalDelay);
        else
            starttime = StaticFunctions.getToStringFromEndTime(props.legdata.startTime, props.legdata.arrivalDelay);
-                   
+                 
+        if (starttime == null)
+            starttime = "";
 
         if (Config.bDebug)
         {
@@ -126,7 +128,7 @@ function LegStep (props) {
                 }
                 else
                 {
-                    let showedtext = starttime + 
+                    let showedtext = starttime +" "
                     +StaticFunctions.getLegName(props.legdata) +
                     " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";
@@ -137,7 +139,7 @@ function LegStep (props) {
         }
         else
         {
-            let showedtext = starttime +" "+
+            let showedtext = starttime +" "
             +StaticFunctions.getLegName(props.legdata) + 
             " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
             " Kesto " +duration +" min";

@@ -6,7 +6,7 @@ import Config from '../util/Config';
  * This class are given user input for start and end address for bus route server
  * query.
  */
-class GiveAddresses extends Component 
+class GiveRoutePlanQueryValues extends Component 
 {
     addressfield = createRef();
     targetaddressfield  = createRef();
@@ -136,7 +136,7 @@ class GiveAddresses extends Component
                     onFocue={this.focusTarget} 
                     defaultValue={this.state.inputTarget || ''}
                     ref={this.targetaddressfield}/>
-                    <div tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div><br/>
+                    {state.errormsg != null ? <div tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div>: null}<br/>
                     <br/>
                 <button onClick={this.searchroutes} aria-label="Hae reittejä">
                     
@@ -156,4 +156,4 @@ class GiveAddresses extends Component
     }
 }
 
-export default GiveAddresses;
+export default GiveRoutePlanQueryValues;

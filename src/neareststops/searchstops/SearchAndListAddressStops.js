@@ -263,7 +263,7 @@ if (Config.bDebug)
    if (Config.bDebug)
       console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
 
-   fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
+    StaticFunctions.postData( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
     method: 'POST',
     headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
     body: body })
@@ -643,7 +643,8 @@ if (Config.bDebug)
                   && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
                return (
                 <li styles={itemStyles}><NearStop index={i} stop={edge.node} 
-                seeKAllStopTimes={this.state.seeKAllStopTimes}/></li>
+                seeKAllStopTimes={this.state.seeKAllStopTimes}
+                usergivenStartTime={props.usergivenStartTime} /></li>
                ); 
              } 
              );

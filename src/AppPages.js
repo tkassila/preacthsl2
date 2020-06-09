@@ -4,6 +4,8 @@ import Router from 'preact-router';
 import RoutePlans from './routeplan/RoutePlans';
 //import RoutePlans from 'routeplans';
 import Header from './components/header/Header';
+import Help from './help/Help';
+
 //import Header from 'header';
 //import { Views, Link } from 'preact-views';
 import { Link } from 'preact-views';
@@ -64,6 +66,14 @@ class AppPages extends Component {
           <RoutePlans title="Pysäkkireittiehdotukset"
            selectedDataSource={props.selectedDataSource}/>
         </div>        
+        <div path='/help'>
+          <Help title="Ohje"
+           selectedDataSource={props.selectedDataSource}/>
+        </div>  
+        <div path='/apua'>
+          <Help title="Ohje"
+           loaddarkstyle={props.loaddarkstyle}/>
+        </div>  
         </Router>
       </div>  
     );
