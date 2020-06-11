@@ -7,9 +7,9 @@ class Config extends Component {
      * if true then GiveNearStopQueryValues class contais a test button to
      * test startime user input by hardcode way. That is near stop ui and query.
      */
-    static bTestButton = true;
+    static bTestButton = false;
 
-    static bDebug = true
+    static bDebug = false
     ;
     static bUseOwnGatewayServer = false;
     static CORS_DIGITRANSITSERVER = 'https://api.digitransit.fi/';
