@@ -4,6 +4,7 @@ import GiveRoutePlanQueryValues from './GiveRoutePlanQueryValues';
 import RoutePlan from './RoutePlan';
 import Checkbox from '../components/Checkbox';
 import StaticFunctions from '../util/StaticFunctions';
+import ShowUserStartTime from '../neareststops/searchstops/ShowUserStartTime';
 
 //import AddressList from '../neareststops/AddressList';
 //import SearchAndListAddressStops from '../neareststops/searchstops/SearchAndListAddressStops';
@@ -62,6 +63,7 @@ class RoutePlans extends Component {
             secondaddress: null,
             firstaddressfeatures: null,
             secondaddressfeatures: null,
+            usergivenStartTime: null,
             addresscoordinateswrong: false
         }
     }
@@ -75,7 +77,12 @@ class RoutePlans extends Component {
     // document.title = “Pysäkit”;
   }
 
-    addresssesSelected = (addressparam, targetparam) => {
+  getUsergivenStartTime(usergivenStartTime)
+  {
+      this.setState({usergivenStartTime: usergivenStartTime });
+  }
+
+    addresssesSelected = (addressparam, targetparam, userstartimeparam) => {
       if (Config.bDebug)
       {
           console.log("Routeplan addresssesSelected.addressparam=" +addressparam);
@@ -83,7 +90,9 @@ class RoutePlans extends Component {
       }
 
       this.setState({secondaddress: StaticFunctions.trimMidleSpacies(targetparam), 
-                     firstaddress: StaticFunctions.trimMidleSpacies(addressparam)});
+                     firstaddress: StaticFunctions.trimMidleSpacies(addressparam),
+                     usergivenStartTime: userstartimeparam 
+                    });
 
       /*
       this.setState({
@@ -103,7 +112,7 @@ class RoutePlans extends Component {
             });
             */
             this.setState({ bButtonPressed: true});
-            this.makeGetQuery(addressparam, targetparam);
+            this.makeGetQuery(addressparam, targetparam, userstartimeparam);
         }      
         if (Config.bDebug)
           console.log("bSearch2");
@@ -119,7 +128,7 @@ class RoutePlans extends Component {
       */
 
       
-      makeGetQuery = async (addressparam, targetparam) =>
+      makeGetQuery = async (addressparam, targetparam, userstartimeparam) =>
       {
           if (addressparam == null || addressparam.trim().length == 0 
             || targetparam == null || targetparam.trim().length == 0 )
@@ -498,6 +507,78 @@ class RoutePlans extends Component {
           longitudetarget, latitudetarget);
     }
 
+   
+    getDateRoutePlanStopStartTime_Time(starttime)
+    {
+        if (starttime != null)
+        {
+            let hours = starttime.getHours();
+            let len = hours.length;
+            if (len == 1)
+              hours = "0" +hours;
+            let mins = starttime.getMinutes();
+            len = mins.length;
+            if (len == 1)
+                mins = "0" +mins;
+              return `time: "` +hours +":" +mins +`:00",`; 
+        }
+        return null;
+    }
+
+    getDateRoutePlanStopStartTime_Date(starttime)
+    {
+       if (Config.bDebug)
+         console.log("RoutePlans getDateRoutePlanStopStartTimeDate() " +starttime);
+
+       try {
+         /*
+         let format = StaticFunctions.getMomentFormatAndNumbersCheck(starttime);
+         if (Config.bDebug)
+             console.log("RoutePlans getDateRoutePlanStopStartTime format" +format);
+          */
+         let timeDate = starttime; // StaticFunctions.getTodayDateFromTime(starttime, format);
+         if (timeDate != null)
+         {/*
+            if (Config.bDebug)
+               console.log("RoutePlans StaticFunctions.getUnixSecondsFromDate()");
+            let sedonds = StaticFunctions.getUnixSecondsFromDate(timeDate);
+            if (Config.bDebug)
+               console.log("RoutePlans sedonds" +sedonds);
+               */
+             /* 
+            let today = Date.current();
+            if (timeDate.getFullYear() != today.getFullYear()
+                || timeDate.getMonth() != today.getMonth()
+                || timeDate.getDay() != today.getDay()
+                )
+              {
+                */
+                let day = timeDate.getDate();
+                let len = day.length;
+                if (len == 1)
+                  day = "0" +day;
+                let year = timeDate.getFullYear();
+                len = year.length;
+                if (len == 1)
+                  year = "0" +year;
+                let month = timeDate.getMonth()+1;
+                len = month.length;
+                if (len == 1)
+                  month = "0" +month;
+                return `date: "` +year +"-" +month +"-" +day +`",`;
+             // }
+         } 
+         return null; // ok
+       }
+       catch(err) {
+         // document.getElementById("demo").innerHTML = err.message;
+         console.log("RoutePlans getDateRoutePlanStopStartTime - error starttime=" +starttime);
+         console.log("RoutePlans getDateRoutePlanStopStartTime - error starttime=" +err);
+         console.log("RoutePlans getDateRoutePlanStopStartTime- not using this value!");
+       }
+       return null; // error
+    }
+   
     makeApolloCallForRoutePlanAfterLongitudeAndLatitue = (longitude, latitude, longitudetarget, latitudetarget) =>
     {
       if (Config.bDebug)
@@ -554,12 +635,26 @@ class RoutePlans extends Component {
   // from: {lat: ` +latitude +`, lon: ` +longitude +`}
   // to: {lat: ` +latitudetarget +`, lon: ` +longitudetarget +`},
 
+  let querydate = ``;
+  let querytime = ``;
+  if (this.state.usergivenStartTime != null 
+    && this.state.usergivenStartTime.toString().trim().length != 0)
+  {
+    querydate = this.getDateRoutePlanStopStartTime_Date(this.state.usergivenStartTime);
+    querytime = this.getDateRoutePlanStopStartTime_Time(this.state.usergivenStartTime);
+  }
+
+  if (querydate == null || querydate.toString().trim().length == 0)
+    querydate = ``;
+  if (querytime == null || querytime.toString().trim().length == 0)
+    querytime = ``;
 
 	// maxResults: 10,
   let body = `{ plan(
     from: {lat: ` +latitude +`, lon: ` +longitude +`}
-    to: {lat: ` +latitudetarget +`, lon: ` +longitudetarget +`},
-   numItineraries: 100
+    to: {lat: ` +latitudetarget +`, lon: ` +longitudetarget +`},`
+    +querydate + querytime +
+    ` numItineraries: 100
    ) {
     itineraries {
       legs {
@@ -750,6 +845,8 @@ class RoutePlans extends Component {
           loadingComp = this.getMissingBusStops(loadingComp, loading, plans,
             state.bButtonPressed, this.state.firstaddress, 
             this.state.secondaddress);
+        let ustarttime = null; 
+            
         if (plans != null && plans.length > 0) 
         {
             if (Config.bDebug)
@@ -757,7 +854,8 @@ class RoutePlans extends Component {
             planitems = plans.map((plan, ind) => { 
               return <RoutePlan id={"routeplan" +ind} 
                       index={ind} plan={plan} 
-                      showShowAllLegs={state.showShowAllLegs} /> } );
+                      showShowAllLegs={state.showShowAllLegs}
+                      usergivenStartTime={state.usergivenStartTime} /> } );
             features2 = <div role="navigation" aria-label="tulosten osoitteet">
                     <h4 tabIndex="0"><b>{this.state.firstaddress}<space> </space>
                    (pit {this.state.firstaddressfeatures[0].geometry.coordinates[1]}<space> </space> 
@@ -771,6 +869,10 @@ class RoutePlans extends Component {
             handleCheckboxChange={this.handleChecboxShowAllLegs} 
             isChecked={state.uncheckCheckBox == true ? false : state.showShowAllLegs} 
             />;
+
+            if (state.usergivenStartTime != null 
+              && state.usergivenStartTime.toString().hasDataAfterTrim())
+              ustarttime = <ShowUserStartTime starttime={state.usergivenStartTime}/>;
         }
 
         return (
@@ -796,6 +898,8 @@ class RoutePlans extends Component {
                disableCancelButton={this.state.disableCancelButton}/> 
              <div>
              {features2}
+             {ustarttime}
+             <p/>
              {features3}
              <p/>
              <div id="loadingComp2" aria-live="polite">{loadingComp}</div>

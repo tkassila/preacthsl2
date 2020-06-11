@@ -28,7 +28,7 @@ class NearestStops extends Component
  
     static getPDFURL()
     {
-        return "https://api.digitransit.fi/timetables/v1/";
+        return Config.CORS_DIGITRANSITSERVER +"/timetables/v1/";
     }
 
     static getHslBaseUrl()
@@ -116,6 +116,7 @@ class NearestStops extends Component
         neareststops: null,
         disableCancelButton: true,
         usergivenStartTime: null,
+        errorinquery: null,
         addresscoordinateswrong: false
         }
     }
@@ -406,9 +407,17 @@ class NearestStops extends Component
             console.log("NearestStops addresssSelected.distanceparam=" +distanceparam);
             console.log("NearestStops addresssSelected.startimeparam=" +startimeparam);            
         }
-        if (distanceparam == null || distanceparam.trim().length == 0)
+
+        if (distanceparam == null)
             distanceparam = 800;
-        if (startimeparam == null || startimeparam.trim().length == 0)
+        else
+        if (distanceparam.trim().length == 0)
+           distanceparam = 800;
+
+        if (startimeparam == null)
+          startimeparam = '';
+        else
+        if(startimeparam.toString().trim().length == 0)
           startimeparam = '';
                        
         addressparam = StaticFunctions.trimMidleSpacies(addressparam);
@@ -577,6 +586,8 @@ class NearestStops extends Component
         console.log("fetch url: " +Config.CORS_DIGITRANSITSERVER +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
       //  console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
   
+      this.setState({errorinquery: null});
+
      //fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
       StaticFunctions.postData( Config.CORS_DIGITRANSITSERVER +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql',  {        
         method: 'POST',
@@ -609,7 +620,8 @@ class NearestStops extends Component
       .catch((error) => {
           console.error("error");
           console.error(error);
-          this.setState({ loading: false, disableCancelButton: true });
+          this.setState({ loading: false, disableCancelButton: true, 
+            errorinquery: error });
           return;
       });
     
@@ -709,7 +721,10 @@ class NearestStops extends Component
            loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</h3>;
         else        
         if (loading == false && bButtonPressed && searchAndListAddressStops == null)
-           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ei tuloksia.</h3>;
+           loadingComp = <h3 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h3>;
+        else
+        if (loading == false && bButtonPressed && state.errorinquery != null)
+           loadingComp = <h3 tabIndex="0" aria-label="Virhe kyselyn suorituksessa">Virhe kyselyn suorituksessa.</h3>
 
         return (
             <section >

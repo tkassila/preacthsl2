@@ -7,6 +7,7 @@ import Checkbox from '../../components/Checkbox';
 import NearestStops from '../NearestStops';
 import Config from '../../util/Config';
 import style from '../../App.css';
+import ShowUserStartTime from './ShowUserStartTime.js';
 
 // import ApolloClient from "apollo-boost";
 // import gql from "apollo-boost";
@@ -664,6 +665,16 @@ if (Config.bDebug)
           //  if (!neareststops)
             this.prev_feature = state.addressfeatures;              
 
+            let ustarttime = props.usergivenStartTime;
+            if (Config.bDebug)
+            {
+              console.log("ustarttime");
+              console.log(ustarttime);
+            }
+           
+            if (ustarttime != null 
+                && ustarttime.toString().hasDataAfterTrim())
+                ustarttime = <ShowUserStartTime starttime={ustarttime}/>;
             //   <ul role="listbox" aria-label="reittiehdotuksia" style={style.ul}>
             //    {this.nearestopsmap}</ul>               
             // 
@@ -671,6 +682,8 @@ if (Config.bDebug)
             return (
                 <div >
                 <h3 tabIndex="0">{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
+                {ustarttime}
+                <p></p>
                 {features3}
                 <p></p>
                 <div id="loadingComp1" aria-live="polite">{loadingComp}</div>

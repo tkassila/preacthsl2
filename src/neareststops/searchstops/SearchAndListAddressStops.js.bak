@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, Fragment } from 'preact';
 import Address from '../Address.js';
 import NearStop from './NearStop';
 import axios from 'axios';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import Checkbox from '../../components/Checkbox';
 import NearestStops from '../NearestStops';
 import Config from '../../util/Config';
+import style from '../../App.css';
 
 // import ApolloClient from "apollo-boost";
 // import gql from "apollo-boost";
@@ -13,6 +14,9 @@ import Config from '../../util/Config';
 // import { url } from 'inspector';
 // import { type } from 'os';
 
+/**
+ * This class used to show and query user intputs before query bus stops.
+ */
 class SearchAndListAddressStops extends Component 
 {
    // address_search_url = "https://api.digitransit.fi/geocoding/v1/search?text=";
@@ -32,7 +36,7 @@ class SearchAndListAddressStops extends Component
           console.log("SearchAndListAddressStops props.neareststops");
           console.log(props.neareststops);
         }
-        this.hsl_baseurl = "http://localhost:8080/hsl/";
+        this.hsl_baseurl = Config.hsl_baseurl;
         this.address_search_url = this.hsl_baseurl +"geocoding/v1/search?text=";
         this.nearestopsmap = null;
         
@@ -44,7 +48,7 @@ class SearchAndListAddressStops extends Component
             seeKAllStopTimes: false,
             uncheckCheckBox: false,
             distance: props.distance,
-            alladdresses: props.alladdresses,
+            alladdresses: props.alladdresses,          
             loading: false
         }
      
@@ -66,7 +70,7 @@ class SearchAndListAddressStops extends Component
       //  this.makeGetQuery();
     }
 
-    shouldComponentUpdate(nextProps, nextState) { 
+    shouldComponentUpdate(nextProps, nextState) {      
       return true;
     }
 
@@ -217,6 +221,7 @@ class SearchAndListAddressStops extends Component
               gtfsId
               code
               desc
+              vehicleType
               locationType              
             }
             ...on BikePark {
@@ -258,7 +263,7 @@ if (Config.bDebug)
    if (Config.bDebug)
       console.log("fetch url: " +this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql');
 
-   fetch( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
+    StaticFunctions.postData( this.hsl_baseurl +'routing/v1/routers/' +NearestStops.localHSLUri+ '/index/graphql', {
     method: 'POST',
     headers: {"Content-Type": "application/graphql",  'Accept': '*/*'},
     body: body })
@@ -363,7 +368,7 @@ if (Config.bDebug)
 
      var xhr = new XMLHttpRequest()
      //xhr.open("POST", 'https://api.digitransit.fi/graphql/hsl'  )
-     xhr.open("POST", 'http://localhost:8080/' +NearestStops.localHSLUri+ '/graphql/hsl'  )
+     xhr.open("POST", Config.hsl_baseurl +NearestStops.localHSLUri+ '/graphql/hsl'  )
      xhr.setRequestHeader('Content-Type', 'application/graphql' );
      xhr.withCredentials = false;
      xhr.onload = function(e){
@@ -479,7 +484,7 @@ if (Config.bDebug)
                 {
                     bExactAdressFound = true;
                     if (Config.bDebug)
-                    console.log("bExactAdressFound:" +bExactAdressFound);
+                      console.log("bExactAdressFound:" +bExactAdressFound);
                     break;
                 }
             } 
@@ -576,7 +581,9 @@ if (Config.bDebug)
       }
 
     render(props, state) 
-    {      
+    { 
+        let itemStyles = { padding: 0 };
+           
         const search = state.searchstops;
         if (Config.bDebug)
         {
@@ -616,9 +623,12 @@ if (Config.bDebug)
                
             const loading = this.state.loading;
             let loadingComp = null;
-            if (loading && features2 == null)
-               loadingComp = <h3>Ladataan...</h3>;            
-
+            if (loading && state.neareststops == null)
+               loadingComp = <h4 aria-label="Ladataan">Ladataan...</h4>;            
+            else
+            if (!loading && state.neareststops == null)
+               loadingComp = <h4 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h4>;
+            
                /*
             coordinates = feature.geometry.coordinates;
             street = feature.properties.name;            
@@ -632,8 +642,9 @@ if (Config.bDebug)
                 if (edge.node != null && edge.node.place != null && edge.node.place != undefined
                   && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
                return (
-                <li  ><NearStop index={i} stop={edge.node} 
-                seeKAllStopTimes={this.state.seeKAllStopTimes}/></li>
+                <li styles={itemStyles}><NearStop index={i} stop={edge.node} 
+                seeKAllStopTimes={this.state.seeKAllStopTimes}
+                usergivenStartTime={props.usergivenStartTime} /></li>
                ); 
              } 
              );
@@ -652,15 +663,19 @@ if (Config.bDebug)
 
           //  if (!neareststops)
             this.prev_feature = state.addressfeatures;              
+
+            //   <ul role="listbox" aria-label="reittiehdotuksia" style={style.ul}>
+            //    {this.nearestopsmap}</ul>               
+            // 
+            const divstyle = { padding_left: 0 };
             return (
-                <div data-message="tulokset">
-                <h3>{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
+                <div >
+                <h3 tabIndex="0">{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
                 {features3}
                 <p></p>
-                {loadingComp}
-                {features2}
-                <ul role="listbox" aria-label="reittiehdotuksia">
-                  {this.nearestopsmap}</ul>
+                <div id="loadingComp1" aria-live="polite">{loadingComp}</div>
+                {features2}              
+                {this.nearestopsmap}
                 </div>
             );
        }

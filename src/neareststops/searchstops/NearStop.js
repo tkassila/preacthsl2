@@ -80,14 +80,18 @@ class NearStop extends Component
      getNearestStopStartTime(starttime)
      {
         if (Config.bDebug)
-          console.log("NearStop getNearestStopStartTime() " +starttime);
+        {
+          console.log("NearStop getNearestStopStartTime() timeDate");
+          console.log(starttime);
+        }
           /*
           if (starttime == null || starttime.trim().length == 0)
             return null;
           */           
 
+          /*
         try {
-          let format = StaticFunctions.getMomentFormat(starttime);
+          let format = StaticFunctions.getMomentFormatAndNumbersCheck(starttime);
           if (Config.bDebug)
               console.log("NearStop format" +format);
 
@@ -96,10 +100,17 @@ class NearStop extends Component
           {
              if (Config.bDebug)
                 console.log("NearStop StaticFunctions.getUnixSecondsFromDate()");
-             let sedonds = StaticFunctions.getUnixSecondsFromDate(timeDate);
+                */
+
+             let sedonds = StaticFunctions.getUnixSecondsFromDate(starttime);             
              if (Config.bDebug)
+             {
                 console.log("NearStop sedonds" +sedonds);
+                console.log("NearStop sedonds as Date");
+                console.log(new Date(sedonds));
+             }
              return `startTime: ` +sedonds +`,`;
+             /*
           } 
         }
         catch(err) {
@@ -109,6 +120,7 @@ class NearStop extends Component
           console.log("NearStop::getNearestStopStartTime - not using this value!");
         }
         return null;
+        */
      }
     
     makeApolloCallForNearestStopTimes(stopid)
@@ -172,7 +184,18 @@ class NearStop extends Component
   }`;
   let longitude = 0;
   let latitude = 0;
-  let starttime = this.getNearestStopStartTime(this.props.usergivenStartTime);
+
+  if (Config.bDebug)
+  {
+    console.log("this.props.usergivenStartTime");
+    console.log(this.props.usergivenStartTime);
+  }
+
+  let starttime = null;
+  if (this.props.usergivenStartTime != null 
+    && this.props.usergivenStartTime.toString().hasDataAfterTrim())
+      starttime = this.getNearestStopStartTime(this.props.usergivenStartTime);
+
   if (starttime == null || starttime.trim().length == 0)
       starttime = ``;      
 
@@ -741,18 +764,18 @@ class NearStop extends Component
      let openpdflink = null;
      if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
        openpdflink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
-       href={'https://api.digitransit.fi/timetables/v1/' +NearestStops.localHSLUri+ '/stops/' +NearStop.getStopIdAfterStartID(this.state.stop.place.gtfsId) +".pdf"}>
+       href={ Config.CORS_DIGITRANSITSERVER +'/timetables/v1/' +NearestStops.localHSLUri+ '/stops/' +NearStop.getStopIdAfterStartID(this.state.stop.place.gtfsId) +".pdf"}>
         (Avaa aikataulu pdf)</a>;
  
     let opentimetablelink = null;
     if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
       opentimetablelink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
-      href={"https://reittiopas.hsl.fi/pysakit/" 
+      href={Config.HSL_SERVER_URL + "/pysakit/" 
       +this.state.stop.place.gtfsId +"/aikataulu"}>(Avaa kartta-aikataulu sivu)</a>;
     else
     if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_FINLAND)
       opentimetablelink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
-      href={"https://opas.matka.fi/pysakit/" +this.state.stop.place.gtfsId +"/aikataulu"}>
+      href={Config.FINLAN_SERVER_URL +"/pysakit/" +this.state.stop.place.gtfsId +"/aikataulu"}>
       (Avaa kartta-aikataulu sivu)</a>;
 
        // console.log("this.state.stop.place" +this.state.stop.place);   

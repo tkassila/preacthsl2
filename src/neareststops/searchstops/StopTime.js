@@ -23,7 +23,7 @@ function StopTime(props) {
                 <space> </space>
                 {StaticFunctions.getTransportMode(StaticFunctions.getRouteType(props.data.vehicleType))}
                 <space> </space>
-                {props.data.stopHeadsign}
+                {props.data.stopHeadsign.toString().replace(" via ", " kautta ")}
                 </p>
                 );
             return ret;
@@ -37,7 +37,7 @@ function StopTime(props) {
             <space> </space>
             {StaticFunctions.getTransportMode(StaticFunctions.getRouteType(props.data.vehicleType))}
             <space> </space>
-             {props.data.stopHeadsign}
+             {props.data.stopHeadsign.toString().replace(" via ", " kautta ")}
             </li>
         );
     }

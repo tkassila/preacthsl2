@@ -3,11 +3,21 @@ import NearestStops from '../neareststops/NearestStops';
 
 class Config extends Component {
 
+    /**
+     * if true then GiveNearStopQueryValues class contais a test button to
+     * test startime user input by hardcode way. That is near stop ui and query.
+     */
+    static bTestButton = true;
+
     static bDebug = true
     ;
     static bUseOwnGatewayServer = false;
     static CORS_DIGITRANSITSERVER = 'https://api.digitransit.fi/';
     // https://api.digitransit.fi/hsl/index/graphql
+
+    static HSL_SERVER_URL = "https://reittiopas.hsl.fi";
+
+    static FINLAN_SERVER_URL = "https://opas.matka.fi";
 
     /*
     static HSLLSERVICEURI = {

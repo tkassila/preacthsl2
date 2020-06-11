@@ -2,6 +2,45 @@ import { Component  } from 'preact';
 import Config from './Config';
 import moment from 'moment';
 
+Date.prototype.isValid = function () {
+    // An invalid date object returns NaN for getTime() and NaN is the only
+    // object not strictly equal to itself.
+    return this.getTime() === this.getTime();
+}; 
+
+Boolean.prototype.hasData = function () {
+    return this.toString().length !== 0;
+};
+
+Boolean.prototype.hasDataAfterTrim = function () {
+    return this.toString().trim().length !== 0;
+};
+
+Number.prototype.hasData = function () {
+    return this.toString().length !== 0;
+};
+
+Number.prototype.hasDataAfterTrim = function () {
+    return this.toString().trim().length !== 0;
+};
+
+String.prototype.hasData = function () {
+    return this.toString().length !== 0;
+};
+
+String.prototype.hasDataAfterTrim = function () {
+    return this.toString().trim().length !== 0;
+};
+
+BigInt.prototype.hasData = function () {
+    return this.toString().length !== 0;
+};
+
+BigInt.prototype.hasDataAfterTrim = function () {
+    return this.toString().trim().length !== 0;
+};
+
+
 class StaticFunctions  extends Component {
 
     static getRouteType(typevalue)
@@ -118,7 +157,7 @@ class StaticFunctions  extends Component {
                     console.log("getTransportMode");
                     console.log("default value = unknown value:");
                     console.log(mode);
-                    return '';
+                    return '';  
                 }
          }
     }
@@ -162,7 +201,11 @@ class StaticFunctions  extends Component {
 
     static getRoundedMeterDistance(distance)
     {
-        console.log("distance: " +distance);
+        if (distance == null)
+            return "";
+
+        if (Config.bDebug)
+            console.log("distance: " +distance);
         if (distance == null || (distance == "NaN" || distance.toString().includes("NaN")))
             return "";
         if (isNaN(distance))
@@ -198,13 +241,15 @@ class StaticFunctions  extends Component {
 
 static getDateFromUnixSeconds(unixTimestamp)
 {
+    if (unixTimestamp == null)
+        return null;
     //let dateObj = new Date(unixTimestamp * 1000); 
     if (isNaN(unixTimestamp))
     {
         console.log("StaticFunctions::getDateFromUnixSeconds:" +unixTimestamp);
         return null;
     }
-    let dateObj = new Date(unixTimestamp); 
+    let dateObj = new Date(unixTimestamp);     
     return dateObj;
 }
 
@@ -215,16 +260,22 @@ static getDateFromUnixSeconds(unixTimestamp)
  */
 static getHourFormat(iLen, momenttime)
 {
+    if (momenttime == null)
+        return '';
+    momenttime = momenttime.trim();
+    iLen = momenttime.length;
+    if (iLen == 1)
+        throw 'error_time_missing';
     if (isNaN(momenttime))
-        throw 'error_time_unknowvalue';
+        throw 'error_time_wrong';
     if (iLen == 1)
        return "h";
     else
     if (iLen == 2)
         return "hh";
     if (iLen > 2)
-        throw 'error_time_unknowvalue';
-    return null;
+        throw 'error_time_wrong';
+    throw 'error_time_unknowvalue';
 }
 
 /**
@@ -234,32 +285,43 @@ static getHourFormat(iLen, momenttime)
  */
 static getHourMinWithSpaceFormat(momenttime)
 {
+    if (momenttime == null)
+        return null;
+    momenttime = momenttime.trim();
     let arrValues = momenttime.split(" ");
     let arrlen = arrValues.length;
     if (arrlen == 0)
-        throw 'error_time_unknowvalue';
+        throw 'error_time_missing';
     else
     if (arrlen == 1)
-        throw 'error_time_unknowvalue';
+        throw 'error_time_missing';
     else
     if (arrlen == 2)
     {
+        if (arrValues[0] == null)
+            throw 'error_time_hour_missing';
+        if (arrValues[1] == null)
+            throw 'error_time_min_missing';
         let arrlen1 = arrValues[0].length;
         let arrlen2 = arrValues[1].length;
+        if (arrlen1 == 0)
+            throw 'error_time_hour_missing';
+        if (arrlen2 == 0)
+            throw 'error_time_min_missing';
         if (isNaN(arrValues[0]))
-            throw 'error_time_unknowvalue';
+            throw 'error_time_hour_wrong';
         if (isNaN(arrValues[1]))
-            throw 'error_time_unknowvalue';
+            throw 'error_time_min_wrong';
         if (arrlen1 > 2)
-            throw 'error_time_unknowvalue';
+            throw 'error_time_hour_wrong';
         if (arrlen2 > 2)
-            throw 'error_time_unknowvalue';
+            throw 'error_time_min_wrong';
         let format1 = "hh";
         if (arrlen1 == 1)
-            format1 = "h";
+            throw 'error_time_hour_wrong';
         let format2 = "mm";
         if (arrlen2 == 1)
-            format2 = "m";
+            throw 'error_time_min_wrong';
         return format1 +" " +format1;
     }
     throw 'error_time_unknowvalue';
@@ -270,8 +332,168 @@ static getHourMinWithSpaceFormat(momenttime)
  * 
  * @param {*} iLen 
  */
+static getDateDayFormat(dayvalue)
+{
+    if (dayvalue == null || dayvalue.trim().length == 0)
+        throw 'error_date_missing';
+    dayvalue = dayvalue.trim();
+    let len = dayvalue.length;
+    if (len == 0)
+        throw 'error_day_missing';
+    if (len > 2)
+        throw 'error_day_wrong';
+    if (isNaN(dayvalue))
+        throw 'error_day_wrong';
+    let format = "DD";
+    if (len == 1)
+        format = "D";
+    return format;
+}
+
+/**
+ * called from another time format functions:
+ * 
+ * @param {*} iLen 
+ */
+static getDateMonthFormat(montvalue)
+{
+    if (montvalue == null || montvalue.trim().length == 0)
+        return '';
+    montvalue = montvalue.trim();
+    let len = montvalue.length;
+    if (len == 0)
+        throw 'error_month_missing';
+    if (len > 2) // possible at the end is time value:
+    {
+        // check possible time after month value:
+        let ind = montvalue.indexOf(" ");
+        if (ind == -1)
+            throw 'error_month_wrong';
+        montvalue = montvalue.split(" ")[0];
+        if (montvalue != null)
+        {
+            montvalue = montvalue.trim();
+            len = montvalue.length;
+            if (len > 2)
+                throw 'error_month_wrong';
+        }
+        else
+            throw 'error_month_missing';
+    }
+    if (isNaN(montvalue))
+        throw 'error_month_wrong';
+    let format = "MM";
+    if (len == 1)
+        format = "M";
+    return format;
+}
+
+/**
+ * get possilb time format after month value
+ * 
+ * called from another time format functions:
+ * 
+ * @param {*} iLen 
+ */
+static getDateMonthTimeFormat(montvalue)
+{
+    if (montvalue == null || montvalue.trim().length == 0)
+         return '';
+    montvalue = montvalue.trim();
+    let len = montvalue.length;
+    if (len > 2)
+    {
+        // check possible time after month value:
+        let ind = montvalue.indexOf(" ");
+        if (ind == -1)
+            return '';
+        let time = montvalue.split(" ")[1];
+        if (time == null)
+            throw 'error_time_missing';
+        format = StaticFunctions.getHourMinFormat(time);
+        return format;
+    }
+    return '';
+}
+
+/**
+ * called from another time format functions:
+ * 
+ * @param {*} iLen 
+ */
+static getDateYearFormat(yearvalue)
+{
+    if (yearvalue == null || yearvalue.trim().length == 0)
+        throw 'error_year_unknowvalue';
+    yearvalue = yearvalue.trim();
+    let len = yearvalue.length;
+    if ((len > 4 || len > 2) && yearvalue.indexOf(" ") != -1)
+    {
+        // get year before time:
+        yearvalue = yearvalue.split(" ")[0];
+        if (Config.bDebug)
+            console.log("date 2: yearvalue= '" +yearvalue +"'");
+        if (yearvalue == null)
+            throw 'error_year_unknowvalue';
+        len = yearvalue.length;
+    }
+    if (len != 1 && len != 2 && len != 4 )
+        throw 'error_year_wrong';
+    if (isNaN(yearvalue))
+        throw 'error_year_wrong';        
+    let format = "YYYY";
+    if (len == 2)
+        format = "YY";
+    if (len == 1)
+        format = "Y";
+    if (Config.bDebug)
+        console.log("date 3: format= '" +format +"'");
+    return format;
+}
+
+static getErrorMsg(msg)
+{
+    if (msg == null || msg == '')
+        return null;
+    let ret = <div className="error"><space> </space><h3>Virhe: {msg}</h3></div>;
+    return ret;
+}
+
+/**
+ * called from another time format functions:
+ * 
+ * @param {*} iLen 
+ */
+static getDateYearTimeFormat(yearvalue)
+{
+    if (yearvalue == null || yearvalue.trim().length == 0)
+         return '';
+    yearvalue = yearvalue.trim();
+    let len = yearvalue.length;
+    if (len > 1)
+    {
+        // check possible time after year value:
+        let ind = yearvalue.indexOf(" ");
+        if (ind == -1)
+            return '';
+        let time = yearvalue.split(" ")[1];        
+        if (time == null)
+            throw 'error_year_unknowvalue';
+        let format = StaticFunctions.getHourMinFormat(time);
+        return format;
+    }
+    return '';
+}
+
+/**
+ * called from another time format functions:
+ * 
+ * @param {*} iLen 
+ */
 static getDateFormat(momenttime)
 {
+    if (momenttime  == null)
+        return null;
     let arrValues = momenttime.split(".");
     let arrlen = arrValues.length;
     if (arrlen == 0)
@@ -280,69 +502,99 @@ static getDateFormat(momenttime)
     if (arrlen == 1)
         throw 'error_unknowvalue_withseparator';
     else
-    if (arrlen >= 2)
     {
-        if (arrlen > 3)
-            throw 'error_date_unknowvalue';
+        let format1 = "";
+        let format2 = "";
+        let format3 = "";
+        let format4 = "";
 
-        let len1 = arrValues[0].length;
-        let len2 = arrValues[1].length;
-        if (isNaN(arrValues[0]))
-            throw 'error_date_unknowvalue';
-        if (len2 < 3 && isNaN(arrValues[1]))
-            throw 'error_month_unknowvalue';
-        if (len1 > 2)
-            throw 'error_month_unknowvalue';
-        let indArr1Space = arrValues[0].indexOf(" ");
-        if (indArr1Space != -1)
-            throw 'error_month_unknowvalue';
-        let format1 = "DD"; // YYYYMMDD
-        let format3 = ""; 
-        let format4 = ""; 
-        if (len1 == 1)
-            format1 = "D";
-        let format2 = "MM";
-        if (len2 == 1)
-            format2 = "M";
+        console.log("date: arrlen= " +arrlen);
+        if (arrlen == 2 && Config.bDebug)
+        {
+            console.log("date: arrValues[0]");
+            console.log("'" +arrValues[0] +"'");
+            console.log("date: arrValues[1]");
+            console.log("'" +arrValues[1] +"'");
+        }
+        if (arrlen == 3 && Config.bDebug)
+        {
+            console.log("date: arrValues[0]");
+            console.log("'" +arrValues[0] +"'");
+            console.log("date: arrValues[1]");
+            console.log("'" +arrValues[1] +"'");
+            console.log("date: arrValues[2]");
+            console.log("'" +arrValues[2] +"'");
+        }
+        if (arrlen == 4 && Config.bDebug)
+        {
+            console.log("date: arrValues[0]");
+            console.log("'" +arrValues[0] +"'");
+            console.log("date: arrValues[1]");
+            console.log("'" +arrValues[1] +"'");
+            console.log("date: arrValues[2]");
+            console.log("'" +arrValues[2] +"'");
+            console.log("date: arrValues[3]");
+            console.log("'" +arrValues[3] +"'");
+        }
+
+        if (arrlen == 2 || (arrlen == 3 && (arrValues[2] == null
+            || arrValues[2].trim().length == 0)))
+        {
+            console.log("date: arrValues[2]");
+            format1 = StaticFunctions.getDateDayFormat(arrValues[0]);
+            format2 = StaticFunctions.getDateMonthFormat(arrValues[1]);
+            // get possible time format:
+            format4 = StaticFunctions.getDateMonthTimeFormat(arrValues[1]);
+        }
         else
+        if (arrlen == 3 || (arrlen == 4 && (arrValues[3] == null
+            || arrValues[3].trim().length == 0)))
         {
-            let possiblemonth = arrValues[1];
-            let indSpace = possiblemonth.indexOf(" ");
-            if (indSpace == -1)
-                throw 'error_month_datelength_withseparator';
-            let arrpossiblemonth = possiblemonth.split(" ");
-            let arrlen2 = arrpossiblemonth.length;
-            if (arrlen2 == 0)
-                throw 'error_month_unknowvalue';
-            else
-            if (arrlen2 == 1)
-                throw 'error_month_unknowvalue';
-            let month = arrpossiblemonth[0];
-            let monthlen = month.length;
-            if (monthlen != 1 && monthlen != 2)
-                throw 'error_month_unknowvalue';
-            if (isNaN(month))
-                throw 'error_month_unknowvalue';
-            if (monthlen == 1)
-                format2 = "M";
-            let time = arrpossiblemonth[1];
-            let timelen = time.length;
-            if (timelen < 3 || timelen > 5)
-                throw 'error_time_unknowvalue';
-            format4 = StaticFunctions.getHourMinFormat(time);
-        }
-        if (arrlen == 3)
+            format1 = StaticFunctions.getDateDayFormat(arrValues[0]);
+            format2 = StaticFunctions.getDateMonthFormat(arrValues[1]);
+            format3 = StaticFunctions.getDateYearFormat(arrValues[2]);
+            // get possible time format:
+            format4 = StaticFunctions.getDateYearTimeFormat(arrValues[2]);         
+        }    
+        else
+        if (arrlen == 4)
         {
-            let len3 = arrValues[2].length;
-            format3 = ".YY"; 
-            if (len3 != 2 && len3 != 4)
-                throw 'error_yearlength_withseparator';
+            if (arrValues[3] == null || arrValues[3].trim().length == 0)
+            {
+                format1 = StaticFunctions.getDateDayFormat(arrValues[0]);
+                format2 = StaticFunctions.getDateMonthFormat(arrValues[1]);
+                format3 = StaticFunctions.getDateYearFormat(arrValues[2]);
+                // get possible time format:
+                format4 = StaticFunctions.getDateYearTimeFormat(arrValues[2]);
+            }
             else
-            if (len3 == 4)
-                format3 = ".YYYY"; 
+            {
+                format1 = StaticFunctions.getDateDayFormat(arrValues[0]);
+                format2 = StaticFunctions.getDateMonthFormat(arrValues[1]);
+                format3 = StaticFunctions.getDateYearFormat(arrValues[2]);
+                // get possible time format:
+                format4 = StaticFunctions.getDateYearTimeFormat(arrValues[3]);
+            }
+        }    
+
+        if (Config.bDebug)
+        {
+            console.log("date: format1");
+            console.log("'" +format1 +"'");
+            console.log("date: format2");
+            console.log("'" +format2 +"'");
+            console.log("date: format3");
+            console.log("'" +format3 +"'");
+            console.log("date: format4");
+            console.log("'" +format4 +"'");
         }
 
-        return format1 +"." +format1 +format3 +format4;
+        let ret = format1 +"." +format2 
+        +(format3 != null && format3.trim().length != 0 ? "." +format3 : "") 
+        +(format4 != null && format4.trim().length != 0 ? " " +format4 : "");
+        if (Config.bDebug)
+            console.log("date format ret:'" +ret +"'");
+        return ret;
     }
     throw 'error_unknowvalue_withseparator';
 }
@@ -354,6 +606,10 @@ static getDateFormat(momenttime)
  */
 static getHourMinFormat(momenttime)
 {
+    if (momenttime == null)
+        return "";
+    
+    momenttime = momenttime.trim();
     let indPossibleHourMinTimeWithColon = momenttime.indexOf(":");
     let indSpace = momenttime.indexOf(" ");
     let iLen = momenttime.length;
@@ -361,7 +617,7 @@ static getHourMinFormat(momenttime)
     {
         if (indSpace == -1)
         {
-            return StaticFunctions.getHourFormat(iLen, momenttime);
+            return StaticFunctions.getHourMinFormat(momenttime); // StaticFunctions.getHourFormat(iLen, momenttime);
         }
         else // constains space
         {
@@ -374,27 +630,31 @@ static getHourMinFormat(momenttime)
         let arrtime = momenttime.split(":");
         let arrlen = arrtime.length;
         if (arrlen != 2)
-            throw 'error_time_unknowvalue';
+            throw 'error_time_wrong';
         let hour = arrtime[0];
         let hourlen = hour.length;
         if (hourlen < 1 || hourlen > 2)
-            throw 'error_time_unknowvalue';
+            throw 'error_time_hour_wrong';
+        if (isNaN(hour))
+            throw 'error_time_hour_wrong';      
         let formatHour = "hh";
         if (hourlen == 1)
             formatHour = "h"
         let min = arrtime[1];
         let minlen = min.length;
         if (minlen < 1 || minlen > 2)
-            throw 'error_time_unknowvalue';
+            throw 'error_time_min_wrong';
+        if (isNaN(min))
+            throw 'error_time_min_wrong';      
         let formatMin = "mm";
         if (minlen == 1)
-            formatMin = "m";
+            throw 'error_time_min_wrong'; 
         return formatHour +":" +formatMin;
     }
     throw 'error_time_unknowvalue';
 }
 
-static getMomentFormat(momenttime)
+static getMomentFormatAndNumbersCheck(momenttime)
 {
     if (momenttime == null || momenttime.trim().length == 0)
         return null;
@@ -418,14 +678,53 @@ static getMomentFormat(momenttime)
             throw 'error_unknowvalue';
         }
         else
-        {   // should be almost data:
+        {   // should be a time::
             return StaticFunctions.getHourMinFormat(momenttime);
         }
-        throw 'error_unknowvalue_withseparator';
+      //  throw 'error_unknowvalue_withseparator';
     }
     else
-    {   // should be almost data:
+    {   // should be almost date, and possilbe a time also::
         return StaticFunctions.getDateFormat(momenttime);
+    }
+   // throw 'error_unknowvalue_withseparator';
+}
+
+static getStartTimeErrorMsg(msg)
+{
+    if (Config.bDebug)
+    {
+        console.log("getStartTimeErrorMsg: " +msg);
+    }
+
+    if (msg == null || msg.toString().trim().length == 0)
+        return "";
+    let starUserMsg = "Korjaa: ";
+    let endUserMsg = " Anna lähtöaika muodossa: tt:mm tai muodossa: pp.kk.vv tai pp.kk.vvvv tai molemmat muodossa: pp.kk.vv tt:mm";
+    switch(msg)
+    {
+        case "error_time_unknowvalue":
+            return starUserMsg +" tuntematon aika virhe. " +endUserMsg;
+            break;
+        case "error_month_datelength_withseparator":
+            return starUserMsg +" pvm kuukausi virhe. " +endUserMsg;
+            break;
+        case "error_month_datelength_withseparator":
+            return starUserMsg +" päivä virhe. " +endUserMsg;
+            break;
+        case "error_month_unknowvalue":
+            return starUserMsg +" pvm kuukaisi virhe. " +endUserMsg;
+            break;
+        case "error_date_unknowvalue":
+            return starUserMsg +" päivä virhe. " +endUserMsg;
+            break;
+        case "Invalid Date":
+                return starUserMsg +"väärä pvm tai kelloaika arvo. " +endUserMsg;
+            break;
+        default:
+            console.log("getStartTimeErrorMsg unknow err msg: " +msg);
+            return starUserMsg +" tuntematon virhe. " +endUserMsg;
+            break;
     }
 }
 
@@ -443,7 +742,7 @@ static getTodayDateFromTime(hours, format, minutes = null)
     {
         //let msecs = Date.parse(hours, format);
         // dateObj = new Date(msecs);
-        dateObj = moment(hours, format).toDate();;
+        dateObj = moment(hours, format, false).toDate();;
     }
     return dateObj;
 }

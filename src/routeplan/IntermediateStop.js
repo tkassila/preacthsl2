@@ -50,12 +50,12 @@ function IntermediateStop(props) {
         let opentimetablelink = null;
         if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
             opentimetablelink = <a target="_blank" id={"open" +props.legdata.gtfsId}
-            href={"https://reittiopas.hsl.fi/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
+            href={Config.HSL_SERVER_URL +"/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
            (Avaa kartta-aikataulu sivu)</a>;
         else
         if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_FINLAND)
             opentimetablelink = <a target="_blank" id={"open" +props.legdata.gtfsId}
-            href={"https://opas.matka.fi/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
+            href={Config.FINLAN_SERVER_URL +"/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
             (Avaa kartta-aikataulu sivu)</a>;
     //    else
      //       opentimetablelink = '';
