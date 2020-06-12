@@ -11,7 +11,8 @@ The application is made by preact 10.4.4 library. The preact is like a js react 
 
 Installing
 
-When (1) npm and node are installed on a (web) server, (2) install this repo on your server, (3) then install the app by command: 'npm install' on project repo root direcotry. (4) Start a gateway server, if don't have gateway part installed on web server. It is started from a 'reacthslserver' directory by command: 'node server.js'. (5) On another prompt, the server app for a developer is started by 'npm run dev' command.
+When (1) npm and node are installed on a (web) server, (2) install this repo on your server, (3) then install the app by command: 'npm install' on project repo root direcotry. (3) install preact-cli. (4) If you had changed Config.js file,
+the app is using local gateway server into open trafic server, then Start a gateway server. But I have changed a gateway server is not needed anymore! This gateway server is started from a 'reacthslserver' directory by command: 'node server.js'. (5) On another prompt, the server app for a developer is started by 'npm run dev' command.
 If give command: 'npm start' enstead, then the starting app will use port 3000.
 
 Deploy
@@ -23,13 +24,28 @@ export default (config) => {
     asyncPlugin(config);
 }
 
-c) build prod. dir content: preact build --no-prerender
+Or you can use also: npm i -D preact-cli-plugin-fast-async, where above file content is:
 
-The deploy package is done by command: npm run build. More exact, see above.
+import asyncPlugin from 'preact-cli-plugin-fast-async';
+ 
+export default (config) => {
+    asyncPlugin(config);
+}
 
-(7) if you have deployed (6), then install and start the js application/server normally.
+c) build prod. in github root dir: preact build --no-prerender [--clean]
+
+d) by example create a new dir and copy localhost.key, localhost.crt into certificates directory and
+e) server.js above it (into the new dir).
+
+
+(7) copy file content into the new dir.
+(8) start node server.js
+
+The server is starting at port 80 for http and 443 for https.
 
 Config.js file contais by ex. a gateway address definition. And reacthslserver directory constains that gateway server made by node server. It is started by command: node server.js <enter>. If you may change Config.js file url or/and port,
-then change also server.js file also.
+then change also gateway server.js file also.
+ 
+A github dir serverexcample contais node server.js etc files as an example server.
  
 Tuomas Kassila
