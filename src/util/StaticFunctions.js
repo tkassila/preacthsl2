@@ -32,6 +32,7 @@ String.prototype.hasDataAfterTrim = function () {
     return this.toString().trim().length !== 0;
 };
 
+/*
 BigInt.prototype.hasData = function () {
     return this.toString().length !== 0;
 };
@@ -39,6 +40,7 @@ BigInt.prototype.hasData = function () {
 BigInt.prototype.hasDataAfterTrim = function () {
     return this.toString().trim().length !== 0;
 };
+*/
 
 
 class StaticFunctions  extends Component {
