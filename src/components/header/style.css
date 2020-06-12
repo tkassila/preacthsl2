@@ -17,10 +17,20 @@
 		margin: 0;
 		padding: 0 15px;
 		font-size: 24px;
-		line-height: 56px;
+		line-height: 30px;
 		font-weight: 400;
 		color: #FFF;
 	}
+
+	/*
+table, th, td {
+		border: 1px solid black;
+}
+*/
+
+tr {
+	height: 40px;
+}
 
 .th {
 		float: right;
@@ -31,7 +41,7 @@
 			border: 2px solid black;
 			margin: 3px;
 			height: 56px;
-			line-height: 56px;
+			line-height: 30px;
 			padding: 7px 7px 7px ;
 			min-width: 50px;
 			text-align: center;
@@ -49,8 +59,8 @@
 	border: 2px solid rgba(36, 39, 219, 0.623);
 	margin: 3px;
 	height: 56px;
-	line-height: 56px;
-	padding: 7px 7px 7px ;
+	line-height: 30px;
+	padding: 3px 3px 3px ;
 	min-width: 50px;
 	text-align: center;
 	background: white;

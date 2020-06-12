@@ -43,9 +43,10 @@ class Header extends Component
     render(props, state) {
       return (
 		<div>
-		<table className={state.loaddarkstyle == true ? HeaderCss.header : 
+<table className={state.loaddarkstyle == true ? HeaderCss.header : 
 			style.header } alt="Valikko">
-		   <tr><th>
+		   <tr className={state.loaddarkstyle == true ? HeaderCss.tr : 
+			style.tr}><th>
 		   <h3 className={state.loaddarkstyle == true ? 
 			HeaderCss.h1 : style.h1 } tabIndex="0" >Pysäkit tekstitaikatauluiksi</h3>
 			</th>
@@ -57,7 +58,8 @@ class Header extends Component
 				</nav>
 			</th>
 			</tr>
-			<tr><th>
+			<tr className={state.loaddarkstyle == true ? HeaderCss.tr : 
+			style.tr}><th>
 			<button className={state.loaddarkstyle == true ? HeaderCss.button : style.button }
 			onClick={props.changeStyle} aria-label="Ulkoasun vaihto">Ulkoasu</button>
 			</th><th>
@@ -65,8 +67,7 @@ class Header extends Component
 			className={state.loaddarkstyle == true ? HeaderCss.link : style.link}
                         href="/apua" >Apua</a>	
 			</th></tr>
-		</table>
-		 </div>	
+		</table>		 </div>	
 		  );
 	} 
 }

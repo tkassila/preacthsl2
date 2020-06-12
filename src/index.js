@@ -1,5 +1,11 @@
 // Must be the first import
-import "preact/debug";
+// Must be the first import
+if (process.env.NODE_ENV==='development') {
+  // Must use require here as import statements are only allowed
+  // to exist at the top of a file.
+  require("preact/debug");
+}
+
 // import React from 'preact/compat';
 //import ReactDOM from 'react-dom';
 import { render } from 'preact';
