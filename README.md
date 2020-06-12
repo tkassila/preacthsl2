@@ -38,8 +38,9 @@ d) by example create a new dir and copy localhost.key, localhost.crt into certif
 e) server.js above it (into the new dir).
 
 
-(7) copy file content into the new dir.
-(8) start node server.js
+(7) copy preact build directory content into the new dir.
+(8) npm install express
+(9) start: node server.js
 
 The server is starting at port 80 for http and 443 for https.
 
