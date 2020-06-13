@@ -5,7 +5,6 @@ import GiveNearStopQueryValues from './GiveNearStopQueryValues';
 import AddressList from './AddressList';
 // import gql from "apollo-boost";
 import SearchAndListAddressStops from './searchstops/SearchAndListAddressStops';
-import axios from 'axios';
 // import { withApollo } from 'react-apollo';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
@@ -73,6 +72,7 @@ class NearestStops extends Component
         if (this.props.client != null)
             this.client = this.props.client;
 
+        /*    
         this.abortController = new AbortController(); // 1
         if (Config.bDebug)
         {
@@ -86,6 +86,7 @@ class NearestStops extends Component
           console.log("NearestStops this.abortSignal:");
           console.log(this.abortSignal);
         }
+        */
 
 //        console.log("window.location.href");
 //        console.log(window.location.href);
@@ -120,6 +121,14 @@ class NearestStops extends Component
         addresscoordinateswrong: false
         }
     }
+
+    
+  componentDidMount() {
+    // document.title = “Pysäkit”;
+    this.abortController = new AbortController(); // 1        
+    this.abortSignal = this.abortController.signal; // 2
+  }
+
 
     shouldComponentUpdate(nextProps, nextState) { 
         return true;
@@ -184,12 +193,16 @@ class NearestStops extends Component
     handleResponseData(response)
     {
         if (Config.bDebug)
+        {
             console.log("NearestStops handleResponseData");
+            console.log("NearestStops response");
+            console.log(response);            
+        }
         let firstAddress = this.state.address;
         firstAddress = firstAddress.replace(",", "");
         this.address = firstAddress;
         if (Config.bDebug)
-            console.log("firstAddress: " +firstAddress);
+            console.log("firstAddress: " +firstAddress);            
         let founded = this.seekRigthAddressFromResponse(response, firstAddress);
         if (Config.bDebug)
             console.log("NearestStops handleResponseData founded: " +founded);
@@ -265,7 +278,7 @@ class NearestStops extends Component
     {
             let i = 0;
             let bSearch = false;
-            const features = response.data.features;
+            const features = response.features; // response.data.features;
             let feature, coordinates, street, label;
             let bExactAdressFound = false;
             let alladdresses = [];
@@ -395,8 +408,27 @@ class NearestStops extends Component
          if (Config.bDebug)
             console.log("decodedurl:" +decodedurl  );
        this.setState({ loading: true, addresscoordinateswrong: false });
-       axios.get(decodedurl)
-            .then(response => this.handleResponseData(response));
+
+       fetch( decodedurl)
+       .then(response => { return response.json();})
+       .then(data => { 
+          if (Config.bDebug)
+          {
+            console.log("data");
+            console.log(data);
+          }
+          this.handleResponseData(data);
+        })
+        .catch((error) => {
+          console.error("error");
+          console.error(error);
+          this.setState({ loading: false, disableCancelButton: true, 
+            errorinquery: error, er });
+          return;
+      });
+    
+       //axios.get(decodedurl)
+         //   .then(response => this.handleResponseData(response));
     }
 
     addresssSelected = (addressparam, distanceparam, startimeparam) => 
@@ -621,7 +653,7 @@ class NearestStops extends Component
           console.error("error");
           console.error(error);
           this.setState({ loading: false, disableCancelButton: true, 
-            errorinquery: error });
+            errorinquery: error, er });
           return;
       });
     
@@ -733,7 +765,8 @@ class NearestStops extends Component
             addresssselected={this.addresssSelected} address={state.address} 
             stopAddresssSelected={this.stopAddresssSelected}
             disableCancelButton={this.state.disableCancelButton}
-            addresscoordinateswrong={state.addresscoordinateswrong} /> 
+            addresscoordinateswrong={state.addresscoordinateswrong}
+            errorinquery={state.errorinquery} /> 
            {addresslist}
            <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
            <ul style={style.ul}>{searchAndListAddressStops}</ul>

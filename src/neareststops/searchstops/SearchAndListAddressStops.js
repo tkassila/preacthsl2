@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'preact';
 import Address from '../Address.js';
 import NearStop from './NearStop';
-import axios from 'axios';
+// import axios from 'axios';
 // import gql from "apollo-boost";
 import Checkbox from '../../components/Checkbox';
 import NearestStops from '../NearestStops';
@@ -451,8 +451,26 @@ if (Config.bDebug)
          const decodedurl = this.address_search_url +encodeURIComponent(this.props.address);
          if (Config.bDebug)
          console.log("decodedurl:" +decodedurl  );
-        axios.get(decodedurl)
-            .then(response => this.handleResponseData(response));
+
+         fetch( decodedurl)
+         .then(response => { return response.json();})
+         .then(data => { 
+            if (Config.bDebug)
+            {
+              console.log("data");
+              console.log(data);
+            }
+            this.handleResponseData(data)
+          })
+          .catch((error) => {
+            console.error("error");
+            console.error(error);
+            this.setState({ loading: false, disableCancelButton: true, 
+              errorinquery: error, er });
+            return;
+        });
+       // axios.get(decodedurl)
+         //   .then(response => this.handleResponseData(response));
     }
 
     handleResponseData(response)
@@ -469,7 +487,7 @@ if (Config.bDebug)
     {
             let i = 0;
             let bSearch = false;
-            const features = response.data.features;
+            const features = response.features; // response.data.features;
             let feature, coordinates, street;
             let bExactAdressFound = false;
 
@@ -657,7 +675,7 @@ if (Config.bDebug)
              console.log(uncheckCheckBox);
              
              let features3 = <Checkbox id="idChecboxShowAllStopTimes" 
-                 label="Hae kaikkien pysäkkien pysähtymisajat" 
+                 label="Näytä kaikkien pysäkkien pysähtymisajat" 
                  handleCheckboxChange={this.handleChecboxShowAllStopTimes} 
                  isChecked={uncheckCheckBox == true ? false : state.seeKAllStopTimes} 
                  />;

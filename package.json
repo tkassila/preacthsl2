@@ -35,13 +35,8 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "apollo-boost": "^0.4.7",
-    "axios": "^0.19.2",
-    "graphql": "^14.6.0",
     "moment": "^2.26.0",
     "preact": "^10.4.4",
-    "preact-material-components": "^1.6.1",
-    "preact-render-to-string": "^5.1.8",
     "preact-router": "^3.2.1",
     "preact-views": "^1.0.0"
   }

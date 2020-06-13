@@ -8,7 +8,7 @@ import ShowUserStartTime from '../neareststops/searchstops/ShowUserStartTime';
 
 //import AddressList from '../neareststops/AddressList';
 //import SearchAndListAddressStops from '../neareststops/searchstops/SearchAndListAddressStops';
-import axios from 'axios';
+// import axios from 'axios';
 import style from '../App.css';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
@@ -41,9 +41,11 @@ class RoutePlans extends Component {
         }
         this.address_search_url = this.hsl_baseurl +"geocoding/v1/search?text=";
           
+        /*
         this.abortController = new AbortController(); // 1        
         this.abortSignal = this.abortController.signal; // 2
-
+        */
+       
         this.state = {
             searchstops: false,
             address: null,
@@ -75,6 +77,8 @@ class RoutePlans extends Component {
 
   componentDidMount() {
     // document.title = “Pysäkit”;
+    this.abortController = new AbortController(); // 1        
+    this.abortSignal = this.abortController.signal; // 2
   }
 
   getUsergivenStartTime(usergivenStartTime)
@@ -152,7 +156,50 @@ class RoutePlans extends Component {
            if (Config.bDebug)
             console.log("decodedurl:" +decodedurl  );            
           this.setState({addresscoordinateswrong: false});
-          let response = await axios.get(decodedurl);
+
+         
+          /*
+         fetch( decodedurl)
+         .then(response => { return response.json();})
+         .then(data => { 
+            if (Config.bDebug)
+            {
+              console.log("data");
+              console.log(data);
+            }
+            this.handleResponseData(data)
+          })
+          .catch((error) => {
+            console.error("error");
+            console.error(error);
+            this.setState({ loading: false, disableCancelButton: true, 
+              errorinquery: error, er });
+            return;
+        });
+        */
+
+       let response = null;
+       let bResponsedata = false;
+       // let response = await axios.get(decodedurl);
+       await fetch( decodedurl)
+       .then(response1 => { return response1.json();})
+       .then(data => { 
+          if (Config.bDebug)
+          {
+            console.log("data");
+            console.log(data);
+          }
+          response = data;
+          this.handleResponseData(bResponsedata, data, "address", addressparam);
+        })
+        .catch((error) => {
+          console.error("error");
+          console.error(error);
+          this.setState({ loading: false, disableCancelButton: true, 
+            errorinquery: error, er });
+          return;
+      });
+
           if (Config.bDebug)
           {
             console.log("Routeplan makeGetQuery after axios: addressresponse" );
@@ -162,8 +209,9 @@ class RoutePlans extends Component {
           {
             this.setState({addresscoordinateswrong: true});
             return;
-          }
-          this.handleResponseData(response, "address", addressparam);
+          }          
+
+          // this.handleResponseData(bResponsedata, response, "address", addressparam);
 
           this.addressresponse = null;
       //    this.setState({ addressresponse: null });
@@ -175,7 +223,27 @@ class RoutePlans extends Component {
           await axios.get(decodedurl)
                  .then(response => { this.calladdressresponce(response) } );
           */
-         response = await axios.get(decodedurl);
+
+         await fetch( decodedurl)
+         .then(response1 => { return response1.json();})
+         .then(data => { 
+            if (Config.bDebug)
+            {
+              console.log("data");
+              console.log(data);
+            }
+            response = data;
+            this.handleResponseData(bResponsedata, data, "target", targetparam);
+          })
+          .catch((error) => {
+            console.error("error");
+            console.error(error);
+            this.setState({ loading: false, disableCancelButton: true, 
+              errorinquery: error, er });
+            return;
+        });
+  
+         // response = await axios.get(decodedurl);
          if (Config.bDebug)
          {
           console.log("Routeplan makeGetQuery after axios: addressresponse" );
@@ -183,7 +251,8 @@ class RoutePlans extends Component {
          }
           if (response == null)
                  return;
-          this.handleResponseData(response, "target", targetparam);
+         // bResponsedata = true;
+        //  this.handleResponseData(bResponsedata, response, "target", targetparam);
         // }
 
         if (this.addressdata != null && this.addresstargetdata != null)
@@ -202,7 +271,7 @@ class RoutePlans extends Component {
       /** this mehtod returns json object with founded values:
        * 
        */
-      seekRigthAddressFromResponse(response, address)
+      seekRigthAddressFromResponse(bResponsedata, response, address)
       {
                if (response == null)
                    return null;
@@ -211,7 +280,11 @@ class RoutePlans extends Component {
 
               let i = 0;
               let bSearch = false;
-              const features = response.data.features;
+              let features = null;
+              if (bResponsedata) 
+                features = response.data.features;
+              else
+                features = response.features;
               let feature, coordinates, street;
               let bExactAdressFound = false;
               let alladdresses = [];
@@ -321,7 +394,7 @@ class RoutePlans extends Component {
           return ret;
       }
     
-    handleResponseData(response, dataname, addressparam)
+    handleResponseData(bResponsedata, response, dataname, addressparam)
     {
       if (Config.bDebug)
       {
@@ -335,14 +408,18 @@ class RoutePlans extends Component {
         firstAddress = firstAddress.replace(",", "");
         if (Config.bDebug)
             console.log("firstAddress: " +firstAddress);
-        var found = this.seekRigthAddressFromResponse(response, firstAddress);        
+        var found = this.seekRigthAddressFromResponse(bResponsedata, response, firstAddress);        
 
         // foundedrecorf = this.state.returneddata;
         let earlieraddress = null;
         
         let i = 0;
         let bSearch = false;
-        const features = response.data.features;
+        let features = null;
+        if (bResponsedata) 
+          features = response.data.features;
+        else
+          features = response.features;
         let feature, coordinates, street;
         let bExactAdressFound = false;
 
@@ -363,7 +440,7 @@ class RoutePlans extends Component {
               console.log("- RoutePlans handleResponseData firstAddress: " +firstAddress);
             if (firstAddress != null)
             {
-               found = this.seekRigthAddressFromResponse(response, firstAddress);               
+               found = this.seekRigthAddressFromResponse(bResponsedata, response, firstAddress);               
             }
             earlieraddress = firstAddress;
             if (Config.bDebug)

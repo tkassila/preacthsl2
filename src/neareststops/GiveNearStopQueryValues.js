@@ -24,7 +24,7 @@ class GiveNearStopQueryValues extends Component
       //      chkbox: false
                 inputValue: localAddress,
                 inputDistance: localDistance,
-                errordistance: null,
+                errordistance: props.errorinquery,
                 addresscoordinateswrong: false,
                 stopstarttime: null,
                 addresses: null
@@ -91,7 +91,8 @@ class GiveNearStopQueryValues extends Component
             inputValue: localAddress,
             inputDistance: localDistance,
             address: nextProps.address,
-            addresses: nextProps.alladdresses
+            addresses: nextProps.alladdresses,
+            errordistance : nextProps.errorinquery
         });
         return true;   
     }

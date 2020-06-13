@@ -1,11 +1,11 @@
 import React, { Fragment, render, Component } from 'preact';
 import {h } from 'preact';
-import axios from 'axios';
+// import axios from 'axios';
 import NearestStops from '../NearestStops';
 import StopTime from './StopTime';
 import Config from '../../util/Config';
 import StaticFunctions from '../../util/StaticFunctions';
-import { duplicateFieldDefinitionNameMessage } from 'graphql/validation/rules/UniqueFieldDefinitionNames';
+// import { duplicateFieldDefinitionNameMessage } from 'graphql/validation/rules/UniqueFieldDefinitionNames';
 
 class NearStop extends Component 
 {
