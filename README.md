@@ -59,7 +59,9 @@ e) server.js above it (into the new dir).
 The server is starting at port 80 for http and 443 for https.
  
 A github dir *serverexcample* contais node server.js etc files as an example server.
- 
+
+Option: a local gateway server for to get trafic json data (not needed any more)
+
 Config.js file contais by ex. a gateway address definition. And reacthslserver directory constains that gateway server made by node server, *if* it is needed. It is started by command: node server.js <enter>. If you may change Config.js file url or/and port, then change also gateway server.js file also.
 
 Tuomas Kassila
