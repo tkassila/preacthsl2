@@ -1,9 +1,11 @@
 # preacthsl2
 Application purpose
 
-PWA accessibility user app makes queries from web browser into a direct into trafic data server where are my bustops and routes. And when by ex. a bus comes. It is using data by using own local gateway server, which redirect post queries into HSL, FINLAND or WALTTI system server. All queried data are shown in below a current query 'form'. It can also open timetable html page on HSL and FINLAND user html pages. And open pdf file that may contain timetables for a bus stop of a user made query. 
+PWA accessibility user app makes queries from web browser into a direct into trafic data server where are my bustops and routes. And when by ex. a bus comes. From browser all queries are redirect post queries into HSL, FINLAND or WALTTI 
+system server. All queried data are shown in below a current query 'form'. It can also open timetable html page on 
+HSL and FINLAND user html pages. And open pdf file that may contain timetables for a bus stop of a user made query. 
  
-The application is coded also for visual impared people in the mind. The application can used by mouse, but also by screenreader, when a user pressing a tab. And selecting by ex. a current link, button by enter key. Checkboxies are set on or off by pressing a space bar.  A screen reader is reading app page logical text elements, like busstop header or route or its sub elments by pressing a tab key.
+The application is coded also for visual impared people in the mind. The application can used by mouse, but also by screenreader, when a user pressing a tab or enter keys. And selecting by ex. a current link, button by enter key. Checkboxies are set on or off by pressing a space bar.  A screen reader is reading app page logical text elements, like busstop header or route or its sub elments by pressing a tab key.
 
 Development
 
