@@ -862,7 +862,7 @@ class NearStop extends Component
                     href={this.state.stop.place.gtfsId}                     
                     style={this.props.canClick ? {pointerEvents: "none"} : null}
               
-                    onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? "" : "Asema"} {this.state.stop.place.code} 
+                    onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? " " : "Asema"} {this.state.stop.place.code} 
 		            {this.state.stop.place.name} {this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
                 <space>  </space>
                 {openpdflink} {opentimetablelink} 
