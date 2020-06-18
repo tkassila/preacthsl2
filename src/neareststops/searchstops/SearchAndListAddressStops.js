@@ -67,7 +67,8 @@ class SearchAndListAddressStops extends Component
             else
               console.log("null: client" );
         }
-
+        
+        this.removeThisStopNoStoptimes = this.removeThisStopNoStoptimes.bind(this);
       //  this.makeGetQuery();
     }
 
@@ -564,7 +565,7 @@ if (Config.bDebug)
         console.log("distance=" +distance);
         }
 
-	this.setState({ ... this.state, distance: distance });
+	      this.setState({ ... this.state, distance: distance });
 	
      //   React.render(this, document.getElementById('div.ListAddresses'));
        /* axios.get("https://api.digitransit.fi/geocoding/v1/search?text=kamppi&size=1")
@@ -597,7 +598,39 @@ if (Config.bDebug)
         {
             this.setState({seeKAllStopTimes: false});
         }
-      }
+    }
+
+    removeThisStopNoStoptimes(removeStop)
+    {
+        if (Config.bDebug)
+        {
+          console.log("removeThisStopNoStoptimes");
+          console.log("removeStop");
+          console.log(removeStop);
+        }
+        if (removeStop == null)
+            return;
+        if (this.state.neareststops == null)
+            return;
+        let newlist = new Array();
+        let ind = 0;
+        this.state.neareststops.forEach(stop => {     
+          console.log("stop");                 
+            if (stop.index != removeStop)
+              newlist[ind] = stop;
+            ind++;
+       });
+
+        if (Config.bDebug)
+        {
+          console.log("removeThisStopNoStoptimes");
+          console.log("newlist");
+          console.log(newlist);
+        }
+        this.nearestopsmap = null;
+        this.setState({ neareststops: newlist});
+
+    }
 
     render(props, state) 
     { 
@@ -654,16 +687,18 @@ if (Config.bDebug)
             console.log("coordinates:" +coordinates);
             console.log("street:" +street);
             */
-           if (Config.bDebug)
-           console.log("this.state.neareststops:" +state.neareststops);
-            if (state.neareststops)
+           this.nearestopsmap = null;
+            if (Config.bDebug)
+              console.log("this.state.neareststops:" +state.neareststops);
+            if (state.neareststops != null)
               this.nearestopsmap = state.neareststops.map((edge, i) => {
                 if (edge.node != null && edge.node.place != null && edge.node.place != undefined
                   && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
                return (
                 <li styles={itemStyles}><NearStop index={i} stop={edge.node} 
                 seeKAllStopTimes={this.state.seeKAllStopTimes}
-                usergivenStartTime={props.usergivenStartTime} /></li>
+                usergivenStartTime={props.usergivenStartTime}
+                removeThisStopNoStoptimes={this.removeThisStopNoStoptimes} /></li>
                ); 
              } 
              );

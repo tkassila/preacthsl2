@@ -29,6 +29,7 @@ class NearStop extends Component
             stop: this.props.stop,
             seeKAllStopTimes: false,
             secondquerystoptime: false,
+            no_stoptimes_at_all: false
         }
      
         if (this.props.client)
@@ -46,6 +47,11 @@ class NearStop extends Component
           console.log("null: client" );
         }
       //  this.makeGetQuery();
+    }
+
+    removeThisStopNoStoptimes()
+    {
+       return this.state.no_stoptimes_at_all;
     }
 
     clearTimeout(timer)
@@ -282,7 +288,9 @@ class NearStop extends Component
           });
         }
         else
-        {
+        {     
+          ;
+          /*
             if (!this.state.secondquerystoptime)
             {
               this.timer = setTimeout(() => {
@@ -291,14 +299,25 @@ class NearStop extends Component
                 console.log("!this.state.secondquerystoptime");
                 this.setState({ secondquerystoptime: true});
                 this.makeApolloCallForNearestStopTimes(stopid);
+                this.setState({ secondquerystoptime: false});
                 this.clearTimeout(this.timer);
               }, 4000);       
             }
+            */
         }
 
         if (this.state.secondquerystoptime)
         {
           this.setState({ secondquerystoptime: false});
+        }
+
+        if (stoptimes == null || stoptimes.length == 0)
+        {
+           if (Config.bDebug)
+              console.log("stoptilmes is null");
+           // this.setState({no_stoptimes_at_all: true});
+           this.props.removeThisStopNoStoptimes(this.props.index);
+           return;
         }
 
         if (Config.bDebug)
@@ -669,10 +688,12 @@ class NearStop extends Component
       astopClicked = (event) => {  
           event.preventDefault();
 
-          if (this.state.underServerCall)
+          if (this.state.underServerCall || this.state.secondquerystoptime)
           {
-            if (Config.bDebug)
-              console.log("this.state.underServerCall true");
+              if (Config.bDebug && this.state.underServerCall)
+                console.log("this.state.underServerCall true");
+              if (Config.bDebug && this.state.secondquerystoptime)
+                console.log("this.state.secondquerystoptime true");
               return;
           }
 
