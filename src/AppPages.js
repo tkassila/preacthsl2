@@ -7,8 +7,6 @@ import Header from './components/header/Header';
 import Help from './help/Help';
 
 //import Header from 'header';
-//import { Views, Link } from 'preact-views';
-import { Link } from 'preact-views';
 
 // import logo from './logo.svg';
 import './App.css';

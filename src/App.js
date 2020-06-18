@@ -5,8 +5,6 @@ import RoutePlans from './routeplan/RoutePlans';
 //import RoutePlans from 'routeplans';
 import Header from './components/header/Header';
 //import Header from 'header';
-//import { Views, Link } from 'preact-views';
-import { Link } from 'preact-views';
 
 // import logo from './logo.svg';
 // import './App.css';

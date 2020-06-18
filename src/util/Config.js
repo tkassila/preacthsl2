@@ -9,7 +9,7 @@ class Config extends Component {
      */
     static bTestButton = false;
 
-    static bDebug = false
+    static bDebug = true
     ;
     static bUseOwnGatewayServer = false;
     static CORS_DIGITRANSITSERVER = 'https://api.digitransit.fi/';
