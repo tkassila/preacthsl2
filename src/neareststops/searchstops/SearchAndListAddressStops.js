@@ -26,6 +26,7 @@ class SearchAndListAddressStops extends Component
     address_search_url = null;
     prev_features = null;
     nearestopsmap = null;
+    new_neareststops = null;
          
   
     constructor(props) {
@@ -49,7 +50,8 @@ class SearchAndListAddressStops extends Component
             seeKAllStopTimes: false,
             uncheckCheckBox: false,
             distance: props.distance,
-            alladdresses: props.alladdresses,          
+            alladdresses: props.alladdresses,      
+            new_neareststops: null,    
             loading: false
         }
      
@@ -432,12 +434,10 @@ if (Config.bDebug)
     }
     */
 
-    /*
     componentDidUpdate()
     {
-        this.makeGetQuery();
+      // this.setState({new_neareststops: null});
     }
-    */
 
     makeGetQuery()
     {
@@ -589,14 +589,23 @@ if (Config.bDebug)
         console.log(isChecked);
         }
 
-        if (isChecked && this.nearestopsmap != null ) 
+        if (Config.bDebug)
         {
-            this.setState({seeKAllStopTimes: true});
+          console.log("this.nearestopsmap");
+          console.log(this.nearestopsmap);
+        }
+    if (isChecked && this.nearestopsmap != null ) 
+        {
+          if (Config.bDebug)
+            console.log("isChecked && this.nearestopsmap != null");
+          this.setState({seeKAllStopTimes: true});
         }
         else
         if (!isChecked && this.nearestopsmap != null ) 
         {
-            this.setState({seeKAllStopTimes: false});
+          if (Config.bDebug)
+            console.log("!isChecked && this.nearestopsmap != null");
+          this.setState({seeKAllStopTimes: false});
         }
     }
 
@@ -614,12 +623,19 @@ if (Config.bDebug)
             return;
         let newlist = new Array();
         let ind = 0;
+        let bFound = false;
         this.state.neareststops.forEach(stop => {     
           console.log("stop");                 
             if (stop.index != removeStop)
+            {
               newlist[ind] = stop;
+              bFound = true;
+            }
             ind++;
        });
+
+    //   if (bFound)
+      //    this.new_neareststops = newlist;
 
         if (Config.bDebug)
         {
@@ -627,9 +643,32 @@ if (Config.bDebug)
           console.log("newlist");
           console.log(newlist);
         }
-        this.nearestopsmap = null;
-        this.setState({ neareststops: newlist});
-
+        let removedivnode = document.getElementById("neartopli" +removeStop);
+        if (Config.bDebug)
+        {
+          console.log("removeThisStopNoStoptimes");
+          console.log("removedivnode");
+          console.log(removedivnode);
+        }
+        // not call this: because js object will remove and ul/li item remains: this.setState({ neareststops: newlist});
+        if (removedivnode != null)
+        {
+          let nearestopsmapdivnode = document.getElementById("nearestopsmapul");
+          if (Config.bDebug)
+          {
+            console.log("nearestopsmapdivnode");
+            console.log(nearestopsmapdivnode);
+          }
+          if (removedivnode.parentNode) {
+            if (Config.bDebug)
+              console.log("removedivnode.parentNode");
+            removedivnode.parentNode.removeChild(removedivnode);
+          }
+          else        
+            nearestopsmapdivnode.removeChild(removedivnode);
+          if (Config.bDebug)
+            console.log("nearestopsmapdiv.removeChild(removedivnode)");
+        }
     }
 
     render(props, state) 
@@ -687,21 +726,32 @@ if (Config.bDebug)
             console.log("coordinates:" +coordinates);
             console.log("street:" +street);
             */
-           this.nearestopsmap = null;
             if (Config.bDebug)
               console.log("this.state.neareststops:" +state.neareststops);
             if (state.neareststops != null)
-              this.nearestopsmap = state.neareststops.map((edge, i) => {
-                if (edge.node != null && edge.node.place != null && edge.node.place != undefined
-                  && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
-               return (
-                <li styles={itemStyles}><NearStop index={i} stop={edge.node} 
-                seeKAllStopTimes={this.state.seeKAllStopTimes}
-                usergivenStartTime={props.usergivenStartTime}
-                removeThisStopNoStoptimes={this.removeThisStopNoStoptimes} /></li>
-               ); 
-             } 
-             );
+            {
+                let nstops = state.neareststops;
+                /*
+                if (!state.isChecked && this.new_neareststops != null)
+                {
+                  if (Config.bDebug)
+                  console.log("this.new_neareststops != null:");
+                      nstops = this.new_neareststops; 
+                  this.new_neareststops = null;                
+                }
+                */
+                this.nearestopsmap = nstops.map((edge, i) => {
+                  if (edge.node != null && edge.node.place != null && edge.node.place != undefined
+                    && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
+                return (
+                  <li id={"neartopli" +i} key={"neartopli" +i} styles={itemStyles}><NearStop key={"nearstop" +i} index={i} stop={edge.node} 
+                  seeKAllStopTimes={this.state.seeKAllStopTimes}
+                  usergivenStartTime={props.usergivenStartTime}
+                  removeThisStopNoStoptimes={this.removeThisStopNoStoptimes} /></li>
+                ); 
+              } 
+              );
+            }
 
              let uncheckCheckBox = (state.uncheckCheckBox);
              if (Config.bDebug)
@@ -733,7 +783,7 @@ if (Config.bDebug)
             // 
             const divstyle = { padding_left: 0 };
             return (
-                <div >
+                <Fragment>
                 <h3 tabIndex="0">{state.address}:n pysäkit (pit {props.longitude} lev {props.latitude})</h3>
                 {ustarttime}
                 <p></p>
@@ -741,14 +791,18 @@ if (Config.bDebug)
                 <p></p>
                 <div id="loadingComp1" aria-live="polite">{loadingComp}</div>
                 {features2}              
-                {this.nearestopsmap}
+                <div id="nearestopsmapdiv" role="navigation">
+                <ul id="nearestopsmapul" style={style.ul}>
+                  {this.nearestopsmap}
+                </ul>
                 </div>
+                </Fragment>
             );
        }
         else
         return (
-            <div>
-            </div>
+            <Fragment>
+            </Fragment>
         );
     }
 }

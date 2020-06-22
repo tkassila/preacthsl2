@@ -1,4 +1,4 @@
-import { h, p, Component } from 'preact';
+import { h, p, Component, Fragment } from 'preact';
 // import StaticFunctions from '../util/StaticFunctions';
 // import Card from 'preact-material-components/Card';
 // import 'preact-material-components/Card/style.css';
@@ -13,10 +13,10 @@ function Help (props) {
     return(
         <section>
 				<h1 tabIndex="0">Ohje</h1>
-				<div>
-					<div>
+				<Fragment>
+					<Fragment>
 						<h3 tabIndex="0">Tarkoitus</h3>
-					</div>
+					</Fragment>
 					<p tabIndex="0">
                     Ohjelmalla tehdään kyselyjä liikennevälineiden tietyn osoitteen 
             lähipysäkkien pysähtymisaikoja sekä toinen kysely lähtö- 
@@ -112,15 +112,15 @@ function Help (props) {
                     <p tabIndex="0"><b>Reittilinkkikista</b>, joiden web linkkejä klikkaamalla tai enterillä 
                     valitsemalla saadaan uusi lista linkin alle kunkin reitin haetut vaihdot pysäkkiaikoineen jne. 
                     Uudelleen valitsemalla äsken avattu linkki, saadaan sen alainen luettelo sulkeutumaan.</p>
-                    <div>
+                    <Fragment>
                     <a tabIndex="0" aria-label="Pysäkit osoitteen mukaan"                         
                         href="/" >Pysäkit osoitteen mukaan</a><br/>
                     <a tabIndex="0" aria-label="Reittisuunnitelma" 
                         
                         href="/routeplan" >Reittisuunnitelma</a>			
 
-                    </div>
-				</div>
+                    </Fragment>
+				</Fragment>
 			</section>
     
     );

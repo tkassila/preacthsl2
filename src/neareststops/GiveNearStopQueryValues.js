@@ -1,4 +1,4 @@
-import React, { Component, h, createRef }  from 'preact';
+import React, { Component, h, createRef, Fragment }  from 'preact';
 // import Button from 'preact-material-components/Button';
 import Config from '../util/Config';
 import StaticFunctions from '../util/StaticFunctions';
@@ -27,6 +27,7 @@ class GiveNearStopQueryValues extends Component
                 errordistance: props.errorinquery,
                 addresscoordinateswrong: false,
                 stopstarttime: null,
+                errormsg: null,
                 addresses: null
             }
         this.distanceRef = React.createRef()
@@ -817,32 +818,30 @@ class GiveNearStopQueryValues extends Component
             data-message="Tietoja luetaan järjestelmästä valinta">
               <fieldset>
                 <legend>Mistä tietoja haetaan:</legend>
-                  <div>
                   <input type="radio" id="hsl" value="HSL" checked={true} 
                  name="datasource" /><label for="hsl">HSL</label>
                 <input type="radio" id="finland" value="FINLAND" 
                 name="datasource" /><label for="finland">FINLAND</label>
                 <input type="radio" id="waltti" value="WALTTI" 
                 name="datasource" /><label for="waltti">WALTTI</label>
-                </div>
               </fieldset>
             </div>
 
             <h3>Lähisoite pysäkeille:</h3>
                 <label htmlFor="address">Anna lähin osoite lähellä sijaitseville pysäkeille (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
-                <input type="text" id="address" name="address" placeholder="Kirjoita haettava osoite.." 
+                <input type="text" id="address" name="address" placeholder="Kirjoita haettava osoite.." aria-required="true"
                     maxlength="200" size="70" onChange={this.updateInput}
                     onFocus={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
                 <label htmlFor="startime">Anna kelloaika lähtöajalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
                 <input type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
-                    maxlength="20" size="70" onChange={this.updateStarttime}
+                    maxlength="20" size="70" onChange={this.updateStarttime} aria-required="false"
                     onFocus={this.focusStarttime} 
                     defaultValue={this.state.starttime || ''}
                     ref={this.starttimefield} /><br/><br/>
                 <label htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
-                <input type="text" id="distance" name="distance"                     
+                <input type="text" id="distance" name="distance" aria-required="true"
                     maxlength="70" size="70" onChange={this.updateDistance} 
                     defaultValue={this.state.inputDistance}
                     ref={this.distanceRef}/>

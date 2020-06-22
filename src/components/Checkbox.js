@@ -1,5 +1,5 @@
 
-import React, { Component } from 'preact';
+import React, { Component, Fragment } from 'preact';
 
 import Config from '../util/Config';
 
@@ -33,23 +33,25 @@ class Checkbox extends Component {
   }
 
   render() {
-    const { label } = this.props;
+    const strlabel = this.props.label;
     const { isChecked } = this.state;
-    
+    let id = "checkbox_id_" +this.props.checkboxid;
     return (
-      <div className="checkbox" data-message="radionappi">
-        <label>
-          <input
+      <Fragment>
+            <input id={id} tabIndex="0" name={id}
                             type="checkbox"
-                            value={label}
+                            value={strlabel}
                             checked={isChecked}
                             onChange={this.toggleCheckboxChange}
-                            aria-label={label}
+                            aria-label={strlabel}
                         />
-
-          {label}
-        </label>
-      </div>
+          <space>    </space>
+          <label htmlFor={id} > 
+          
+          {strlabel} 
+          
+          </label>
+      </Fragment>
     );
   }
 }

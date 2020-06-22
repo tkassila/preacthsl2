@@ -58,7 +58,7 @@ export default class Header extends Component {
 		if (Config.bDebug)
 			console.log(props.selectedRoute);
 		return (
-			<div data-message="Valikko" tabindex="0">
+			<div data-message="Valikko" tabIndex="0">
 				<TopAppBar className="topappbar">
 					<TopAppBar.Row>
 						<TopAppBar.Section align-start>

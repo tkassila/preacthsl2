@@ -120,7 +120,7 @@ function LegStep (props) {
                     let showedtext = starttime +
                     " Määränpäähän " +StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";                    
-                    return (<div><li tabindex="0" aria-label={showedtext}>
+                    return (<div><li tabIndex="0" aria-label={showedtext}>
                         <a id={"leglinkdivlink" +props.id} 
                         >{showedtext}</a></li>
                         <ul >{intermediateStops}</ul>                        
@@ -132,7 +132,7 @@ function LegStep (props) {
                     +StaticFunctions.getLegName(props.legdata) +
                     " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";
-                    return (<li tabindex="0" aria-label={showedtext}>
+                    return (<li tabIndex="0" aria-label={showedtext}>
                         {showedtext}
                         </li>);
                 }
@@ -143,7 +143,7 @@ function LegStep (props) {
             +StaticFunctions.getLegName(props.legdata) + 
             " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
             " Kesto " +duration +" min";
-            return (<li tabindex="0" aria-label={showedtext}>{showedtext}</li>);
+            return (<li tabIndex="0" aria-label={showedtext}>{showedtext}</li>);
         }
 }
 

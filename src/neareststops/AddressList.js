@@ -85,8 +85,8 @@ class AddressList extends Component
                     aria-label="Näytä osoitelista" 
                     defaultChecked={this.state.chkbox} 
                     onChange={this.handleChangeChk} />
-                    <label htmlFor="checkbox_id" >Näytä osoitelista</label>
-                    <div className={!state.chkbox ? 'hidden' : ''}>
+                    <label htmlFor="checkbox_id" >Näytä osoitelista</label>                    
+                    <div role="navigation" className={!state.chkbox ? 'hidden' : ''}>
                      {addresses}                    
                     </div>           
                </Fragment>

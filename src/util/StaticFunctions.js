@@ -725,7 +725,7 @@ static getStartTimeErrorMsg(msg)
             break;
         default:
             console.log("getStartTimeErrorMsg unknow err msg: " +msg);
-            return starUserMsg +" tuntematon virhe. " +endUserMsg;
+            return starUserMsg +"" +endUserMsg;
             break;
     }
 }

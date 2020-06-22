@@ -180,7 +180,7 @@ class GiveRoutePlanQueryValues extends Component
                             console.log('starttimefield called!');
                             this.starttimefield.current.focus();
                             this.clearTimeout(this.timer);
-                            }, 4000);                        
+                            }, 18000);                        
                         return;
                     }
                 }
@@ -217,24 +217,24 @@ class GiveRoutePlanQueryValues extends Component
             <h3>Osoitteet ehdotettavile reiteille:</h3>
                 <label htmlFor="sourceaddress">Anna lähtöosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
                 <input type="text" id="sourceaddress" name="sourceaddress" placeholder="Kirjoita lähtöosoite.." 
-                    maxlength="100" size="70" onChange={this.updateInput} 
+                    maxlength="100" size="70" onChange={this.updateInput} aria-required="true"
                     onFocue={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
                 <label htmlFor="targetaddress">Anna määränpääosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
                 <input type="text" id="targetaddress" name="targetaddress" placeholder="Kirjoita määränpääosoite.." 
-                    maxlength="100" size="70" onChange={this.updateTarget} 
+                    maxlength="100" size="70" onChange={this.updateTarget} aria-required="true"
                     onFocue={this.focusTarget} 
                     defaultValue={this.state.inputTarget || ''}
                     ref={this.targetaddressfield}/><br/><br/>
                 <label htmlFor="startime">Anna kelloaika suunnitelmalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
                 <input type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
-                    maxlength="20" size="70" onChange={this.updateStarttime}
+                    maxlength="20" size="70" onChange={this.updateStarttime} aria-required="false"
                     onFocus={this.focusStarttime} 
                     defaultValue={this.state.starttime || ''}
                     ref={this.starttimefield} /><br/><br/>
 
-                {state.errormsg != null ? <div tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div>: null}<br/>
+                <div tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div><br/>
                     <br/>
                 <button onClick={this.searchroutes} aria-label="Hae reittejä">
                     

@@ -63,7 +63,7 @@ class NearStop extends Component
         if (this.props.seeKAllStopTimes !== nextProps.seeKAllStopTimes) {
             if (nextProps.seeKAllStopTimes)
             {                
-                this.setState({seeKAllStopTimes: true});
+                this.setState({seeKAllStopTimes: true, linkclicked: true});
                 this.seeKAllStopTimes();
             }    
             else
@@ -71,7 +71,7 @@ class NearStop extends Component
               /*  if (this.state.seeKAllStopTimes)
                 {
                     */                
-                   this.setState({linkclicked: !this.state.linkclicked, seeKAllStopTimes: false});
+                   this.setState({linkclicked: false, seeKAllStopTimes: false});
                // }
             }            
         }
@@ -876,15 +876,18 @@ class NearStop extends Component
 
         //       onKeyPress={this.handleKeyPress}
 
+                const divid = "routestoptimesofstopdiv" +props.index;
+
                 return (  // <Fragment>
-                 <div id={"routestoptimesofstopdiv" +props.index} data-message="pysäkki"> 
+                 <div id={divid} data-message="pysäkki"> 
                     <a id={this.state.stop.place.gtfsId} role="link"
                     tabIndex="0"
                     href={this.state.stop.place.gtfsId}                     
                     style={this.props.canClick ? {pointerEvents: "none"} : null}
               
-                    onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? " " : " Asema "} {this.state.stop.place.code} 
-		            {this.state.stop.place.name} {this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
+                    onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? " " : " Asema "} 
+                    {this.state.stop.place.code}<space>  </space>
+		            {this.state.stop.place.name}<space>  </space>{this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
                 <space>  </space>
                 {openpdflink} {opentimetablelink} 
                     <ul id={"ulnearstop" +this.state.stop.place.gtfsId} >                    

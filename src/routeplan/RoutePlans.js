@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, Component, useEffect, Fragment } from 'preact';
 import NearestStops from '../neareststops/NearestStops';
 import GiveRoutePlanQueryValues from './GiveRoutePlanQueryValues';
 import RoutePlan from './RoutePlan';
@@ -59,6 +59,7 @@ class RoutePlans extends Component {
             plans: null,
             uncheckCheckBox: false,
             showShowAllLegs: false,
+            loaddarkstyle: false,
             bButtonPressed: false,
             disableCancelButton: true,
             firstaddress: null,
@@ -66,12 +67,20 @@ class RoutePlans extends Component {
             firstaddressfeatures: null,
             secondaddressfeatures: null,
             usergivenStartTime: null,
+            errormsg: null,
+            loaddarkstyle: false,
+            stylechangedattime: null,
             addresscoordinateswrong: false
         }
+
     }
 
     
     shouldComponentUpdate(nextProps, nextState) { 
+      if (nextProps.stylechangedattime != this.state.stylechangedattime)
+      {
+         this.setState({ errorinquery: "Ulkoasua muutettu", loaddarkstyle: nextProps.loaddarkstyle});
+      }
       return true;
   }
 
@@ -898,21 +907,25 @@ class RoutePlans extends Component {
         console.log("state");
         console.log(state);
       }
+
         let loading = this.state.loading;
         let loadingComp = null;
         let features2 = null;
         let plans = this.state.plans;
         if (state.addresscoordinateswrong == true)
-          loadingComp = <h4 aria-label="Tulokset alla">Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja.</h4>;
+          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja">Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja.</p>;
         else
         if (state.bButtonPressed && (!loading && plans != null))
-          loadingComp = <h4 aria-label="Tulokset alla">Tulokset alla.</h4>;
+          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
         else
         if (state.bButtonPressed && (loading && plans == null))
-           loadingComp = <h4 aria-label="Ladataan">Ladataan...</h4>;
+           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
         else
         if (state.bButtonPressed && (!loading && plans == null))
-          loadingComp = <h4 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h4>;
+          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
+        else
+        if ((state.errormsg != null))
+          loadingComp = <p tabIndex="0" style={style.political_p} aria-label={state.errormsg}></p>;
         
         if (Config.bDebug)
           console.log(plans);
@@ -952,28 +965,26 @@ class RoutePlans extends Component {
               ustarttime = <ShowUserStartTime starttime={state.usergivenStartTime}/>;
         }
 
-        return (
-            <section data-message="Reittisuunnitelma">              
+        return (   
+          <section data-message="Reittisuunnitelma">              
              <h1 tabIndex="0">Reittisuunnitelma lähtö- ja tulo-osoitteiden mukaan</h1>
              <div onChange={props.selectedDataSource} 
-	 data-message="Tietoja luetaan järjestelmästä valinta">
-	   <fieldset>
-		 <legend>Mistä tietoja haetaan:</legend>
-		   <div>
-		   <input type="radio" id="hsl" value="HSL" checked={true} 
-		  name="datasource" /><label for="hsl">HSL</label>
-		 <input type="radio" id="finland" value="FINLAND" 
-		 name="datasource" /><label for="finland">FINLAND</label>
-		 <input type="radio" id="waltti" value="WALTTI" 
-		 name="datasource" /><label for="waltti">WALTTI</label>
-		 </div>
-	   </fieldset>
-	 </div>
+	            data-message="Tietoja luetaan järjestelmästä valinta">
+                <fieldset>
+                    <legend>Mistä tietoja haetaan:</legend>
+                      <input type="radio" id="hsl" value="HSL" checked={true} 
+                      name="datasource" /><label for="hsl">HSL</label>
+                    <input type="radio" id="finland" value="FINLAND" 
+                    name="datasource" /><label for="finland">FINLAND</label>
+                    <input type="radio" id="waltti" value="WALTTI" 
+                    name="datasource" /><label for="waltti">WALTTI</label>
+                </fieldset>
+              </div>
              <GiveRoutePlanQueryValues  addresssesselected={this.addresssesSelected}
                address={this.state.address} target={this.state.target}
                routeAddressesSelected={this.routeAddressesSelected}
                disableCancelButton={this.state.disableCancelButton}/> 
-             <div>
+             <Fragment>
              {features2}
              {ustarttime}
              <p/>
@@ -981,11 +992,11 @@ class RoutePlans extends Component {
              <p/>
              <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
              <div role="navigation" aria-label="kyselyn tulokset">
-              <ul style={style.ul}>
+              <ul id="planitemsul" style={style.ul}>
              {planitems}
              </ul>
              </div>
-             </div>
+             </Fragment>
             </section>
         );
     }

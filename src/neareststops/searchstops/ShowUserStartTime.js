@@ -2,6 +2,7 @@
 import Config from '../../util/Config';
 import StaticFunctions from '../../util/StaticFunctions';
 import moment from 'moment';
+import { Fragment } from 'preact';
 /**
  * This class is used to show a bus stop or like that.
  * 
@@ -32,7 +33,7 @@ function ShowUserStartTime(props) {
         }
 
         if (ret == null)
-            return (<div></div>);
+            return (<Fragment></Fragment>);
         else
         return ( <div tabIndex="0" aria-label={"" + ret}>
             <b> {ret} </b>

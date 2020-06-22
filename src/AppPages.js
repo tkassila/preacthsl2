@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'preact';
+import React, { Component, createRef, Fragment } from 'preact';
 import {h, p } from 'preact';
 import Router from 'preact-router';
 import RoutePlans from './routeplan/RoutePlans';
@@ -26,7 +26,8 @@ class AppPages extends Component {
     super(props);
     this.state = {
       showSidebar: false,
-      loaddarkstyle: props.loaddarkstyle
+      loaddarkstyle: props.loaddarkstyle,
+      stylechangedattime: props.stylechangedattime
     }
     // this.cssloader = createRef();
     // this.changeStyleSheet();
@@ -48,32 +49,42 @@ class AppPages extends Component {
     const showSidebar = this.state.showSidebar;
     const  size = 'small';
     return (
-      <div>
+      <Fragment>
         <Header changeStyle={props.changeStyle} 
         loaddarkstyle={props.loaddarkstyle} />
        <Router>
         <div path='/' default>
            <NearestStops title="Pysäkkikysely" 
-           selectedDataSource={props.selectedDataSource}/>
+           selectedDataSource={props.selectedDataSource} 
+           loaddarkstyle={props.loaddarkstyle}
+           stylechangedattime={this.state.stylechangedattime} />
         </div>
         <div path='/reitti'>
           <RoutePlans title="Pysäkkireittiehdotukset" 
-          selectedDataSource={props.selectedDataSource}/>
+          selectedDataSource={props.selectedDataSource}
+          loaddarkstyle={props.loaddarkstyle} 
+          stylechangedattime={this.state.stylechangedattime} />
         </div>
         <div path='/routeplan'>
           <RoutePlans title="Pysäkkireittiehdotukset"
-           selectedDataSource={props.selectedDataSource}/>
+           selectedDataSource={props.selectedDataSource} 
+           loaddarkstyle={props.loaddarkstyle}
+           stylechangedattime={this.state.stylechangedattime} />
         </div>        
         <div path='/help'>
           <Help title="Ohje"
-           selectedDataSource={props.selectedDataSource}/>
+           selectedDataSource={props.selectedDataSource}
+           loaddarkstyle={props.loaddarkstyle}
+           stylechangedattime={this.state.stylechangedattime}/>
         </div>  
         <div path='/apua'>
           <Help title="Ohje"
-           loaddarkstyle={props.loaddarkstyle}/>
+           selectedDataSource={props.selectedDataSource}
+           loaddarkstyle={props.loaddarkstyle}
+           stylechangedattime={this.state.stylechangedattime}/>
         </div>  
         </Router>
-      </div>  
+      </Fragment>
     );
   } 
 }

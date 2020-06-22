@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'preact';
+import React, { Component, createRef, Fragment } from 'preact';
 import {h, p } from 'preact';
 import Router from 'preact-router';
 import RoutePlans from './routeplan/RoutePlans';
@@ -13,8 +13,8 @@ import Config from './util/Config';
 import AppPages from './AppPages';
 //import gql from "apollo-boost";
 
-const cssFuncLoader = () => import('./App.css');
-const cssFuncLoaderDark = () => import('./AppDark.css');
+//const cssFuncLoader = () => import('./App.css');
+// const cssFuncLoaderDark = () => import('./AppDark.css');
 
 // require the decache module:
 
@@ -68,14 +68,15 @@ class App extends Component {
     super(props);
     this.state = {
       showSidebar: false,
-      loaddarkstyle: true
+      loaddarkstyle: true,
+      stylechangedattime: null
     }
   }
 
   changeStyle = () =>
 	{
 		const { loaddarkstyle } = this.state;
-		this.setState({ loaddarkstyle: !loaddarkstyle});
+		this.setState({ loaddarkstyle: !loaddarkstyle, stylechangedattime: new Date()});
 	}
 
   shouldComponentUpdate(nextProps, nextState)
@@ -178,23 +179,23 @@ class App extends Component {
     }
     let cssPath = "";
 
-    // is below / is selected, then App.css path is above path:
+    // is below / is selected, then App.css or AppDark.css path is below path:
     if (removedDocumentURI != null 
         && (removedDocumentURI.includes("routeplan")
         || removedDocumentURI.includes("reitti")
-        ||removedDocumentURI.includes("help")
+        || removedDocumentURI.includes("help")
         || removedDocumentURI.includes("apua")
         ))
       cssPath = "../";
 
     return (      
-      <div>
+      <Fragment>
         <link rel="stylesheet" type="text/css" href={this.state.loaddarkstyle ? cssPath +'AppDark.css' : cssPath +'App.css'} />
         <AppPages selectedDataSource={this.selectedDataSource}
-          loaddarkstyle={this.state.loaddarkstyle}
+          loaddarkstyle={this.state.loaddarkstyle} stylechangedattime={this.state.stylechangedattime}
           changeStyle={this.changeStyle}
         /> 
-      </div>  
+      </Fragment>
     );
   } 
 }

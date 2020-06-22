@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import { h, Component, useEffect } from 'preact';
 import style from '../App.css';
 
 import GiveNearStopQueryValues from './GiveNearStopQueryValues';
@@ -49,13 +49,7 @@ class NearestStops extends Component
         return hsl_baseurl;
     }
 
-    componentDidMount() {
-      // document.title; // = “Pysäkit”;
-      /*
-      useEffect(() => {
-        document.title = "Pysäkit";
-      });
-      */      
+    componentDidMount() {    
     }
 
     // address_search_url = "https://api.digitransit.fi/geocoding/v1/search?text=";
@@ -118,6 +112,8 @@ class NearestStops extends Component
         disableCancelButton: true,
         usergivenStartTime: null,
         errorinquery: null,
+        loaddarkstyle: false,
+        stylechangedattime: null,
         addresscoordinateswrong: false
         }
     }
@@ -131,7 +127,11 @@ class NearestStops extends Component
 
 
     shouldComponentUpdate(nextProps, nextState) { 
-        return true;
+      if (nextProps.stylechangedattime != this.state.stylechangedattime)
+      {
+         this.setState({ errorinquery: "Ulkoasua muutettu", loaddarkstyle: nextProps.loaddarkstyle});
+      }
+      return true;
         /*      
         if(this.state.addressfeatures !== nextState.addressfeatures
            || this.state.neareststops !== nextState.neareststops
@@ -696,6 +696,7 @@ class NearestStops extends Component
             console.log("state.neareststops");
             console.log(state.neareststops);
         }
+    
         const search = (state.searchstops != null && state.addressfeatures != null);
         if (Config.bDebug)
         {
@@ -729,7 +730,7 @@ class NearestStops extends Component
         }
 
         if (search)
-        searchAndListAddressStops = <SearchAndListAddressStops 
+        searchAndListAddressStops = <SearchAndListAddressStops key="searchandlistaddressstops"
             address={state.address} distance={state.distance} 
             addressfeatures={state.addressfeatures} 
             addresssselected={this.addresssSelected} 
@@ -743,23 +744,23 @@ class NearestStops extends Component
         let loading = this.state.loading;
         let bButtonPressed = this.state.buttonpressed;
         if (loading == false && bButtonPressed && searchAndListAddressStops != null)
-           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Tulokset alla.</h3>;
+           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
         else
         if (loading && bButtonPressed && searchAndListAddressStops == null)
-           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Ladataan...</h3>;
+           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
         else        
         if (loading == false && bButtonPressed && state.addresscoordinateswrong
            && searchAndListAddressStops == null)
-           loadingComp = <h3 tabIndex="0" aria-label="Ladataan">Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</h3>;
+           loadingComp = <p tabIndex="0" style={style.political_p} >Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</p>;
         else        
         if (loading == false && bButtonPressed && searchAndListAddressStops == null)
-           loadingComp = <h3 tabIndex="0" aria-label="Ei tuloksia">Ei tuloksia.</h3>;
+           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
         else
         if (loading == false && bButtonPressed && state.errorinquery != null)
-           loadingComp = <h3 tabIndex="0" aria-label="Virhe kyselyn suorituksessa">Virhe kyselyn suorituksessa.</h3>
+           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Virhe kyselyn suorituksessa">Virhe kyselyn suorituksessa.</p>
 
-        return (
-            <section >
+        return (  
+          <section >
             <h1 tabIndex="0">Hae pysäkkejä osoitteen mukaan</h1>
             <GiveNearStopQueryValues style={style.page} distance={state.distance} 
             addresssselected={this.addresssSelected} address={state.address} 
@@ -769,7 +770,7 @@ class NearestStops extends Component
             errorinquery={state.errorinquery} /> 
            {addresslist}
            <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
-           <ul style={style.ul}>{searchAndListAddressStops}</ul>
+           {searchAndListAddressStops}
            </section>
         );
     }
