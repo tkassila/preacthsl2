@@ -120,9 +120,7 @@ function LegStep (props) {
                     let showedtext = starttime +
                     " Määränpäähän " +StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";                    
-                    return (<div><li tabIndex="0" aria-label={showedtext}>
-                        <a id={"leglinkdivlink" +props.id} 
-                        >{showedtext}</a></li>
+                    return (<div><li tabIndex="0" aria-label={showedtext}>{showedtext}</li>
                         <ul >{intermediateStops}</ul>                        
                         </div>);
                 }

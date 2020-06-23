@@ -1,4 +1,4 @@
-import { h, table, tr, th, createRef, Component, Fragment } from 'preact';
+import { h, table, tr, th, Component, Fragment } from 'preact';
 // import { Link } from 'preact-router/match';
 import style from './style';
 import HeaderCss from './styleDark';
@@ -7,7 +7,7 @@ import HeaderCss from './styleDark';
 // const loadercss = () => import('./style.css');
 
 /**
- * This functional component Header is displaying in header area and are used
+ * This component Header is displaying in header area and are used
  * for menu like use.
  * 
  * @param {*} props 
@@ -16,7 +16,7 @@ class Header extends Component
 {
   
 	style = null;
-	headerCssComp = createRef();
+	// headerCssComp = ();
 
 	constructor(props) {
 		super(props);

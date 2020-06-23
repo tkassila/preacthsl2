@@ -71,5 +71,19 @@ help_a:focus {
 	will-change: background-color;
 }
 
+.section {
+	display: block;
+	margin: 20px auto;
+	padding: 70px;
+	margin-bottom: 0px;
+	max-width: 100%;
+	background: #FAFAFA;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+	border-radius: 3px;
+}
+
+.p {
+	margin: 30px;
+}
 
 
