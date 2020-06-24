@@ -1,4 +1,4 @@
-import { h, table, tr, th, Component, Fragment } from 'preact';
+import { h, Component, Fragment } from 'preact';
 // import { Link } from 'preact-router/match';
 import style from './style';
 import HeaderCss from './styleDark';
