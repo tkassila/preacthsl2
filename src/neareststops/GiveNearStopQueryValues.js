@@ -1,8 +1,11 @@
 import React, { Component, h, createRef, Fragment }  from 'preact';
+import { useContext } from 'preact/compat';
+
 // import Button from 'preact-material-components/Button';
 import Config from '../util/Config';
 import StaticFunctions from '../util/StaticFunctions';
 import moment from 'moment';
+import CssDark from  '../context/Context';
 
 /**
  * This class is given address and distance inputs from user before near (bus) stops.
@@ -135,11 +138,6 @@ class GiveNearStopQueryValues extends Component
     }
     */
 
-    clearTimeout(timer)
-    {
-        this.timer = null;
-    }
-
     searchaddressss() {
         if (Config.bDebug)
             console.log("searchaddressss()");
@@ -156,7 +154,7 @@ class GiveNearStopQueryValues extends Component
             this.timer = setTimeout(() => {
                 console.log('Timeout called!');
                 this.addressfield.current.focus();
-                this.clearTimeout(this.timer);
+                clearTimeout(this.timer);
             }, 4000);        
             return;
         }
@@ -175,7 +173,7 @@ class GiveNearStopQueryValues extends Component
                 this.timer = setTimeout(() => {
                     console.log('Timeout called!');
                     this.distanceRef.current.focus();
-                    this.clearTimeoutclearTimeout(this.timer);
+                    clearTimeout(this.timer);
                 }, 4000);                        
                 return;
             }        
@@ -186,7 +184,7 @@ class GiveNearStopQueryValues extends Component
                 this.timer = setTimeout(() => {
                     console.log('Timeout called!');
                     this.distanceRef.current.focus();
-                    this.clearTimeout(this.timer);
+                    clearTimeout(this.timer);
                 }, 4000);                        
                 return;
             }
@@ -201,7 +199,7 @@ class GiveNearStopQueryValues extends Component
                 this.timer = setTimeout(() => {
                     console.log('Timeout called!');
                     this.distanceRef.current.focus();
-                    this.clearTimeout(this.timer);
+                    clearTimeout(this.timer);
                 }, 4000);                        
                 return;
             }
@@ -262,8 +260,8 @@ class GiveNearStopQueryValues extends Component
                 this.timer = setTimeout(() => {
                     console.log('starttimefield called!');
                     this.starttimefield.current.focus();
-                    this.clearTimeout(this.timer);
-                    }, 4000);                        
+                    clearTimeout(this.timer);
+                    }, 28000);                        
                 return;
                 }
             }
@@ -801,6 +799,7 @@ class GiveNearStopQueryValues extends Component
         if (Config.bDebug)
             console.log("errordistance" +state.errordistance);
 
+        const cssDark = useContext(CssDark);
         let testbuttonforstarttime = null;
         if (Config.bTestButton)
         {
@@ -814,46 +813,46 @@ class GiveNearStopQueryValues extends Component
         return (             
             <div data-message="Anna haettavien pysäkkien lähiosoite">
             {testbuttonforstarttime}
-                            <div onChange={props.selectedDataSource} 
+                            <div className={"div" +cssDark} onChange={props.selectedDataSource} 
             data-message="Tietoja luetaan järjestelmästä valinta">
-              <fieldset>
-                <legend>Mistä tietoja haetaan:</legend>
-                  <input type="radio" id="hsl" value="HSL" checked={true} 
+              <fieldset className={"fieldset" +cssDark} >
+                <legend className={"legend" +cssDark} >Mistä tietoja haetaan:</legend>
+                  <input className={"input" +cssDark} type="radio" id="hsl" value="HSL" checked={true} 
                  name="datasource" /><label for="hsl">HSL</label>
-                <input type="radio" id="finland" value="FINLAND" 
+                <input className={"input" +cssDark} type="radio" id="finland" value="FINLAND" 
                 name="datasource" /><label for="finland">FINLAND</label>
-                <input type="radio" id="waltti" value="WALTTI" 
+                <input className={"input" +cssDark} type="radio" id="waltti" value="WALTTI" 
                 name="datasource" /><label for="waltti">WALTTI</label>
               </fieldset>
             </div>
 
             <h3>Lähisoite pysäkeille:</h3>
-                <label htmlFor="address">Anna lähin osoite lähellä sijaitseville pysäkeille (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
-                <input type="text" id="address" name="address" placeholder="Kirjoita haettava osoite.." aria-required="true"
+                <label className={"label" +cssDark} htmlFor="address">Anna lähin osoite lähellä sijaitseville pysäkeille (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
+                <input className={"input" +cssDark} type="text" id="address" name="address" placeholder="Kirjoita haettava osoite.." aria-required="true"
                     maxlength="200" size="70" onChange={this.updateInput}
                     onFocus={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
-                <label htmlFor="startime">Anna kelloaika lähtöajalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
-                <input type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
+                <label className={"label" +cssDark} htmlFor="startime">Anna kelloaika lähtöajalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
+                <input className={"input" +cssDark} type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
                     maxlength="20" size="70" onChange={this.updateStarttime} aria-required="false"
                     onFocus={this.focusStarttime} 
                     defaultValue={this.state.starttime || ''}
                     ref={this.starttimefield} /><br/><br/>
-                <label htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
-                <input type="text" id="distance" name="distance" aria-required="true"
+                <label className={"label" +cssDark} htmlFor="distance">Anna pysäkkien maksimi etäisyys metreissä:</label><br/>
+                <input className={"input" +cssDark} type="text" id="distance" name="distance" aria-required="true"
                     maxlength="70" size="70" onChange={this.updateDistance} 
                     defaultValue={this.state.inputDistance}
                     ref={this.distanceRef}/>
-                    <div id="errordistance1" aria-live="polite">{state.errordistance}</div>
+                    <div className={"div" +cssDark} id="errordistance1" aria-live="polite">{state.errordistance}</div>
                     <br/><br/>
-                <button onClick={this.searchaddressss} aria-label="Hae pysäkkejä" >
+                <button className={"button" +cssDark} onClick={this.searchaddressss} aria-label="Hae pysäkkejä" >
 
                     Hae pysäkkejä
 
                 </button>
                 &nbsp;&nbsp;
-                <button role="button" disabled={props.disableCancelButton} 
+                <button className={"button" +cssDark} role="button" disabled={props.disableCancelButton} 
                 aria-label="Keskeytä haku"
                 onClick={this.stopAddresssSelected} >
                     

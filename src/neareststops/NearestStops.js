@@ -1,5 +1,6 @@
 import { h, Component, useEffect } from 'preact';
 import style from '../App.css';
+import { useContext } from 'preact/compat';
 
 import GiveNearStopQueryValues from './GiveNearStopQueryValues';
 import AddressList from './AddressList';
@@ -9,6 +10,8 @@ import SearchAndListAddressStops from './searchstops/SearchAndListAddressStops';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
 import StaticFunctions from '../util/StaticFunctions';
+import CssDark from  '../context/Context';
+
 /**
  * This class is showing controls of the bus stop query and makes query for near stops.
  */
@@ -686,6 +689,8 @@ class NearestStops extends Component
   }
 
    render(props, state) {
+        const cssDark = useContext(CssDark);
+
         if (Config.bDebug)
         {
             console.log("NearestStops render()");
@@ -717,7 +722,8 @@ class NearestStops extends Component
             alladdresses={state.alladdresses}
             addressfeatures={state.addressfeatures}
             handleChangeChk={this.handleAddressListChangeChk}
-            chkbox={this.state.chkboxAddressList} />;
+            chkbox={this.state.chkboxAddressList}
+            />;
 
 
         if (Config.bDebug)
@@ -727,7 +733,7 @@ class NearestStops extends Component
             console.log(state.alladdresses);
             console.log("addresslist");
             console.log(addresslist);
-        }
+         }
 
         if (search)
         searchAndListAddressStops = <SearchAndListAddressStops key="searchandlistaddressstops"
@@ -737,39 +743,40 @@ class NearestStops extends Component
             coordinateschanged={this.coordinateschanged}
             latitude={state.latitude} longitude={state.longitude}
             neareststops={state.neareststops} 
-            usergivenStartTime={state.usergivenStartTime}
+            usergivenStartTime={state.usergivenStartTime}            
             />;
-
+        
         let loadingComp = null;
         let loading = this.state.loading;
         let bButtonPressed = this.state.buttonpressed;
         if (loading == false && bButtonPressed && searchAndListAddressStops != null)
-           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
         else
         if (loading && bButtonPressed && searchAndListAddressStops == null)
-           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
         else        
         if (loading == false && bButtonPressed && state.addresscoordinateswrong
            && searchAndListAddressStops == null)
-           loadingComp = <p tabIndex="0" style={style.political_p} >Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</p>;
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} >Osoite tuntematon. Ei leveys ja pituusosoitekoordinaatteja haun jälkeen</p>;
         else        
         if (loading == false && bButtonPressed && searchAndListAddressStops == null)
-           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
         else
         if (loading == false && bButtonPressed && state.errorinquery != null)
-           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Virhe kyselyn suorituksessa">Virhe kyselyn suorituksessa.</p>
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Virhe kyselyn suorituksessa">Virhe kyselyn suorituksessa.</p>           
 
         return (  
-          <section >
-            <h1 tabIndex="0">Hae pysäkkejä osoitteen mukaan</h1>
+          <section className={"section" +cssDark}>
+            <h1 className={"h" +cssDark} tabIndex="0">Hae pysäkkejä osoitteen mukaan</h1>
             <GiveNearStopQueryValues style={style.page} distance={state.distance} 
             addresssselected={this.addresssSelected} address={state.address} 
             stopAddresssSelected={this.stopAddresssSelected}
             disableCancelButton={this.state.disableCancelButton}
             addresscoordinateswrong={state.addresscoordinateswrong}
-            errorinquery={state.errorinquery} /> 
+            errorinquery={state.errorinquery}
+             /> 
            {addresslist}
-           <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
+           <div className={"div" +cssDark} id="loadingComp2" aria-live="polite">{loadingComp}</div>
            {searchAndListAddressStops}
            </section>
         );

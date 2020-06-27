@@ -1,5 +1,5 @@
 import { h, Component, Fragment } from 'preact';
-// import { Link } from 'preact-router/match';
+import { Link } from 'preact-router/match';
 import style from './style';
 import HeaderCss from './styleDark';
 
@@ -51,10 +51,10 @@ class Header extends Component
 			HeaderCss.h1 : style.h1 } tabIndex="0" >Pysäkit tekstitaikatauluiksi</h3>
 			</th>
 			<th><nav role="navigation" aria-label="pagination" >
-				<a aria-label="Pysäkit osoitteen mukaan" 
-				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/" >Pysäkit osoitteen mukaan</a>
-				<a aria-label="Reittisuunnitelma" 
-				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/routeplan" >Reittisuunnitelma</a>
+				<Link aria-label="Pysäkit osoitteen mukaan" onClick={props.linkClicked}
+				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/" >Pysäkit osoitteen mukaan</Link>
+				<Link aria-label="Reittisuunnitelma" onClick={props.linkClicked}
+				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/routeplan" >Reittisuunnitelma</Link>
 				</nav>
 			</th>
 			</tr>

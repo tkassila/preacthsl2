@@ -1,10 +1,12 @@
 import React, { Component } from 'preact';
+import { useContext } from 'preact/compat';
 import {h, p } from 'preact';
 import LegStep from './LegStep';
 import NearStop from '../neareststops/searchstops/NearStop';
 import NearestStops from '../neareststops/NearestStops';
 import StaticFunctions from '../util/StaticFunctions';
 import Config from '../util/Config';
+import CssDark from  '../context/Context';
 
 /**
  * This class is used when showing an intermediate stop under a route plan and 
@@ -38,9 +40,11 @@ function IntermediateStop(props) {
         </ul>
         </div>);      
         */
+       const cssDark = useContext(CssDark);
+
        let openpdflink = null;
        if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
-         openpdflink = <a target="_blank" id={"open" +props.legdata.gtfsId} 
+         openpdflink = <a className={"a" +cssDark} target="_blank" id={"open" +props.legdata.gtfsId} 
          href={NearestStops.getPDFURL()+ NearestStops.localHSLUri +"/stops/" +
          NearStop.getStopIdAfterStartID(props.legdata.gtfsId) +".pdf"}>
              (Avaa aikataulu pdf)</a>;
@@ -49,12 +53,12 @@ function IntermediateStop(props) {
 
         let opentimetablelink = null;
         if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
-            opentimetablelink = <a target="_blank" id={"open" +props.legdata.gtfsId}
+            opentimetablelink = <a className={"a" +cssDark} target="_blank" id={"open" +props.legdata.gtfsId}
             href={Config.HSL_SERVER_URL +"/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
            (Avaa kartta-aikataulu sivu)</a>;
         else
         if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_FINLAND)
-            opentimetablelink = <a target="_blank" id={"open" +props.legdata.gtfsId}
+            opentimetablelink = <a className={"a" +cssDark} target="_blank" id={"open" +props.legdata.gtfsId}
             href={Config.FINLAN_SERVER_URL +"/pysakit/" +props.legdata.gtfsId +"/aikataulu"}>
             (Avaa kartta-aikataulu sivu)</a>;
     //    else
@@ -72,7 +76,7 @@ function IntermediateStop(props) {
             StaticFunctions.getLegVehicleType(this.props.legdata) +" "
                         +" Lähtöaika "+ starttime +" " +
                         ( props.legdata.desc != null ? props.legdata.desc : '');
-       return (<div><li id="" tabIndex="0" auto-label={showtext}>
+       return (<div><li className={"li" +cssDark} id="" tabIndex="0" auto-label={showtext}>
        <b>{showtext}</b></li>{openpdflink}{(openpdflink != null ? ' ' : null)} 
         {opentimetablelink}</div>
        );

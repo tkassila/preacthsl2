@@ -1,5 +1,8 @@
-import {h , Component} from 'preact';
+import {h , Component } from 'preact';
+import { useContext } from 'preact/compat';
 import Config from '../util/Config';
+import CssDark from '../context/Context';
+
 
 /**
  * This Address class is showing a address.
@@ -31,26 +34,30 @@ class Address extends Component
 
     addressClicked = event => {     
         event.preventDefault();   
-        if (this.props.addresssselected == null)
+        if (this.props.addresssselected === null)
             return;
 
         let distance = this.props.distance;
-        if (distance == null || distance == '')
+        if (distance == null || distance === '')
 	        distance = '800';
 	    this.props.addresssselected(event.target.text, distance);
     }
 
-    render() {
+    render(props) {
+        const cssDark = useContext(CssDark);
         const nocallclickhandler = (this.props.addresssselected == null)
         if (nocallclickhandler)
         {
             return (
-                <div data-message="lähiosoite" ><p>{this.props.address}</p></div>                              
+                <div className={"div" +cssDark} data-message="lähiosoite" >
+                  <p className={"p" +cssDark}>{this.props.address}</p>
+                  </div>                              
               );  
         }
         else
         return (
-              <div data-message="klikattu lähiosoite" ><a id={"addresslink" +this.props.id} href={"."} onClick={this.addressClicked}>{this.props.address}</a>
+              <div className={"div" +cssDark} data-message="klikattu lähiosoite" >
+                <a className={"a" +cssDark} id={"addresslink" +this.props.id} href={"."} onClick={this.addressClicked}>{this.props.address}</a>
               </div>                              
             );
     }

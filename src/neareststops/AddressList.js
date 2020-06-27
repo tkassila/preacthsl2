@@ -1,7 +1,9 @@
 import React, { Fragment, Component } from 'preact';
+import { useContext } from 'preact/compat';
 import Address from './Address.js'
 import {h } from 'preact';
 import Config from '../util/Config';
+import CssDark from '../context/Context';
 
 /**
  * This class component is showing a list of addresses.
@@ -50,6 +52,8 @@ class AddressList extends Component
       }
 
     render(props, state) {
+        const cssDark = useContext(CssDark);
+
         if (Config.bDebug)
         {
             console.log("AddressList::render(props, state)");
@@ -66,7 +70,8 @@ class AddressList extends Component
         if (props.alladdresses != null)
           addresses = props.alladdresses.map((child, i) => {
                 return <Address id={i} addresssselected={this.props.addresssselected} 
-                address={child} distance={this.props.distance} /> });
+                address={child} distance={this.props.distance}
+                /> });
         if (Config.bDebug)
         {
             console.log("alladdresses");
@@ -79,27 +84,29 @@ class AddressList extends Component
         if (state.chkbox)
         {
             return (
-                <Fragment>
-                    <h3 tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
-                    <input tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id" 
+                <Fragment>                   
+                    <h3 className={"h" +cssDark} tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
+                    <input className={"input" +cssDark} tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id" 
                     aria-label="Näytä osoitelista" 
                     defaultChecked={this.state.chkbox} 
                     onChange={this.handleChangeChk} />
-                    <label htmlFor="checkbox_id" >Näytä osoitelista</label>                    
+                    <label className={"label" +cssDark} htmlFor="checkbox_id" >Näytä osoitelista</label>                    
+                    <br/>
                     <div role="navigation" className={!state.chkbox ? 'hidden' : ''}>
+                    <br/>
                      {addresses}                    
-                    </div>           
+                    </div>                
                </Fragment>
             );    
         }
         else
             return (
-            <Fragment>
-                <h3 tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
-                <input tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id"
+            <Fragment>              
+                <h3 className={"h" +cssDark} tabIndex="0">Annetun osoitteen muita löytyneitä osoitteita</h3>
+                <input className={"input" +cssDark} tabIndex="0" type="checkbox" id="checkbox_id" name="checkbox_id"
                 defaultChecked={this.state.chkbox} 
                 onChange={this.handleChangeChk} />
-                <label htmlFor="checkbox_id">Näytä osoitelista</label>            
+                <label className={"label" +cssDark} htmlFor="checkbox_id">Näytä osoitelista</label>                   
             </Fragment>
             );
     }

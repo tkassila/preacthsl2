@@ -2,10 +2,20 @@ import { h, Component } from "preact";
 import Loading from "./Loading"; // your own spinner cmp here obviously
 
 class AsyncComponent extends Component {
-  state = {
-    Cmp: null,
-    pastDelay: false
-  };
+
+  delay = null;
+
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      Cmp: null,
+      pastDelay: false
+    };  
+    this.delay = null;
+    // this.cssloader = createRef();
+    // this.changeStyleSheet();
+  }
 
   componentDidMount() {
     // only show the spinner after 200ms has passed. this improves speed perception.
@@ -25,7 +35,9 @@ class AsyncComponent extends Component {
       try {
         const { default: Cmp } = await this.props.moduleProvider();
         this.setState({ Cmp });
-      } catch (e) {
+      } catch (err) {
+        console.log("AsyncComponent::getComponent error ");
+        console.log(err);        
         /* Handle failure to load dynamic component */
       }
     }
@@ -33,7 +45,7 @@ class AsyncComponent extends Component {
 
   render(props, { Cmp, pastDelay }) {
     // if Cmp is defined, show it. Otherwise, if 200ms has passed AND still no Cmp, then show spinner
-    return Cmp ? <Cmp {...props} /> : pastDelay && <Loading isFullPage />;
+    return (Cmp ? <Cmp {...props} /> : pastDelay && <Loading isFullPage />);
   }
 }
 

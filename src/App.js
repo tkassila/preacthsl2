@@ -1,62 +1,14 @@
-import React, { Component, createRef, Fragment } from 'preact';
+import React, { Component, Fragment } from 'preact';
 import {h, p } from 'preact';
 import Router from 'preact-router';
 import RoutePlans from './routeplan/RoutePlans';
-//import RoutePlans from 'routeplans';
 import Header from './components/header/Header';
-//import Header from 'header';
+import './App.css';
+import CssDark from './context/Context';
 
-// import logo from './logo.svg';
-// import './App.css';
 import NearestStops from './neareststops/NearestStops.js';
 import Config from './util/Config';
 import AppPages from './AppPages';
-//import gql from "apollo-boost";
-
-//const cssFuncLoader = () => import('./App.css');
-// const cssFuncLoaderDark = () => import('./AppDark.css');
-
-// require the decache module:
-
-/*
-const GET_LINKS = gql`
-query {
-    alllinks {
-        url
-        type
-        meta {
-            author 
-            date 
-            description 
-            image 
-            logo 
-            publisher 
-            title
-            url
-        }
-    }
-}`;
-*/
-
-
-/*
-const Home = () => (
-  <div>
-    <h1>Home!</h1>
-    <Link to="other" params={{ value:1 }}>Go Other</Link>
-  </div>
-);
-
-
-const Other = ({ value=0 }) => (
-  <div>
-    <h1>Other.</h1>
-    <Link to="home">Go Home</Link>
-    <p>value is {value}.</p>
-    <Link to="other" params={{ value: value+1 }}>Increment</Link>
-  </div>
-);
-*/
 
 class App extends Component {
   
@@ -69,15 +21,12 @@ class App extends Component {
     this.state = {
       showSidebar: false,
       loaddarkstyle: true,
-      stylechangedattime: null
+      cssPath: "/",
+      stylePath: 'App.css',
+      stylechangedattime: null,
+      cssDark: "_dark"
     }
   }
-
-  changeStyle = () =>
-	{
-		const { loaddarkstyle } = this.state;
-		this.setState({ loaddarkstyle: !loaddarkstyle, stylechangedattime: new Date()});
-	}
 
   shouldComponentUpdate(nextProps, nextState)
 	{
@@ -88,16 +37,18 @@ class App extends Component {
   {
   }
 
-  changeStyleSheet()
+  changeStyleSheet = () =>
   {
     console.log("changeStyleSheet()");
-    if (this.state.loaddarkstyle != null)
+    let loaddarkstyle = this.state.loaddarkstyle;
+    if (loaddarkstyle != null)
     {
-      if (this.state.loaddarkstyle)
+      loaddarkstyle = !loaddarkstyle;
+      if (loaddarkstyle)
       {
         console.log("./AppDark.css");
-        // import('./AppDark.css');
-        this.setState({ stylePath: './AppDark.css' });
+        // import('./AppDark.css');    
+        this.setState({ cssDark: "_dark", stylePath: 'AppDark.css' });
         //document.body.classList.remove(cssFuncLoader());
         // document.body.classList.add('mdc-theme--dark');
       }
@@ -105,10 +56,31 @@ class App extends Component {
       {
         console.log("./App.css'");
         // import('./App.css');
-        this.setState({ stylePath: './App.css' });
+        this.setState({ cssDark: "", stylePath: 'App.css' });
       }
-      // forceUpdate();
+      this.setState({ loaddarkstyle: loaddarkstyle, stylechangedattime: new Date()});    
+      this.forceUpdate();
     }
+  }
+
+  linkClicked =  (event) => {
+    console.log("linkClicked");
+    console.log("event");
+    console.log(event);
+    let href = event.target.attributes.href;
+    if (href == null || href == undefined)
+      return;
+    console.log("href");
+    console.log(href);
+    if (href.toString() == "/")
+      this.setState({ cssPath: "" });
+    else
+      this.setState({ cssPath: "../" });
+    console.log("cssPath");
+    console.log(this.state.cssPath);
+    console.log("state.cssPath +state.stylePath");
+    console.log(this.state.cssPath +this.state.stylePath);
+    this.forceUpdate();
   }
 
   selectedDataSource = (event) => {
@@ -148,83 +120,19 @@ class App extends Component {
     console.log(NearestStops.localHSLUri);
   }
 
-  render() {
-    // const showSidebar = this.state.showSidebar;
-    // const  size = 'small';
-    // <link rel="stylesheet" type="text/css" href={this.state.loaddarkstyle ? './AppDark.css' : './App.css'} />
-
-    if (Config.bDebug)
-    {
-      console.log("document.documentURI");
-      console.log(document.documentURI);
-      console.log("baseUrl");
-    }
-
-    // seek current url and at last last url to know where current App.css etc is:
-
-    let baseUrl = window.location.protocol + "//" + window.location.hostname +":" + window.location.port;
-    if (Config.bDebug)
-      console.log(baseUrl);
-    let ind = document.baseURI.toString().indexOf(baseUrl);
-    if (Config.bDebug)
-    {
-      console.log("ind");
-      console.log(ind);
-    }
-    let removedDocumentURI = document.baseURI.toString().substring(ind+baseUrl.length);
-    if (Config.bDebug)
-    {
-      console.log("removedDocumentURI");
-      console.log(removedDocumentURI);
-    }
-    let cssPath = "";
-
-    // is below / is selected, then App.css or AppDark.css path is below path:
-    if (removedDocumentURI != null 
-        && (removedDocumentURI.includes("routeplan")
-        || removedDocumentURI.includes("reitti")
-        || removedDocumentURI.includes("help")
-        || removedDocumentURI.includes("apua")
-        ))
-      cssPath = "../";
-
+  render(props, state) {
     return (      
       <Fragment>
-        <link rel="stylesheet" type="text/css" href={this.state.loaddarkstyle ? cssPath +'AppDark.css' : cssPath +'App.css'} />
-        <AppPages selectedDataSource={this.selectedDataSource}
+        <CssDark.Provider value={this.state.cssDark}>
+        <AppPages selectedDataSource={this.selectedDataSource} linkClicked={this.linkClicked}
           loaddarkstyle={this.state.loaddarkstyle} stylechangedattime={this.state.stylechangedattime}
-          changeStyle={this.changeStyle}
+          changeStyle={this.changeStyleSheet} cssPath={state.cssPath}
+          cssDark={state.cssDark}
         /> 
+        </CssDark.Provider>
       </Fragment>
     );
   } 
 }
-
-/*
-        <Header changeStyle={this.changeStyle} 
-        loaddarkstyle={this.state.loaddarkstyle} />
-       <Router>
-        <div path='/' default>
-           <NearestStops title="Pysäkkikysely" 
-           selectedDataSource={this.selectedDataSource}/>
-        </div>
-        <div path='/reitti'>
-          <RoutePlans title="Pysäkkireittiehdotukset" 
-          selectedDataSource={this.selectedDataSource}/>
-        </div>        
-        <div path='/routeplan'>
-          <RoutePlans title="Pysäkkireittiehdotukset"
-           selectedDataSource={this.selectedDataSource}/>
-        </div>        
-        </Router>
-*/
-
-/*
-   <Router>
-           <NearestStops path='/' default />
-           <RoutePlan path='/routeplan' />           
-        </Router>     
-        
-  */
 
 export default App;

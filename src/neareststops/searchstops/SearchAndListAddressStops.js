@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'preact';
+import { useContext } from 'preact/compat';
 import Address from '../Address.js';
 import NearStop from './NearStop';
 // import axios from 'axios';
@@ -744,10 +745,12 @@ if (Config.bDebug)
                   if (edge.node != null && edge.node.place != null && edge.node.place != undefined
                     && edge.node.place.locationType != null && edge.node.place.locationType != undefined)
                 return (
-                  <li id={"neartopli" +i} key={"neartopli" +i} styles={itemStyles}><NearStop key={"nearstop" +i} index={i} stop={edge.node} 
+                  <li id={"neartopli" +i} key={"neartopli" +i} styles={itemStyles}>
+                    <NearStop key={"nearstop" +i} index={i} stop={edge.node} 
                   seeKAllStopTimes={this.state.seeKAllStopTimes}
                   usergivenStartTime={props.usergivenStartTime}
-                  removeThisStopNoStoptimes={this.removeThisStopNoStoptimes} /></li>
+                  removeThisStopNoStoptimes={this.removeThisStopNoStoptimes}
+                   /></li>
                 ); 
               } 
               );

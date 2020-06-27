@@ -692,6 +692,31 @@ static getMomentFormatAndNumbersCheck(momenttime)
    // throw 'error_unknowvalue_withseparator';
 }
 
+static getAriaLabeledBy(msg)
+{
+    console.log("getAriaLabeledBy 1");
+    console.log(msg);
+    if (msg == null || msg.toString().trim().length == 0)
+        return "";
+    let ret = msg.toString();
+    let ind = ret.indexOf(":");
+    if (ind == -1)
+        return msg;
+    ret = ret.replace(":", " kaksoispiste ");
+    ind = ret.indexOf(":");
+    console.log("getAriaLabeledBy 2");
+    console.log(ret);
+
+    while(ind != -1)
+    {
+        ret = ret.replace(":", " kaksoispiste ");
+        ind = ret.indexOf(":");
+    }
+    console.log("getAriaLabeledBy 3");
+    console.log(ret);
+    return ret;
+}
+
 static getStartTimeErrorMsg(msg)
 {
     if (Config.bDebug)

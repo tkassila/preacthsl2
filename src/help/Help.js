@@ -1,4 +1,6 @@
 import { h, p, Component, Fragment } from 'preact';
+import { useContext } from 'preact/compat';
+
 // import StaticFunctions from '../util/StaticFunctions';
 // import Card from 'preact-material-components/Card';
 // import 'preact-material-components/Card/style.css';
@@ -6,6 +8,7 @@ import { h, p, Component, Fragment } from 'preact';
 import style from './style';
 //import style from './index';
 import HeaderCss from './styleDark';
+import CssDark from  '../context/Context';
 
 /**
  * This class is used to show help text for a user.
@@ -33,8 +36,9 @@ class Help extends Component
     }
     
     render(props, state) {
+            const cssDark = useContext(CssDark);
             return(
-                <section >
+                <section className={"section" +cssDark}>
                         <h1 tabIndex="0">Ohje</h1>
                         <Fragment>
                             <Fragment>
@@ -52,8 +56,7 @@ class Help extends Component
                                 selaimella, mutta muut sitä uudemmat selaimet ovat tuettuina. Eli ohjelma toimii niissä.
                             </p>
                             <h3 tabIndex="0">Käyttö</h3>
-                            <p tabIndex="0" className={state.loaddarkstyle == true ? HeaderCss.p : 
-                    style.p }>
+                            <p tabIndex="0" >
                                 Ohjelmaa voidaan käyttää selaimella, hiirellä klikkaamalla tai 
                                 ruudunlukuohjelmalla (puhuu eri käyttöliittymän ja kyselyjen tulosten
                                 kohtia) tai suurennusohjelmalla. Ulkoasu-painonapista 
@@ -86,7 +89,9 @@ class Help extends Component
                             </p>
                             
                             <h4 tabIndex="0">1.4. tekstikenttä on vapaaehtoinen: Anna lähtöaika</h4>
-                            <p tabIndex="0">Anna lähtöaikojen kelloaika muodossa tt:mm tai 
+                            <p tabIndex="0" aria-labelledby="Anna lähtöaikojen kelloaika muodossa tt kaksoispiste mm tai 
+                            päivämäärä muodossa pp.kk.yy tai muodossa pp.kk.yyyy tai pp.kk.yyyy tt kaksoispiste mm, 
+                            esim. 24.06.2020 19:30">Anna lähtöaikojen kelloaika muodossa tt:mm tai 
                             päivämäärä muodossa pp.kk.yy tai muodossa pp.kk.yyyy tai pp.kk.yyyy tt:mm, 
                             esim. 24.06.2020 19:30    
                             </p>   
@@ -137,11 +142,12 @@ class Help extends Component
                             
                             <p tabIndex="0"><b>Reittilinkkikista</b>, joiden web linkkejä klikkaamalla tai enterillä 
                             valitsemalla saadaan uusi lista linkin alle kunkin reitin haetut vaihdot pysäkkiaikoineen jne. 
-                            Uudelleen valitsemalla äsken avattu linkki, saadaan sen alainen tiedot, luettelo sulkeutumaan.</p>
+                            Uudelleen valitsemalla äsken avattu linkki, saadaan sen alainen tiedot, luettelo sulkeutumaan.
+                            </p>
                             <Fragment>
-                            <a tabIndex="0" aria-label="Pysäkit osoitteen mukaan"                         
+                            <a className={"a" +cssDark} tabIndex="0" aria-label="Pysäkit osoitteen mukaan"                         
                                 href="/" >Pysäkit osoitteen mukaan</a><br/>
-                            <a tabIndex="0" aria-label="Reittisuunnitelma" 
+                            <a className={"a" +cssDark} tabIndex="0" aria-label="Reittisuunnitelma" 
                                 
                                 href="/routeplan" >Reittisuunnitelma</a>			
 

@@ -1,7 +1,9 @@
 import React, {h, Component, createRef } from 'preact';
+import { useContext } from 'preact/compat';
 import Config from '../util/Config';
 import StaticFunctions from '../util/StaticFunctions';
 import GiveNearStopQueryValues from '../neareststops/GiveNearStopQueryValues';
+import CssDark from  '../context/Context';
 
 // import Button from 'preact-material-components/Button';
 
@@ -95,12 +97,6 @@ class GiveRoutePlanQueryValues extends Component
         this.setState({ userstartime: value });
     }
 
-
-    clearTimeout(timer)
-    {
-        this.timer = null;
-    }
-
     searchroutes() {
         if (Config.bDebug)
         console.log(this.state);
@@ -113,7 +109,7 @@ class GiveRoutePlanQueryValues extends Component
             this.setState({errormsg: StaticFunctions.getErrorMsg("Lähtöoosoite puuttuu tai on tyhjä")});
             this.timer = setTimeout(() => {
                 this.addressfield.current.focus();
-                this.clearTimeout(this.timer);
+                clearTimeout(this.timer);
             }, 4000);        
             return;         
         }
@@ -122,7 +118,7 @@ class GiveRoutePlanQueryValues extends Component
             this.setState({errormsg: StaticFunctions.getErrorMsg("Määränpääsoite puuttuu tai on tyhjä")});
             this.timer = setTimeout(() => {
                 this.targetaddressfield.current.focus();
-                this.clearTimeout(this.timer);
+                clearTimeout(this.timer);
             }, 4000);        
             return;         
         }
@@ -176,11 +172,13 @@ class GiveRoutePlanQueryValues extends Component
                         console.log("GiveRoutePlanQueryValues::getNearestStopStartTime - error starttime=" +err);
                         console.log("GiveRoutePlanQueryValues::getNearestStopStartTime - not using this value!");
                         this.setState({errormsg: StaticFunctions.getErrorMsg("Lähtöaika virhe: " +StaticFunctions.getStartTimeErrorMsg(err))});
+                        /*
                         this.timer = setTimeout(() => {
                             console.log('starttimefield called!');
                             this.starttimefield.current.focus();
-                            this.clearTimeout(this.timer);
-                            }, 18000);                        
+                            clearTimeout(this.timer);
+                            }, 28000);                        
+                            */
                         return;
                     }
                 }
@@ -212,37 +210,39 @@ class GiveRoutePlanQueryValues extends Component
      //  <label htmlFor="address">Anna osoite:</label><br/>
              
     render(props, state) {
+        const cssDark = useContext(CssDark);
+
         return (
-            <div data-message="reittiehdotuksen osoitteet">
-            <h3>Osoitteet ehdotettavile reiteille:</h3>
-                <label htmlFor="sourceaddress">Anna lähtöosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
-                <input type="text" id="sourceaddress" name="sourceaddress" placeholder="Kirjoita lähtöosoite.." 
+            <div className={"div" +cssDark} data-message="reittiehdotuksen osoitteet">
+            <h3 className={"h" +cssDark} >Osoitteet ehdotettavile reiteille:</h3>
+                <label className={"label" +cssDark} htmlFor="sourceaddress">Anna lähtöosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
+                <input className={"input" +cssDark} type="text" id="sourceaddress" name="sourceaddress" placeholder="Kirjoita lähtöosoite.." 
                     maxlength="100" size="70" onChange={this.updateInput} aria-required="true"
                     onFocue={this.focusInput} 
                     defaultValue={this.state.inputValue || ''}
                     ref={this.addressfield} /><br/><br/>
-                <label htmlFor="targetaddress">Anna määränpääosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
-                <input type="text" id="targetaddress" name="targetaddress" placeholder="Kirjoita määränpääosoite.." 
+                <label className={"label" +cssDark}htmlFor="targetaddress">Anna määränpääosoite (paikkakunta viimeisenä, isoalkukirjain):</label><br/>
+                <input className={"input" +cssDark}type="text" id="targetaddress" name="targetaddress" placeholder="Kirjoita määränpääosoite.." 
                     maxlength="100" size="70" onChange={this.updateTarget} aria-required="true"
                     onFocue={this.focusTarget} 
                     defaultValue={this.state.inputTarget || ''}
                     ref={this.targetaddressfield}/><br/><br/>
-                <label htmlFor="startime">Anna kelloaika suunnitelmalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
-                <input type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
+                <label className={"label" +cssDark} htmlFor="startime">Anna kelloaika suunnitelmalle (tunti tai tt:mm tai pp.kk.yyyy jne):</label><br/>
+                <input className={"input" +cssDark} type="text" id="starttime" name="starttime" placeholder="Kirjoita lähtöaika tai jätä tyhjäksi.." 
                     maxlength="20" size="70" onChange={this.updateStarttime} aria-required="false"
                     onFocus={this.focusStarttime} 
                     defaultValue={this.state.starttime || ''}
                     ref={this.starttimefield} /><br/><br/>
 
-                <div tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div><br/>
+                <div className={"div" +cssDark}tabIndex="0" id="errorfield1" aria-live="polite">{state.errormsg}</div><br/>
                     <br/>
-                <button onClick={this.searchroutes} aria-label="Hae reittejä">
+                <button className={"button" +cssDark} onClick={this.searchroutes} aria-label="Hae reittejä">
                     
                     Hae reittejä
                     
                 </button>
                 &nbsp;&nbsp;
-                <button disabled={props.disableCancelButton} aria-label="Keskeytä haku"
+                <button className={"button" +cssDark} disabled={props.disableCancelButton} aria-label="Keskeytä haku"
                 onClick={this.routeAddressesSelected} >
                     
                     Keskeytä haku

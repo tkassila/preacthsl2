@@ -1,17 +1,20 @@
 import {h, p, Component, render } from 'preact';
+import { useContext } from 'preact/compat';
 
 import IntermediateStop from './IntermediateStop';
 import StaticFunctions from '../util/StaticFunctions';
 import NearestStops from '../neareststops/NearestStops';
 import Config from '../util/Config';
-import {useState} from 'preact/hooks'
+import { useState } from 'preact/hooks';
+import CssDark from  '../context/Context';
 
 /**
  * This is used inside of LegStep component.
  * 
  * @param {*} props 
  */
-function useIntermediateStops(props) {
+function useIntermediateStops(props) 
+{
     const [intermediates, setIntermediates] = useState(null);
 
         if (Config.bDebug)
@@ -78,6 +81,7 @@ function LegStep (props) {
         }
         */
 
+       const cssDark = useContext(CssDark);
        const { intermediates } = useIntermediateStops(props);
        let legname = props.legdata.mode;
        if (Config.bDebug)
@@ -107,7 +111,8 @@ function LegStep (props) {
 
             const intermediateStops = intermediates.map((istop, ind) => { 
                 return <IntermediateStop id={"intermediateStop" +ind} index={ind} 
-                legdata={istop}/>});
+                legdata={istop} cssDark={cssDark}
+                 />});
             
             if (Config.bDebug)
                 console.log("-LegStep:intermediateStops" +intermediateStops);
@@ -120,7 +125,7 @@ function LegStep (props) {
                     let showedtext = starttime +
                     " Määränpäähän " +StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";                    
-                    return (<div><li tabIndex="0" aria-label={showedtext}>{showedtext}</li>
+                    return (<div><li className={"li" +cssDark} tabIndex="0" aria-label={showedtext}>{showedtext}</li>
                         <ul >{intermediateStops}</ul>                        
                         </div>);
                 }
@@ -130,7 +135,7 @@ function LegStep (props) {
                     +StaticFunctions.getLegName(props.legdata) +
                     " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
                     " Kesto " +duration +" min";
-                    return (<li tabIndex="0" aria-label={showedtext}>
+                    return (<li className={"li" +cssDark} tabIndex="0" aria-label={showedtext}>
                         {showedtext}
                         </li>);
                 }
@@ -141,7 +146,7 @@ function LegStep (props) {
             +StaticFunctions.getLegName(props.legdata) + 
             " Määränpäähän " + StaticFunctions.getRoundedMeterDistance(props.legdata.distance) +
             " Kesto " +duration +" min";
-            return (<li tabIndex="0" aria-label={showedtext}>{showedtext}</li>);
+            return (<li className={"li" +cssDark} tabIndex="0" aria-label={showedtext}>{showedtext}</li>);
         }
 }
 

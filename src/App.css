@@ -81,7 +81,28 @@ input {
 
 input:focus, button:focus {
 	outline: 3px solid black;  
-  }
+}
+
+.input_dark {
+	background: rgb(7, 7, 7);
+	border: 3px solid rgb(133, 118, 118);
+	line-height: 1.3 !important;
+	padding: 5px 10px;
+	font: inherit;
+	font-size: 100%;
+	border-radius: 7px;
+	outline: none;
+	color: whitesmoke;
+	margin-top: 10px;
+}
+
+.input_dark:focus {
+	outline: 5px solid white;  
+}
+
+.button_dark:focus {
+	outline: 5px solid yellowgreen;  
+}
 
 section {
 	display: block;
@@ -93,6 +114,19 @@ section {
 	box-shadow: 0 1px 5px rgba(0,0,0,0.3);
 	border-radius: 3px;
 }
+
+.section_dark {
+	display: block;
+	margin: 20px auto;
+	padding: 50px;
+	margin-bottom: 0px;
+	width: 100%;
+	color: white;
+	background: black;
+	box-shadow: 0 1px 5px wheat;
+	border-radius: 3px;
+}
+
 
 .page {
 	min-height: 100%;
@@ -118,6 +152,10 @@ button {
 	font-size: 20px;
 }
 
+.button_dark {
+	font-size: 20px;
+}
+
 input::-webkit-input-placeholder {
     font-size: 18px;
     
@@ -128,7 +166,17 @@ input[type="text"]
     font-size: 18px;
 }
 
+.input_dark[type="text"]
+{
+    font-size: 18px;
+}
+
 a {font-size: 16px}
+
+.a_dark {
+	font-size: 16px; 
+	color: yellow;
+}
 
 a:focus {
 	border: 2px solid rgba(36, 39, 219, 0.623);
@@ -140,15 +188,45 @@ a:focus {
 	will-change: background-color;
 }
 
+.a_dark:focus {
+	border: 2px solid rgba(36, 39, 219, 0.623);
+	margin: 3px;
+	text-align: center;
+	background: white;
+	text-decoration: underline;
+	color: black;
+	will-change: background-color;
+}
+
 div {font-size: 16px}
 
 li {font-size: 16px}
 
 li:focus { border: 4px solid rgba(36, 39, 219, 0.623); }
 
+.div_dark {font-size: 16px}
+
+.li_dark {font-size: 16px}
+
+li_dark:focus { border: 4px solid rgba(36, 39, 219, 0.623); }
+
 .error {color: rgba(197, 23, 174, 0.973); background: black; font-size: 16px}
 
+.error_dark {color: red; background: white; font-size: 16px}
+
 .header {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 56px;
+	padding: 0;
+	background: rgb(190, 181, 206);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+	z-index: 50;
+}
+
+.header_dark {
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -164,12 +242,31 @@ li:focus { border: 4px solid rgba(36, 39, 219, 0.623); }
 	font-size: 22px;
 }
 
+.political_p_dark {
+	font-size: 22px;
+}
+
 .mdc-theme--dark {
 	background-color: #333;
 	color: #fff;
 }
 
+input[type=radio] {
+	border: 2px solid rgba(36, 39, 219, 0.623);
+	margin: 10px;
+}
+
+.input_dark[type=radio] {
+	border: 2px solid rgba(36, 39, 219, 0.623);
+	margin: 10px;
+}
+
 p {
+	margin: 20px;
+	padding-right: 100px;
+}
+
+.p_dark {
 	margin: 20px;
 	padding-right: 100px;
 }

@@ -1,6 +1,8 @@
 import React, { p, Component } from 'preact';
+import { useContext } from 'preact/compat';
 import Config from '../../util/Config';
 import StaticFunctions from '../../util/StaticFunctions';
+import CssDark from  '../../context/Context';
 
 /**
  * This class is used to show a bus stop or like that.
@@ -9,6 +11,7 @@ import StaticFunctions from '../../util/StaticFunctions';
  */
 function StopTime(props) {
 { 
+        const cssDark = useContext(CssDark);
         let ret = null; // role="option"
         if (Config.bDebug)
         {
@@ -18,7 +21,7 @@ function StopTime(props) {
         }        
         if (props.htmlelement == "p")
         {
-            ret = ( <p tabIndex="0">
+            ret = ( <p className={"p" +cssDark} abIndex="0">
                 {props.data.strarrivetime} <b>{props.data.trip.routeShortName}</b> 
                 <space> </space>
                 {StaticFunctions.getTransportMode(StaticFunctions.getRouteType(props.data.vehicleType))}
@@ -29,7 +32,7 @@ function StopTime(props) {
             return ret;
         }
         else
-        return ( <li tabIndex="0" aria-label={"pysäkkiaika " 
+        return ( <li className={"li" +cssDark} tabIndex="0" aria-label={"pysäkkiaika " 
             + props.data.strarrivetime +" "+ props.data.trip.routeShortName +" "
             +StaticFunctions.getTransportMode(StaticFunctions.getRouteType(props.data.vehicleType))
             +" " + props.data.stopHeadsign}>

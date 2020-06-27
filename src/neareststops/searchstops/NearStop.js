@@ -1,4 +1,5 @@
 import React, { Fragment, render, Component } from 'preact';
+import { useContext } from 'preact/compat';
 import {h } from 'preact';
 // import axios from 'axios';
 import NearestStops from '../NearestStops';
@@ -6,6 +7,7 @@ import StopTime from './StopTime';
 import Config from '../../util/Config';
 import StaticFunctions from '../../util/StaticFunctions';
 // import { duplicateFieldDefinitionNameMessage } from 'graphql/validation/rules/UniqueFieldDefinitionNames';
+import CssDark from  '../../context/Context';
 
 class NearStop extends Component 
 {
@@ -52,11 +54,6 @@ class NearStop extends Component
     removeThisStopNoStoptimes()
     {
        return this.state.no_stoptimes_at_all;
-    }
-
-    clearTimeout(timer)
-    {
-        this.timer = null;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -300,7 +297,7 @@ class NearStop extends Component
                 this.setState({ secondquerystoptime: true});
                 this.makeApolloCallForNearestStopTimes(stopid);
                 this.setState({ secondquerystoptime: false});
-                this.clearTimeout(this.timer);
+                clearTimeout(this.timer);
               }, 4000);       
             }
             */
@@ -774,6 +771,8 @@ class NearStop extends Component
       }
 
     render(props) {
+        const cssDark = useContext(CssDark);
+
         const linkclicked = this.state.linkclicked;
      // const features2 = this.state.addressfeatures; '
      if (Config.bDebug)
@@ -784,18 +783,18 @@ class NearStop extends Component
 
      let openpdflink = null;
      if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
-       openpdflink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
+       openpdflink = <a className={"a" +cssDark} target="_blank" id={"open" +this.state.stop.place.gtfsId} 
        href={ Config.CORS_DIGITRANSITSERVER +'/timetables/v1/' +NearestStops.localHSLUri+ '/stops/' +NearStop.getStopIdAfterStartID(this.state.stop.place.gtfsId) +".pdf"}>
         (Avaa aikataulu pdf)</a>;
  
     let opentimetablelink = null;
     if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
-      opentimetablelink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
+      opentimetablelink = <a className={"a" +cssDark} target="_blank" id={"open" +this.state.stop.place.gtfsId} 
       href={Config.HSL_SERVER_URL + "/pysakit/" 
       +this.state.stop.place.gtfsId +"/aikataulu"}>(Avaa kartta-aikataulu sivu)</a>;
     else
     if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_FINLAND)
-      opentimetablelink = <a target="_blank" id={"open" +this.state.stop.place.gtfsId} 
+      opentimetablelink = <a className={"a" +cssDark} target="_blank" id={"open" +this.state.stop.place.gtfsId} 
       href={Config.FINLAN_SERVER_URL +"/pysakit/" +this.state.stop.place.gtfsId +"/aikataulu"}>
       (Avaa kartta-aikataulu sivu)</a>;
 
@@ -823,8 +822,8 @@ class NearStop extends Component
                 {opentimetablelink}
         */
             return ( 
-                <div id="routelinkofstopdiv" data-message="osoitteen koordinaatit">
-                    <a id={this.state.stop.place.gtfsId} role="link"
+                <div className={"div" +cssDark} id="routelinkofstopdiv" data-message="osoitteen koordinaatit">
+                    <a className={"a" +cssDark} id={this.state.stop.place.gtfsId} role="link"
                     href={this.state.stop.place.gtfsId}
                     onClick={this.astopClicked}>
                     {this.state.stop.place.locationType == "STOP" ? "" : "Asema"} {this.state.stop.place.code}&nbsp; 
@@ -879,8 +878,8 @@ class NearStop extends Component
                 const divid = "routestoptimesofstopdiv" +props.index;
 
                 return (  // <Fragment>
-                 <div id={divid} data-message="pysäkki"> 
-                    <a id={this.state.stop.place.gtfsId} role="link"
+                 <div className={"div" +cssDark} id={divid} data-message="pysäkki"> 
+                    <a className={"a" +cssDark} id={this.state.stop.place.gtfsId} role="link"
                     tabIndex="0"
                     href={this.state.stop.place.gtfsId}                     
                     style={this.props.canClick ? {pointerEvents: "none"} : null}
@@ -890,8 +889,8 @@ class NearStop extends Component
 		            {this.state.stop.place.name}<space>  </space>{this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
                 <space>  </space>
                 {openpdflink} {opentimetablelink} 
-                    <ul id={"ulnearstop" +this.state.stop.place.gtfsId} >                    
-                    {sorted.map((stime,i) => <StopTime htmlelement="li" index={i} data={stime}/>)} 
+                    <ul className={"ul" +cssDark} id={"ulnearstop" +this.state.stop.place.gtfsId} >                    
+                    {sorted.map((stime,i) => <StopTime htmlelement="li" index={i} data={stime} />)} 
                     </ul>
                     </div>                  
                 ); //  </Fragment> 

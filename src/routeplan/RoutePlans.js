@@ -1,4 +1,5 @@
 import { h, Component, useEffect, Fragment } from 'preact';
+import { useContext } from 'preact/compat';
 import NearestStops from '../neareststops/NearestStops';
 import GiveRoutePlanQueryValues from './GiveRoutePlanQueryValues';
 import RoutePlan from './RoutePlan';
@@ -12,6 +13,7 @@ import ShowUserStartTime from '../neareststops/searchstops/ShowUserStartTime';
 import style from '../App.css';
 import Config from '../util/Config';
 import AbortController from "abort-controller";
+import CssDark from  '../context/Context';
 
 /**
  * This class is used to show routeplans and makes querie to the server for.
@@ -901,6 +903,8 @@ class RoutePlans extends Component {
     }
 
     render(props, state) {
+      const cssDark = useContext(CssDark);
+
       if (Config.bDebug)
       {
         console.log("render");
@@ -913,19 +917,19 @@ class RoutePlans extends Component {
         let features2 = null;
         let plans = this.state.plans;
         if (state.addresscoordinateswrong == true)
-          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja">Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja.</p>;
+          loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja">Tuntematon osoite. Ei leveys- ja pituuskoordinaatteja.</p>;
         else
         if (state.bButtonPressed && (!loading && plans != null))
-          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
+          loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Tulokset alla">Tulokset alla.</p>;
         else
         if (state.bButtonPressed && (loading && plans == null))
-           loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
+           loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Ladataan">Ladataan...</p>;
         else
         if (state.bButtonPressed && (!loading && plans == null))
-          loadingComp = <p tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
+          loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label="Ei tuloksia">Ei tuloksia.</p>;
         else
         if ((state.errormsg != null))
-          loadingComp = <p tabIndex="0" style={style.political_p} aria-label={state.errormsg}></p>;
+          loadingComp = <p className={"p" +cssDark} tabIndex="0" style={style.political_p} aria-label={state.errormsg}></p>;
         
         if (Config.bDebug)
           console.log(plans);
@@ -945,19 +949,20 @@ class RoutePlans extends Component {
               return <RoutePlan id={"routeplan" +ind} 
                       index={ind} plan={plan} 
                       showShowAllLegs={state.showShowAllLegs}
-                      usergivenStartTime={state.usergivenStartTime} /> } );
+                      usergivenStartTime={state.usergivenStartTime}
+                       /> } );
             features2 = <div role="navigation" aria-label="tulosten osoitteet">
-                    <h4 tabIndex="0"><b>{this.state.firstaddress}<space> </space>
+                    <h4 className={"h" +cssDark} tabIndex="0"><b>{this.state.firstaddress}<space> </space>
                    (pit {this.state.firstaddressfeatures[0].geometry.coordinates[1]}<space> </space> 
                    lev {this.state.firstaddressfeatures[0].geometry.coordinates[0]})
-                   </b></h4><h4 tabIndex="0"><b>{this.state.secondaddress}<space> </space> 
+                   </b></h4><h4 className={"h" +cssDark} tabIndex="0"><b>{this.state.secondaddress}<space> </space> 
                    (pit {this.state.secondaddressfeatures[0].geometry.coordinates[1]}<space> </space>  
                    lev {this.state.secondaddressfeatures[0].geometry.coordinates[0]})
                    </b></h4><p/></div>;
             features3 = <Checkbox id="idChecboxShowAllLegs" 
             label="Avaa kaikki reittivaihtoehtojen alakohdat" 
             handleCheckboxChange={this.handleChecboxShowAllLegs} 
-            isChecked={state.uncheckCheckBox == true ? false : state.showShowAllLegs} 
+            isChecked={state.uncheckCheckBox == true ? false : state.showShowAllLegs}             
             />;
 
             if (state.usergivenStartTime != null 
@@ -966,33 +971,34 @@ class RoutePlans extends Component {
         }
 
         return (   
-          <section data-message="Reittisuunnitelma">              
-             <h1 tabIndex="0">Reittisuunnitelma lähtö- ja tulo-osoitteiden mukaan</h1>
-             <div onChange={props.selectedDataSource} 
+          <section className={"section" +cssDark} data-message="Reittisuunnitelma">              
+             <h1 className={"h" +cssDark} tabIndex="0">Reittisuunnitelma lähtö- ja tulo-osoitteiden mukaan</h1>
+             <div className={"div" +cssDark} onChange={props.selectedDataSource} 
 	            data-message="Tietoja luetaan järjestelmästä valinta">
-                <fieldset>
-                    <legend>Mistä tietoja haetaan:</legend>
-                      <input type="radio" id="hsl" value="HSL" checked={true} 
+                <fieldset className={"fieldset" +cssDark} >
+                    <legend className={"legend" +cssDark} >Mistä tietoja haetaan:</legend>
+                      <input className={"input" +cssDark} type="radio" id="hsl" value="HSL" checked={true} 
                       name="datasource" /><label for="hsl">HSL</label>
-                    <input type="radio" id="finland" value="FINLAND" 
+                    <input className={"input" +cssDark} type="radio" id="finland" value="FINLAND" 
                     name="datasource" /><label for="finland">FINLAND</label>
-                    <input type="radio" id="waltti" value="WALTTI" 
+                    <input className={"input" +cssDark} type="radio" id="waltti" value="WALTTI" 
                     name="datasource" /><label for="waltti">WALTTI</label>
                 </fieldset>
               </div>
              <GiveRoutePlanQueryValues  addresssesselected={this.addresssesSelected}
                address={this.state.address} target={this.state.target}
                routeAddressesSelected={this.routeAddressesSelected}
-               disableCancelButton={this.state.disableCancelButton}/> 
+               disableCancelButton={this.state.disableCancelButton}
+                /> 
              <Fragment>
              {features2}
              {ustarttime}
              <p/>
              {features3}
              <p/>
-             <div id="loadingComp2" aria-live="polite">{loadingComp}</div>
-             <div role="navigation" aria-label="kyselyn tulokset">
-              <ul id="planitemsul" style={style.ul}>
+             <div className={"div" +cssDark} id="loadingComp2" aria-live="polite">{loadingComp}</div>
+             <div className={"div" +cssDark} role="navigation" aria-label="kyselyn tulokset">
+              <ul className={"ul" +cssDark} id="planitemsul" style={style.ul}>
              {planitems}
              </ul>
              </div>

@@ -1,8 +1,10 @@
 import {h, p, render, Component } from 'preact';
+import { useContext } from 'preact/compat';
 import LegStep from './LegStep';
 import Config from '../util/Config';
 //import NearestStops from '../neareststops/NearestStops';
 import StaticFunctions from '../util/StaticFunctions';
+import CssDark from  '../context/Context';
 
 class RoutePlan extends Component {
 
@@ -69,6 +71,8 @@ class RoutePlan extends Component {
     }
 
     render(props, state) {
+        const cssDark = useContext(CssDark);
+
         let legs = props.plan.legs; 
         let leg = legs[0];
         let legname = leg.mode;
@@ -127,7 +131,7 @@ class RoutePlan extends Component {
             return null;
         if (Config.bDebug)
              console.log("not null"); // href={"routeplan" +this.props.id}
-        let planlink = <a id={"planlink" +this.props.id} href=""
+        let planlink = <a className={"a" +cssDark} id={"planlink" +this.props.id} href=""
             onClick={this.planClicked}>{legname} Lähtöaika {starttime} Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
         if (Config.bDebug)
         {
@@ -135,7 +139,7 @@ class RoutePlan extends Component {
             console.log(planlink);
         }
         if (!state.routeplanclicked)
-            return <li ><div>{planlink}</div></li>;
+            return <li ><div className={"div" +cssDark} >{planlink}</div></li>;
         else
         {
             if (Config.bDebug)            
@@ -143,7 +147,7 @@ class RoutePlan extends Component {
             let legs = this.props.plan.legs.map((legdata, ind) => { 
                 return <LegStep id={"legstep" +ind} 
                         legClicked={false} 
-                        legdata={legdata}/>});
+                        legdata={legdata} />});
             if (Config.bDebug)
             {
                 console.log("else legs");
