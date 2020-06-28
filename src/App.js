@@ -123,6 +123,7 @@ class App extends Component {
   render(props, state) {
     return (      
       <Fragment>
+        <link rel="stylesheet" type="text/css" href="/App.css" />
         <CssDark.Provider value={this.state.cssDark}>
         <AppPages selectedDataSource={this.selectedDataSource} linkClicked={this.linkClicked}
           loaddarkstyle={this.state.loaddarkstyle} stylechangedattime={this.state.stylechangedattime}

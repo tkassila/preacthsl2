@@ -43,7 +43,7 @@ class GiveNearStopQueryValues extends Component
         this.updateDistance = this.updateDistance.bind(this);
         this.searchaddressss = this.searchaddressss.bind(this);
         this.stopAddresssSelected = this.stopAddresssSelected.bind(this);
-        this.calledtestbutton = this.calledtestbutton.bind(this);
+       // this.calledtestbutton = this.calledtestbutton.bind(this);
     }
 
     componentDidMount(){
@@ -378,6 +378,7 @@ class GiveNearStopQueryValues extends Component
     /**
      * test button function for testing startime, user input values:
      */
+    /*
     calledtestbutton()
     {
         console.log("calledtestbutton start");
@@ -792,6 +793,7 @@ class GiveNearStopQueryValues extends Component
         console.log("testStartTimeReturned = " +testStartTimeReturned);
         console.log("");
     }
+    */
 
      //  <label htmlFor="address">Anna osoite:</label><br/>
              
@@ -800,6 +802,7 @@ class GiveNearStopQueryValues extends Component
             console.log("errordistance" +state.errordistance);
 
         const cssDark = useContext(CssDark);
+        /*
         let testbuttonforstarttime = null;
         if (Config.bTestButton)
         {
@@ -808,11 +811,13 @@ class GiveNearStopQueryValues extends Component
               <button onClick={this.calledtestbutton} aria-label="Test button" >
             Testipainonappi lähtöaikojen testaukseen
             </button>;
-        }
+        }        
+
+        //             {testbuttonforstarttime}
+        */
 
         return (             
             <div data-message="Anna haettavien pysäkkien lähiosoite">
-            {testbuttonforstarttime}
                             <div className={"div" +cssDark} onChange={props.selectedDataSource} 
             data-message="Tietoja luetaan järjestelmästä valinta">
               <fieldset className={"fieldset" +cssDark} >

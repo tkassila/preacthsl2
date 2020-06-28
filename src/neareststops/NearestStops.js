@@ -119,6 +119,8 @@ class NearestStops extends Component
         stylechangedattime: null,
         addresscoordinateswrong: false
         }
+
+        this.addresssSelectionChange = this.addresssSelectionChange.bind(this);
     }
 
     
@@ -434,6 +436,14 @@ class NearestStops extends Component
          //   .then(response => this.handleResponseData(response));
     }
 
+    addresssSelectionChange = (addressparam) => {
+      if (addressparam == null || addressparam.toString().length == 0)
+        return;
+      let usergivenStartTime = this.state.usergivenStartTime;
+      let distance = this.state.distance;
+      this.addresssSelected(addressparam, distance, usergivenStartTime);
+    }
+
     addresssSelected = (addressparam, distanceparam, startimeparam) => 
     {
         if (Config.bDebug)
@@ -717,7 +727,7 @@ class NearestStops extends Component
         let addresslist = null;
         if (search)
             addresslist = <AddressList style={style.page} 
-            addresssselected={this.addresssSelected} 
+            addresssselected={this.addresssSelectionChange} 
             distance={state.distance} 
             alladdresses={state.alladdresses}
             addressfeatures={state.addressfeatures}

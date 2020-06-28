@@ -5,7 +5,7 @@ import StaticFunctions from '../../util/StaticFunctions';
 import CssDark from  '../../context/Context';
 
 /**
- * This class is used to show a bus stop or like that.
+ * This function is used to show a bus stop or like that.
  * 
  * @param {*} props 
  */

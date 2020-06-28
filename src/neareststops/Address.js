@@ -1,66 +1,61 @@
 import {h , Component } from 'preact';
 import { useContext } from 'preact/compat';
+// import { useState, useEffect  } from 'preact/hooks';
 import Config from '../util/Config';
 import CssDark from '../context/Context';
 
 
 /**
- * This Address class is showing a address.
+ * This Address function is showing a address.
  */
-class Address extends Component 
+// class Address extends Component 
+const Address = (props) =>
 {
+  //  const [addresssselected] = useState(props.addresssselected);
+  //  const [distance, setDistance] = useState(props.distance);
+
+    /*
     constructor(props) {        
         super(props);
       if (Config.bDebug)
       {
         console.log("Address::constructor");
         console.log(this.props);
-      }
-        /*
-        this.state = {
-            chkbox: false,
-            addresses: ['1','2']
-        }
-        */
+      }       
     }
 
     componentWillReceiveProps(nextProps) {
-        /*
-        if (this.props.address !== nextProps.address) {
-          this.setState({address: nextProps.address});
-        }
-        */
      }
+     */
 
-    addressClicked = event => {     
+    const addressClicked = event => {     
         event.preventDefault();   
-        if (this.props.addresssselected === null)
+        if (props.addresssselected === null)
             return;
 
-        let distance = this.props.distance;
-        if (distance == null || distance === '')
-	        distance = '800';
-	    this.props.addresssselected(event.target.text, distance);
+      //  if (distance == null || distance === '')
+        //  setDistance('800');
+        props.addresssselected(event.target.text);
     }
 
-    render(props) {
+    // render(props) {
         const cssDark = useContext(CssDark);
-        const nocallclickhandler = (this.props.addresssselected == null)
+        const nocallclickhandler = (props.addresssselected == null)
         if (nocallclickhandler)
         {
             return (
                 <div className={"div" +cssDark} data-message="lähiosoite" >
-                  <p className={"p" +cssDark}>{this.props.address}</p>
+                  <p className={"p" +cssDark}>{props.address}</p>
                   </div>                              
               );  
         }
         else
         return (
               <div className={"div" +cssDark} data-message="klikattu lähiosoite" >
-                <a className={"a" +cssDark} id={"addresslink" +this.props.id} href={"."} onClick={this.addressClicked}>{this.props.address}</a>
+                <a className={"a" +cssDark} id={"addresslink" +props.id} href={"."} onClick={addressClicked}>{props.address}</a>
               </div>                              
             );
-    }
+   // }
 }
 
 export default Address;
