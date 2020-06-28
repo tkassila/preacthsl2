@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'preact';
+import React, { Fragment } from 'preact';
 import { useState  } from 'preact/hooks';
 // const { useState, useEffect, useMemo } = React;
 import { useContext } from 'preact/compat';

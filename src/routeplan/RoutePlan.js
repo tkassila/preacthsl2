@@ -5,9 +5,13 @@ import Config from '../util/Config';
 //import NearestStops from '../neareststops/NearestStops';
 import StaticFunctions from '../util/StaticFunctions';
 import CssDark from  '../context/Context';
+import { useState, useEffect  } from 'preact/hooks';
 
-class RoutePlan extends Component {
-
+// class RoutePlan extends Component {
+const RoutePlan = (props) => {
+    const [routeplanclicked, setRouteplanclicked] = useState(props.showShowAllLegs == null ? false : props.showShowAllLegs);
+    const [showShowAllLegs, setShowShowAllLegs] = useState(props.showShowAllLegs == null ? false : props.showShowAllLegs);
+    /*
     constructor(props) {
         super(props);
         if (Config.bDebug)
@@ -25,7 +29,7 @@ class RoutePlan extends Component {
             routeplanclicked: props.showShowAllLegs
         }
     }
-
+     
     shouldComponentUpdate(nextProps, nextState) { 
         if (nextState.routeplanclicked != this.state.routeplanclicked)
         {
@@ -44,33 +48,44 @@ class RoutePlan extends Component {
             return true;            
         }
         return false;
-        /*      
-        if(this.state.addressfeatures !== nextState.addressfeatures
-           || this.state.neareststops !== nextState.neareststops
-           */
     }
+    */
 
-    planClicked = (event) => {  
+   useEffect(() => {    
+    if (Config.bDebug)
+    {
+    console.log("useEffect()");
+    console.log("id: " +props.id +" showShowAllLegs " +showShowAllLegs);
+    }
+    let newvalue = props.showShowAllLegs == null ? false : props.showShowAllLegs;
+        if (newvalue != showShowAllLegs)
+        {
+            setRouteplanclicked(newvalue);
+            setShowShowAllLegs(newvalue);
+        }
+    });
+     
+    const planClicked = (event) => {  
         event.preventDefault();
-        let newbvalue = !this.state.routeplanclicked;
+        let newbvalue = !routeplanclicked;
         if (Config.bDebug)
         {
         console.log("planClicked()");
-        console.log("id: " +this.props.id +" " +newbvalue);
+        console.log("id: " +props.id +" " +newbvalue);
         }
-        this.setState({routeplanclicked: newbvalue});
+        setRouteplanclicked(newbvalue);
         if (Config.bDebug)
             console.log("planClicked() 2");
     }
 
-    getHeaderLink(leg)
+    const getHeaderLink = (leg) =>
     {
         if (leg == null)
             return null;
-        return <a onClick={this.planClicked}>{leg.mode}</a>;
+        return <a onClick={planClicked}>{leg.mode}</a>;
     }
 
-    render(props, state) {
+    // render(props, state) {
         const cssDark = useContext(CssDark);
 
         let legs = props.plan.legs; 
@@ -122,7 +137,7 @@ class RoutePlan extends Component {
             console.log("leg");
             console.log(leg);
             console.log("routeplanclicked");
-            console.log(state.routeplanclicked);
+            console.log(routeplanclicked);
             console.log("legname");
             console.log(legname);
         }
@@ -131,20 +146,20 @@ class RoutePlan extends Component {
             return null;
         if (Config.bDebug)
              console.log("not null"); // href={"routeplan" +this.props.id}
-        let planlink = <a className={"a" +cssDark} id={"planlink" +this.props.id} href=""
-            onClick={this.planClicked}>{legname} Lähtöaika {starttime} Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
+        let planlink = <a className={"a" +cssDark} id={"planlink" +props.id} href=""
+            onClick={planClicked}>{legname} Lähtöaika {starttime} Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
         if (Config.bDebug)
         {
             console.log("planlink");
             console.log(planlink);
         }
-        if (!state.routeplanclicked)
+        if (!routeplanclicked)
             return <li ><div className={"div" +cssDark} >{planlink}</div></li>;
         else
         {
             if (Config.bDebug)            
                 console.log("else 1");
-            let legs = this.props.plan.legs.map((legdata, ind) => { 
+            let legs = props.plan.legs.map((legdata, ind) => { 
                 return <LegStep id={"legstep" +ind} 
                         legClicked={false} 
                         legdata={legdata} />});
@@ -160,7 +175,7 @@ class RoutePlan extends Component {
                </li>
             );
         }
-    }
+   // }
 }
 
 export default RoutePlan;

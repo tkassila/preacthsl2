@@ -1,4 +1,4 @@
-import { h, Component, useEffect } from 'preact';
+import { h, Component } from 'preact';
 import style from '../App.css';
 import { useContext } from 'preact/compat';
 
