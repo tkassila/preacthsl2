@@ -46,7 +46,7 @@ export default (config) => {
 
 c) build prod. in github root dir: preact build --no-prerender [--clean]
 
-! Use preact v. 2.x to build (the last version beofre preact-cli v. 3.x)!!
+! Use preact v. 2.x to build (the last version before preact-cli v. 3.x)!!
 
 d) by example create a new dir and copy localhost.key, localhost.crt into certificates directory and
 
