@@ -1,1 +1,1 @@
-preact build --no-prerender %*
+.\node_modules\.bin\preact build --no-prerender %*
