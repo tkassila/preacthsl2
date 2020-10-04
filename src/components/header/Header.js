@@ -43,7 +43,7 @@ class Header extends Component
     render(props, state) {
       return (
 		<Fragment>
-<table className={state.loaddarkstyle == true ? HeaderCss.header : 
+			<table className={state.loaddarkstyle == true ? HeaderCss.header : 
 			style.header } alt="Valikko">
 		   <tr className={state.loaddarkstyle == true ? HeaderCss.tr : 
 			style.tr}><th>
@@ -53,8 +53,10 @@ class Header extends Component
 			<th><nav role="navigation" aria-label="pagination" >
 				<Link aria-label="Pysäkit osoitteen mukaan" onClick={props.linkClicked}
 				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/" >Pysäkit osoitteen mukaan</Link>
+				<br/>
 				<Link aria-label="Reittisuunnitelma" onClick={props.linkClicked}
 				className={state.loaddarkstyle == true ? HeaderCss.link : style.link} href="/routeplan" >Reittisuunnitelma</Link>
+				<br />
 				</nav>
 			</th>
 			</tr>
