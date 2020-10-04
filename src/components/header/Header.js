@@ -69,7 +69,9 @@ class Header extends Component
 			className={state.loaddarkstyle == true ? HeaderCss.link : style.link}
                         href="/apua" >Apua</a>	
 			</th></tr>
-		</table>		 </Fragment>	
+		</table>
+		<br/><br/>
+		</Fragment>	
 		  );
 	} 
 }
