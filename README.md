@@ -19,7 +19,7 @@ When (1) npm and node are installed on a (web) server,
 
 (3) then install the app by command: 'npm install' on project repo root direcotry. 
 
-(4) install preact-cli. 
+(4) install v. 2.x preact-cli. 
 
 (5) If you had changed Config.js file to the app is using local gateway server into open trafic server, 
 then Start a gateway server. But I have changed a gateway server is not needed anymore! This gateway server is started from a 'reacthslserver' directory by command: 'node server.js'. 
@@ -45,6 +45,8 @@ export default (config) => {
 ]
 
 c) build prod. in github root dir: preact build --no-prerender [--clean]
+
+! Use preact v. 2.x to build (the last version before preact-cli v. 3.x)!!
 
 d) by example create a new dir and copy localhost.key, localhost.crt into certificates directory and
 
