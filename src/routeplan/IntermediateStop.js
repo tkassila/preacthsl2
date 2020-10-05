@@ -42,6 +42,11 @@ function IntermediateStop(props) {
         */
        const cssDark = useContext(CssDark);
 
+       let width = screen.width;
+       if (window.innerWidth > 0)
+       {
+          width = window.innerWidth;
+       }  
        let openpdflink = null;
        let mobileBR = null;
        if (width <= 660)

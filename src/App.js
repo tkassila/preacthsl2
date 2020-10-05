@@ -22,7 +22,7 @@ class App extends Component {
       showSidebar: false,
       loaddarkstyle: true,
       cssPath: "/",
-      stylePath: 'App.css',
+      stylePath: 'AppDark.css',
       stylechangedattime: null,
       cssDark: "_dark"
     }

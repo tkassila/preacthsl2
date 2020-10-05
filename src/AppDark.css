@@ -31,6 +31,10 @@
   }
 }
 
+html {
+	background-color: black;	
+}
+
 body {
 	padding-top: 0px;
 	font: 14px/1.21 'Helvetica Neue',arial;
@@ -87,14 +91,16 @@ input:focus, button:focus {
 
 section {
 	display: block;
-	margin: 20px auto;
-	padding: 50px;
+	margin: 5px auto;
+	padding: 20px;
 	margin-bottom: 0px;
+	margin-top: 40px;
 	width: 100%;
 	color: white;
 	background: black;
 	box-shadow: 0 1px 5px wheat;
 	border-radius: 3px;
+	background-color: black;
 }
 
 .page {
