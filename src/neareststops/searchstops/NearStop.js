@@ -670,7 +670,15 @@ class NearStop extends Component
         console.log(linkclicked); 
      }
 
+     let width = screen.width;
+     if (window.innerWidth > 0)
+     {
+        width = window.innerWidth;
+     }
      let openpdflink = null;
+     let mobileBR = null;
+     if (width <= 660)
+         mobileBR = <br/>;
      if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
        openpdflink = <a className={"a" +cssDark} target="_blank" id={"open" +this.state.stop.place.gtfsId} 
        href={ Config.CORS_DIGITRANSITSERVER +'/timetables/v1/' +NearestStops.localHSLUri+ '/stops/' +NearStop.getStopIdAfterStartID(this.state.stop.place.gtfsId) +".pdf"}>
@@ -776,7 +784,7 @@ class NearStop extends Component
                     onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? " " : " Asema "} 
                     {this.state.stop.place.code}<space>  </space>
 		            {this.state.stop.place.name}<space>  </space>{this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
-                <space>  </space>
+                <space>  </space>{mobileBR}
                 {openpdflink} {opentimetablelink} 
                     <ul className={"ul" +cssDark} id={"ulnearstop" +this.state.stop.place.gtfsId} >                    
                     {sorted.map((stime,i) => <StopTime htmlelement="li" index={i} data={stime} />)} 

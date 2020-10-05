@@ -15,9 +15,9 @@
 .h1 {
 		float: left;
 		margin: 0;
-		padding: 0 15px;
-		font-size: 24px;
-		line-height: 30px;
+		padding: 0 10px;
+		font-size: 20px;
+		line-height: 25px;
 		font-weight: 400;
 		color: #FFF;
 	}
@@ -38,7 +38,6 @@ tr {
 }
 
 .link {
-			border: 2px solid black;
 			margin: 3px;
 			height: 56px;
 			line-height: 30px;
@@ -48,7 +47,7 @@ tr {
 			background: rgba(255,255,255,0);
 			text-decoration: underline;
 			color: #EEE;
-			will-change: background-color;
+			will-change: color;
 
 			&:hover, &:active {
 				background: rgba(255,255,255,0.3);			
@@ -73,3 +72,18 @@ help_a {
 	color: black; background: white;
 }
 
+
+fieldset {
+	width: 50%;	
+}
+
+@media (max-width: 660px){
+	fieldset {
+		width: 100%;	
+	}	
+}
+
+divfieldset {
+	float: left;
+
+}

@@ -818,7 +818,7 @@ class GiveNearStopQueryValues extends Component
 
         return (             
             <div data-message="Anna haettavien pysäkkien lähiosoite">
-                            <div className={"div" +cssDark} onChange={props.selectedDataSource} 
+                            <div className={"divfieldset" +cssDark} onChange={props.selectedDataSource} 
             data-message="Tietoja luetaan järjestelmästä valinta">
               <fieldset className={"fieldset" +cssDark} >
                 <legend className={"legend" +cssDark} >Mistä tietoja haetaan:</legend>
@@ -857,6 +857,7 @@ class GiveNearStopQueryValues extends Component
 
                 </button>
                 &nbsp;&nbsp;
+                <br/><br/>
                 <button className={"button" +cssDark} role="button" disabled={props.disableCancelButton} 
                 aria-label="Keskeytä haku"
                 onClick={this.stopAddresssSelected} >

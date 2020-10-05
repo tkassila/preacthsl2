@@ -242,6 +242,7 @@ class GiveRoutePlanQueryValues extends Component
                     
                 </button>
                 &nbsp;&nbsp;
+                <br/><br/>
                 <button className={"button" +cssDark} disabled={props.disableCancelButton} aria-label="Keskeytä haku"
                 onClick={this.routeAddressesSelected} >
                     

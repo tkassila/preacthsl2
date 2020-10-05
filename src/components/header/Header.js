@@ -70,7 +70,7 @@ class Header extends Component
                         href="/apua" >Apua</a>	
 			</th></tr>
 		</table>
-		<br/><br/>
+		<br/><br/><br/><br/><br/>
 		</Fragment>	
 		  );
 	} 

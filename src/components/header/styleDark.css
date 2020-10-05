@@ -8,53 +8,58 @@
 	height: 56px;
 	padding: 0;
 	background: black;
-	box-shadow: 0 0 15px rgb(241, 236, 236);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 	z-index: 50;
 }
 
 .h1 {
-		float: left;
-		margin: 0;
-		padding: 0 15px;
-		font-size: 24px;
-		line-height: 30px;
-		font-weight: 400;
-		color: #FFF;
-	}
+	float: left;
+	margin: 0;
+	padding: 0 10px;
+	font-size: 20px;
+	line-height: 25px;
+	font-weight: 400;
+	color: #FFF;
+}
 
-	tr {
-		height: 35px;
-	}
-	
 	/*
 table, th, td {
-		border: 1px solid white;
+		border: 1px solid black;
 }
 */
+
+tr {
+	height: 35px;
+}
 
 .th {
 		float: right;
 		font-size: 100%;
 }
 
-.link {	
-	margin: 3px;
-	height: 56px;
-	line-height: 30px;
-	padding: 3px 3px 3px ;
-	min-width: 50px;
-	text-align: center;
-	background: rgba(255,255,255,0);
-	text-decoration: underline;
-	color: #EEE;
-	will-change: color;
+.link {
+			border: 2px solid black;
+			margin: 3px;
+			height: 56px;
+			line-height: 30px;
+			padding: 7px 7px 7px ;
+			min-width: 50px;
+			text-align: center;
+			background: rgba(255,255,255,0);
+			text-decoration: underline;
+			color: #EEE;
+			will-change: color;
+
+			&:hover, &:active {
+				background: rgba(255,255,255,0.3);			
+			}
 }
 
 .link:hover, .link:active, .link:focus {
 	border: 2px solid rgba(36, 39, 219, 0.623);
 	margin: 3px;
 	height: 56px;
-	line-height: 20px;
+	line-height: 30px;
 	padding: 3px 3px 3px ;
 	min-width: 50px;
 	text-align: center;
@@ -64,7 +69,21 @@ table, th, td {
 	will-change: background-color;
 }
 
+help_a {
+	color: black; background: white;
+}
 
-.button {
-	box-shadow: 0 0px 15px white;
+fieldset {
+	width: 50%;	
+}
+
+@media (max-width: 660px){
+	fieldset {
+		width: 100%;	
+	}	
+}
+
+divfieldset {
+	float: left;
+
 }

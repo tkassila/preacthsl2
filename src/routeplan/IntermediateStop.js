@@ -43,6 +43,9 @@ function IntermediateStop(props) {
        const cssDark = useContext(CssDark);
 
        let openpdflink = null;
+       let mobileBR = null;
+       if (width <= 660)
+           mobileBR = <br/>;
        if (NearestStops.localHSLUri == Config.HSLLSERVICEURI_HSL)
          openpdflink = <a className={"a" +cssDark} target="_blank" id={"open" +props.legdata.gtfsId} 
          href={NearestStops.getPDFURL()+ NearestStops.localHSLUri +"/stops/" +

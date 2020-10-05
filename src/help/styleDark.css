@@ -86,3 +86,8 @@ help_a:focus {
 	margin: 30px;
 }
 
+@media (max-width: 660px){
+	.adjusted-mobile-margin .panel-row-style {
+		margin-left: 10px !important;
+	}
+}
