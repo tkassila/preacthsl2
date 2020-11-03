@@ -7,6 +7,12 @@ HSL and FINLAND user html pages. And open pdf file that may contain timetables f
  
 The application is coded also for visual impared people in the mind. The application can used by mouse, but also by screenreader, when a user pressing a tab or enter keys. And selecting by ex. a current link, button by enter key. Checkboxies are set on or off by pressing a space bar.  A screen reader is reading app page logical text elements, like busstop header or route or its sub elments by pressing a tab key.
 
+Deployment
+
+Download file build_production_server_data.zip and extract file content on a selected webserver directory. Then use that webaddress and uri to start this app in a user browser. In this case web address is in the form: webaddress.com/useddir .
+
+If will use excample server server.js file in a production webser, copy that file into the same web directory and node server by giving comamnd: "node server.js". In this later case a browser address is in the form: 999.999.999.999:8080 or webaddress.com:8080
+
 Development
 
 The application is made by preact 10.4.4 library. The preact is like a js react dialect, but smaller and quicker than react is. 
