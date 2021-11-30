@@ -111,7 +111,7 @@ function LegStep (props) {
 
             const intermediateStops = intermediates.map((istop, ind) => { 
                 return <IntermediateStop id={"intermediateStop" +ind} index={ind} 
-                legdata={istop} cssDark={cssDark}
+                legdata={istop} cssDark={cssDark} showlatlon={props.showlatlon}
                  />});
             
             if (Config.bDebug)

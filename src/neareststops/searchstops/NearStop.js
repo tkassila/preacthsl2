@@ -724,7 +724,7 @@ class NearStop extends Component
                     href={this.state.stop.place.gtfsId}
                     onClick={this.astopClicked}>
                     {this.state.stop.place.locationType == "STOP" ? "" : "Asema"} {this.state.stop.place.code}&nbsp; 
-		            {this.state.stop.place.name} {this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a> 
+		            {this.state.stop.place.name} {this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>                
                 </div>
             );
         else
@@ -784,7 +784,9 @@ class NearStop extends Component
                     onClick={this.astopClicked}>{this.state.stop.place.locationType == "STOP" ? " " : " Asema "} 
                     {this.state.stop.place.code}<space>  </space>
 		            {this.state.stop.place.name}<space>  </space>{this.state.stop.place.desc} Etäisyys {this.state.stop.distance}</a>
-                <space>  </space>{mobileBR}
+                <space>  </space> 
+                { this.props.showShowlatlon ? "(pit." +this.state.stop.place.lat +" lev. " 
+                  +this.state.stop.place.lon +")" : "" } {mobileBR}
                 {openpdflink} {opentimetablelink} 
                     <ul className={"ul" +cssDark} id={"ulnearstop" +this.state.stop.place.gtfsId} >                    
                     {sorted.map((stime,i) => <StopTime htmlelement="li" index={i} data={stime} />)} 

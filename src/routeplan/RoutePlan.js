@@ -147,7 +147,8 @@ const RoutePlan = (props) => {
         if (Config.bDebug)
              console.log("not null"); // href={"routeplan" +this.props.id}
         let planlink = <a className={"a" +cssDark} id={"planlink" +props.id} href=""
-            onClick={planClicked}>{legname} Lähtöaika {starttime} Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
+            onClick={planClicked}>{legname} Lähtöaika {starttime} 
+            Etäisyys {StaticFunctions.getRoundedMeterDistance(leg.distance)}</a>;
         if (Config.bDebug)
         {
             console.log("planlink");
@@ -162,7 +163,7 @@ const RoutePlan = (props) => {
             let legs = props.plan.legs.map((legdata, ind) => { 
                 return <LegStep id={"legstep" +ind} 
                         legClicked={false} 
-                        legdata={legdata} />});
+                        legdata={legdata} showlatlon={props.showlatlon} />});
             if (Config.bDebug)
             {
                 console.log("else legs");

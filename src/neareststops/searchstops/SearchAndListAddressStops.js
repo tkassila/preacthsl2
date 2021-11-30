@@ -49,6 +49,7 @@ class SearchAndListAddressStops extends Component
             addressfeatures: props.addressfeatures,
             neareststops: props.neareststops,
             seeKAllStopTimes: false,
+            showShowlatlon: false,
             uncheckCheckBox: false,
             distance: props.distance,
             alladdresses: props.alladdresses,      
@@ -496,6 +497,20 @@ if (Config.bDebug)
         }
     }
 
+    
+    handleChecboxShowlatlon = (id, label, isChecked) =>
+    {
+      if (isChecked /* && this.addressdata != null && this.addresstargetdata != null */ ) 
+      {
+          this.setState({showShowlatlon: true});
+      }
+      else
+      if (!isChecked /* && this.addressdata != null && this.addresstargetdata != null */ ) 
+      {
+          this.setState({showShowlatlon: false});
+      }
+    }
+
     removeThisStopNoStoptimes(removeStop)
     {
         if (Config.bDebug)
@@ -634,6 +649,7 @@ if (Config.bDebug)
                   <li id={"neartopli" +i} key={"neartopli" +i} styles={itemStyles}>
                     <NearStop key={"nearstop" +i} index={i} stop={edge.node} 
                   seeKAllStopTimes={this.state.seeKAllStopTimes}
+                  showShowlatlon={this.state.showShowlatlon}
                   usergivenStartTime={props.usergivenStartTime}
                   removeThisStopNoStoptimes={this.removeThisStopNoStoptimes}
                    /></li>
@@ -654,6 +670,12 @@ if (Config.bDebug)
                  isChecked={uncheckCheckBox == true ? false : state.seeKAllStopTimes} 
                  />;
 
+             let features4 = <Checkbox id="idChecboxShowShowlatlon" 
+                 label="Näytä pysäkkien pituus ja leveyspiiri arvot avattaessa" 
+                 handleCheckboxChange={this.handleChecboxShowlatlon} 
+                 isChecked={state.uncheckCheckBox == true ? false : state.showShowlatlon}             
+                 />;
+     
           //  if (!neareststops)
             this.prev_feature = state.addressfeatures;              
 
@@ -677,7 +699,9 @@ if (Config.bDebug)
                 {ustarttime}
                 <p></p>
                 {features3}
-                <p></p>
+                <p/>
+                {features4}
+                <p/>
                 <div id="loadingComp1" aria-live="polite">{loadingComp}</div>
                 {features2}              
                 <div id="nearestopsmapdiv" role="navigation">

@@ -61,6 +61,7 @@ class RoutePlans extends Component {
             plans: null,
             uncheckCheckBox: false,
             showShowAllLegs: false,
+            showShowlatlon: false,
             loaddarkstyle: false,
             bButtonPressed: false,
             disableCancelButton: true,
@@ -842,6 +843,20 @@ class RoutePlans extends Component {
            console.log("makeApolloCallForNearestStops 3" );
     }
 
+    
+    handleChecboxShowlatlon = (id, label, isChecked) =>
+    {
+      if (isChecked /* && this.addressdata != null && this.addresstargetdata != null */ ) 
+      {
+          this.setState({showShowlatlon: true});
+      }
+      else
+      if (!isChecked /* && this.addressdata != null && this.addresstargetdata != null */ ) 
+      {
+          this.setState({showShowlatlon: false});
+      }
+    }
+
     handleChecboxShowAllLegs = (id, label, isChecked) =>
     {
       if (Config.bDebug)
@@ -936,6 +951,7 @@ class RoutePlans extends Component {
         let planitems = null;
         let i = 0;
         let features3 = null;
+        let features4 = null;
           loadingComp = this.getMissingBusStops(loadingComp, loading, plans,
             state.bButtonPressed, this.state.firstaddress, 
             this.state.secondaddress);
@@ -950,6 +966,7 @@ class RoutePlans extends Component {
                       index={ind} plan={plan} 
                       showShowAllLegs={state.showShowAllLegs}
                       usergivenStartTime={state.usergivenStartTime}
+                      showlatlon={state.showShowlatlon}
                        /> } );
             features2 = <div role="navigation" aria-label="tulosten osoitteet">
                     <h4 className={"h" +cssDark} tabIndex="0"><b>{this.state.firstaddress}<space> </space>
@@ -964,6 +981,13 @@ class RoutePlans extends Component {
             handleCheckboxChange={this.handleChecboxShowAllLegs} 
             isChecked={state.uncheckCheckBox == true ? false : state.showShowAllLegs}             
             />;
+
+            features4 = <Checkbox id="idChecboxShowShowlatlon" 
+            label="Näytä alakohtien pituus ja leveyspiiri arvoja avattaessa" 
+            handleCheckboxChange={this.handleChecboxShowlatlon} 
+            isChecked={state.uncheckCheckBox == true ? false : state.showShowlatlon}             
+            />;
+
 
             if (state.usergivenStartTime != null 
               && state.usergivenStartTime.toString().hasDataAfterTrim())
@@ -995,6 +1019,8 @@ class RoutePlans extends Component {
              {ustarttime}
              <p/>
              {features3}
+             <p/>
+             {features4}
              <p/>
              <div className={"div" +cssDark} id="loadingComp2" aria-live="polite">{loadingComp}</div>
              <div className={"div" +cssDark} role="navigation" aria-label="kyselyn tulokset">

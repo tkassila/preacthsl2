@@ -1,5 +1,5 @@
 // import { createContext } from 'preact';
 import { createContext } from 'preact/compat';
-const CssDark = createContext('_dark');
+const Theme = createContext('');
 
-export default CssDark; 
+export default Theme; 

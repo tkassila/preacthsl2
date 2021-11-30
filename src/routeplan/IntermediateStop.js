@@ -83,7 +83,9 @@ function IntermediateStop(props) {
         let showtext = "Pysäkki " +this.props.legdata.name +" "+
             StaticFunctions.getLegVehicleType(this.props.legdata) +" "
                         +" Lähtöaika "+ starttime +" " +
-                        ( props.legdata.desc != null ? props.legdata.desc : '');
+                        ( props.legdata.desc != null ? props.legdata.desc : '')
+                        +(props.showlatlon != null && props.showlatlon ? 
+                            " (Pit. " +props.legdata.lat +" lev. " +props.legdata.lon +")" : "") ;
        return (<div><li className={"li" +cssDark} id="" tabIndex="0" auto-label={showtext}>
        <b>{showtext}</b></li>{openpdflink}{(openpdflink != null ? ' ' : null)} 
         {opentimetablelink}</div>
