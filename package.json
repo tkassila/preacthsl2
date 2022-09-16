@@ -36,10 +36,9 @@
   },
   "dependencies": {
     "abort-controller": "^3.0.0",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "moment": "^2.29.1",
-    "preact": "^10.6.2",
-    "preact-router": "^3.2.1",
+    "moment": "^2.29.4",
+    "preact": "^10.11.0",
+    "preact-router": "^4.1.0",
     "unistore": "^3.5.2"
   }
 }
